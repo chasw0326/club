@@ -13,13 +13,11 @@ import javax.persistence.*;
 @Setter
 @ToString
 @Entity
-public class Picture extends BaseEntity{
+public class Staff extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long pno;
-
-    private String ImageUrl;
+    private Long sno;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "club")
@@ -30,10 +28,4 @@ public class Picture extends BaseEntity{
     @JoinColumn(name = "member")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Member member;
-
-    @Transient
-    private Long likeCnt;
-
-    @Transient
-    private boolean likeState;
 }

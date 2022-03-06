@@ -1,8 +1,6 @@
 package com.example.club_project.entity;
 
 import lombok.*;
-import org.hibernate.action.internal.OrphanRemovalAction;
-import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
