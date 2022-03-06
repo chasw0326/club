@@ -32,4 +32,7 @@ public class Reply extends BaseEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Member member;
 
+    public void changeContent(String content){
+        this.content = content;
+    }
 }

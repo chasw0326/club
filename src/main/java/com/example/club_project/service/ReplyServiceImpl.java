@@ -7,6 +7,7 @@ import com.example.club_project.entity.Reply;
 import com.example.club_project.repository.ReplyRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,7 +43,7 @@ public class ReplyServiceImpl {
             Reply reply = result.get();
             if (!reply.getMember().getMno().equals(principalId)) {
                 log.error("error deleting reply by userId: {}", principalId);
-                throw new IllegalArgumentException(); // 권한 에러로 수정 예정
+                throw new AccessDeniedException("댓글 작성자가 아닙니다. 현재 id: " + principalId);
             }
             repository.deleteById(rno);
         }
@@ -55,9 +56,11 @@ public class ReplyServiceImpl {
             Reply reply = result.get();
             if (!reply.getMember().getMno().equals(principalId)) {
                 log.error("error modifying reply by userId: {}", principalId);
-                throw new IllegalArgumentException(); // 권한 에러로 수정 예정
+                throw new AccessDeniedException("댓글 작성자가 아닙니다. 현재 id: " + principalId);
             }
-            repository.deleteById(reply.getRno());
+            reply.changeContent(dto.getText());
+            repository.save(reply);
         }
+
     }
 }
