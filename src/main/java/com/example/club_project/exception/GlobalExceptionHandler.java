@@ -45,6 +45,14 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(dto, HttpStatus.FORBIDDEN);
     }
 
+    @ExceptionHandler({IllegalArgumentException.class})
+    public ResponseEntity<?> illegalArgHandler(IllegalArgumentException e) {
+        log.error("accessDeniedHandler: {}", e.getMessage());
+        e.printStackTrace();
+        ErrorRespDTO dto = errorToDTO(e);
+        return new ResponseEntity<>(dto, HttpStatus.FORBIDDEN);
+    }
+
     @ExceptionHandler({RuntimeException.class})
     public ResponseEntity<?> runtimeHandler(RuntimeException e) {
         log.error("RuntimeException: {}", e.getMessage());

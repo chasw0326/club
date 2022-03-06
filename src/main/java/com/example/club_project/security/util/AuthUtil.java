@@ -1,5 +1,6 @@
 package com.example.club_project.security.util;
 
+import com.example.club_project.dto.PasswordDTO;
 import com.example.club_project.dto.SignupDTO;
 import com.example.club_project.entity.Member;
 import com.example.club_project.entity.MemberRole;
@@ -8,6 +9,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Log4j2
 public class AuthUtil {
@@ -43,5 +46,28 @@ public class AuthUtil {
         memberRepository.save(member);
 
         return member;
+    }
+
+    @Transactional
+    public void changePassword(final PasswordDTO dto, Long principalId){
+        Optional<Member> result = memberRepository.findById(principalId);
+        if (!result.isPresent()) {
+            log.error("result is empty, input: {}", principalId);
+            throw new IllegalArgumentException("멤버id를 확인하세요. 입력한 값:" + principalId);
+        }
+        Member member = result.get();
+        // 입력한 비밀번호와 현재 비밀번호가 다를때
+        if (!passwordEncoder.matches(dto.getOldPw(), member.getPassword())) {
+            log.warn("이전 비밀번호가 다릅니다.");
+            throw new IllegalArgumentException("이전 비밀번호가 다릅니다.");
+        }
+        // 1차, 2차 비밀번호 입력이 다를때
+        if (!dto.getNewPw().equals(dto.getCheckNewPw())) {
+            log.warn("확인 비밀번호가 새 비밀번호와 다릅니다.");
+            throw new IllegalArgumentException("확인 비밀번호가 새 비밀번호와 다릅니다.");
+        }
+        member.setPassword(passwordEncoder.encode(dto.getNewPw()));
+        memberRepository.save(member);
+        log.info("changePassword");
     }
 }
