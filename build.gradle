@@ -41,6 +41,7 @@ dependencies {
     testImplementation group: 'org.springframework.security', name: 'spring-security-test', version: '5.5.3'
     testCompileOnly 'org.projectlombok:lombok:1.18.12'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
+    runtimeOnly 'com.h2database:h2'
 }
 
 test {
