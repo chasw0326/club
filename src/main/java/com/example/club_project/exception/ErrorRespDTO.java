@@ -16,6 +16,8 @@ public class ErrorRespDTO {
 
     String message;
 
+    String error;
+
     Map<String, String> errors;
 }
 
