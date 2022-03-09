@@ -4,7 +4,6 @@ package com.example.club_project.exception;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -35,14 +34,6 @@ public class GlobalExceptionHandler {
                 .errors(errors)
                 .build();
         return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler({AccessDeniedException.class})
-    public ResponseEntity<?> accessDeniedHandler(IllegalArgumentException e) {
-        log.error("accessDeniedHandler: {}", e.getMessage());
-        e.printStackTrace();
-        ErrorRespDTO dto = errorToDTO(e);
-        return new ResponseEntity<>(dto, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler({IllegalArgumentException.class})
