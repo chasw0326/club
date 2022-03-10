@@ -4,11 +4,9 @@ package com.example.club_project.domain;
 import com.example.club_project.domain.base.AuditingCreateUpdateEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -62,7 +60,7 @@ public class User extends AuditingCreateUpdateEntity {
     }
 
     @Builder
-    public User(String email, String name, String password, String nickname, String university, String introduction){
+    private User(String email, String name, String password, String nickname, String university, String introduction){
         this.email = email;
         this.name = name;
         this.password = password;

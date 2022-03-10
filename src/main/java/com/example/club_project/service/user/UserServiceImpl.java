@@ -50,8 +50,7 @@ public class UserServiceImpl implements UserService{
     public void updatePassword(Long principalId, String oldPw, String newPw, String checkPw){
         User user = userRepository.findById(principalId)
                 .orElseThrow(() -> new EntityNotFoundException("throw notFoundException"));
-        System.out.println(user.getPassword());
-        System.out.println(oldPw);
+
         if(!passwordEncoder.matches(oldPw, user.getPassword())){
             log.warn("이전 비밀번호와 다릅니다.");
             throw new IllegalArgumentException("이전 비밀번호와 다릅니다.");
