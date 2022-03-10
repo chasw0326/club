@@ -1,5 +1,6 @@
 package com.example.club_project.domain;
 
+import com.example.club_project.domain.base.AuditingCreateEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,7 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "categories")
-public class Category {
+public class Category extends AuditingCreateEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

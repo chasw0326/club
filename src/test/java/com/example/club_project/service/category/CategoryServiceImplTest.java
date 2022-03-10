@@ -9,12 +9,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Transactional
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 class CategoryServiceImplTest {
@@ -28,8 +30,6 @@ class CategoryServiceImplTest {
     public void init() {
         categoryName = "test";
         categoryDescription = "description";
-        //categoryName 매핑되는 엔티티 미리 지우기
-        categoryService.delete(categoryName);
     }
 
     @Test
