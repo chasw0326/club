@@ -1,8 +1,7 @@
 package com.example.club_project.controller.user;
 
-import com.example.club_project.model.User;
+import com.example.club_project.domain.User;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
 
 import javax.validation.constraints.Email;

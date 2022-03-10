@@ -1,4 +1,4 @@
-package com.example.club_project.model;
+package com.example.club_project.domain;
 
 public enum UserRole {
     USER, ADMIN

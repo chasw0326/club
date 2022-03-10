@@ -1,11 +1,11 @@
-package com.example.club_project.model;
+package com.example.club_project.domain;
 
 
+import com.example.club_project.domain.base.AuditingCreateUpdateEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -13,23 +13,22 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@EntityListeners(value = AuditingEntityListener.class )
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
-@ToString
+@ToString(exclude = "roleSet")
 @Table(name = "users")
-public class User {
+public class User extends AuditingCreateUpdateEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 50, unique = true)
+    @Column(nullable = false, length = 50)
     private String email;
 
     @Setter
-    @Column(nullable = false, length = 20)
+    @JsonIgnore
+    @Column(nullable = false, length = 80)
     private String password;
 
     @Column(nullable = false, length = 20)
@@ -44,11 +43,10 @@ public class User {
     @Column(name= "profile_url", length = 500)
     private String profileUrl;
 
-    @Column(length = 100)
+    @Column(nullable = false, length = 100)
     private String introduction;
 
     @ElementCollection(fetch = FetchType.LAZY)
-    @Builder.Default
     @JsonIgnore
     private Set<UserRole> roleSet = new HashSet<>();
 
@@ -56,11 +54,20 @@ public class User {
         roleSet.add(userRole);
     }
 
-    @CreationTimestamp
-    @Column(name = "create_at", nullable = false, updatable = false)
-    private LocalDateTime createAt;
+    public void updateUserInfo(String name, String nickname, String university, String introduction){
+        this.name = name;
+        this.nickname = nickname;
+        this.introduction = introduction;
+        this.university = university;
+    }
 
-    @UpdateTimestamp
-    @Column(name = "update_at")
-    private LocalDateTime updateAt;
+    @Builder
+    public User(String email, String name, String password, String nickname, String university, String introduction){
+        this.email = email;
+        this.name = name;
+        this.password = password;
+        this.nickname = nickname;
+        this.university = university;
+        this.introduction = introduction;
+    }
 }
