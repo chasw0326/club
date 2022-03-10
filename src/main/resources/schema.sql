@@ -29,6 +29,7 @@ CREATE TABLE categories
     id                  bigint          NOT NULL AUTO_INCREMENT COMMENT 'id',
     name                varchar(20)     NOT NULL COMMENT '카테고리명',
     description         varchar(50)     NOT NULL COMMENT '카테고리 설명',
+    created_at          datetime        NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일시',
     PRIMARY KEY (id)
 );
 
