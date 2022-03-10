@@ -190,7 +190,7 @@ class ClubServiceTest {
     }
 
     @Test
-    @DisplayName("특정 대학교에 속하고 해당 카테고리에 속하는 모든 동아리를 반환한다")
+    @DisplayName("특정 대학교에 있는 하나의 동아리를 삭제한다")
     public void Should_DeleteClub_When_ClubnameAndUniversity_Valid() {
         //given
         clubService.register(testName, testAddress, testUniversity, testDescription, testCategoryName, null);
