@@ -7,7 +7,7 @@ import javax.validation.constraints.Pattern;
 public class PasswordDTO {
 
     static class Response{
-        String username;
+        String nickname;
         String profile_url;
     }
 
