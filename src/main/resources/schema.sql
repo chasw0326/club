@@ -48,6 +48,7 @@ CREATE TABLE clubs
     PRIMARY KEY (id),
     KEY clubs_idx_name (name),
     KEY clubs_idx_university (university),
+    KEY clubs_idx_name_university (name, university),
     CONSTRAINT fk_club_to_category FOREIGN KEY (category_id) REFERENCES categories (id) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 

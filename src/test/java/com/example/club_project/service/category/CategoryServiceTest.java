@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Transactional
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-class CategoryServiceImplTest {
+class CategoryServiceTest {
 
     @Autowired
     private CategoryService categoryService;

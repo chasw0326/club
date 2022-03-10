@@ -17,17 +17,17 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Transactional
     public Category register(String name, String description) {
-        Category category = Category.builder()
-                                    .name(name)
-                                    .description(description)
-                                    .build();
-
-        return categoryRepository.save(category);
+        return categoryRepository.save(Category.of(name, description));
     }
 
     @Transactional(readOnly = true)
     public List<Category> getCategories() {
         return categoryRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Category> getCategories(List<String> categoryNames) {
+        return categoryRepository.findAll(categoryNames);
     }
 
     @Transactional(readOnly = true)

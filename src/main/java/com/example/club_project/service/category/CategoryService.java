@@ -12,5 +12,7 @@ public interface CategoryService {
 
     List<Category> getCategories();
 
+    List<Category> getCategories(List<String> categoryNames);
+
     long delete(String name);
 }
