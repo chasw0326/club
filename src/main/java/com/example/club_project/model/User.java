@@ -1,4 +1,4 @@
-package com.example.club_project.entity;
+package com.example.club_project.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -16,6 +16,7 @@ import java.util.Set;
 @EntityListeners(value = AuditingEntityListener.class )
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
 @ToString
 @Table(name = "users")
 public class User {
@@ -27,6 +28,7 @@ public class User {
     @Column(nullable = false, length = 50, unique = true)
     private String email;
 
+    @Setter
     @Column(nullable = false, length = 20)
     private String password;
 
@@ -39,13 +41,14 @@ public class User {
     @Column(nullable = false, length = 20)
     private String university;
 
-    @Column(length = 500)
-    private String profile_url;
+    @Column(name= "profile_url", length = 500)
+    private String profileUrl;
 
     @Column(length = 100)
     private String introduction;
 
     @ElementCollection(fetch = FetchType.LAZY)
+    @Builder.Default
     @JsonIgnore
     private Set<UserRole> roleSet = new HashSet<>();
 
@@ -60,5 +63,4 @@ public class User {
     @UpdateTimestamp
     @Column(name = "update_at")
     private LocalDateTime updateAt;
-
 }

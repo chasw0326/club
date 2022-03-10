@@ -1,4 +1,4 @@
-package com.example.club_project.entity;
+package com.example.club_project.model;
 
 public enum UserRole {
     USER, ADMIN
