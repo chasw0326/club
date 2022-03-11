@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.ObjectUtils;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -38,48 +39,28 @@ public class Club extends AuditingCreateUpdateEntity {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    public void update(String imageUrl) {
-        Objects.requireNonNull(imageUrl, "imageUrl must not be null");
-        this.imageUrl = imageUrl;
+    public void update(String name, String address, String university, String description, Category category, String imageUrl) {
+        this.name = ObjectUtils.isEmpty(name) ? this.name : name;
+        this.address = ObjectUtils.isEmpty(address) ? this.address : address;
+        this.university = ObjectUtils.isEmpty(university) ? this.university : university;
+        this.description = ObjectUtils.isEmpty(description) ? this.description : description;
+        this.category = ObjectUtils.isEmpty(category) ? this.category : category;
+        this.imageUrl = ObjectUtils.isEmpty(imageUrl) ? this.imageUrl : imageUrl;
     }
 
-    @Builder(access = AccessLevel.PRIVATE)
-    private Club(String name, String address, String university, String description, Category category) {
-        this.name = name;
-        this.address = address;
-        this.university = university;
-        this.description = description;
-        this.category = category;
-    }
-
-    @Builder(access = AccessLevel.PRIVATE)
+    @Builder
     private Club(String name, String address, String university, String description, Category category, String imageUrl) {
+        Objects.requireNonNull(name, "name값은 필수입니다.");
+        Objects.requireNonNull(address, "address값은 필수입니다.");
+        Objects.requireNonNull(university, "university값은 필수입니다.");
+        Objects.requireNonNull(description, "description값은 필수입니다.");
+        Objects.requireNonNull(category, "category값은 필수입니다.");
+
         this.name = name;
         this.address = address;
         this.university = university;
         this.description = description;
         this.category = category;
         this.imageUrl = imageUrl;
-    }
-
-    public static Club of(String name, String address, String university, String description, Category category) {
-        return Club.builder()
-                .name(name)
-                .address(address)
-                .university(university)
-                .description(description)
-                .category(category)
-                .build();
-    }
-
-    public static Club of(String name, String address, String university, String description, Category category, String imageUrl) {
-        return Club.builder()
-                .name(name)
-                .address(address)
-                .university(university)
-                .description(description)
-                .category(category)
-                .imageUrl(imageUrl)
-                .build();
     }
 }
