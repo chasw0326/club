@@ -16,7 +16,7 @@ public interface ClubService {
 
     boolean existed(String name, String university);
 
-    long delete(String name, String university);
+    void delete(Long id);
 
     //TODO: updateMethod
 }

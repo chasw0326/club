@@ -190,20 +190,16 @@ class ClubServiceTest {
     }
 
     @Test
-    @DisplayName("특정 대학교에 있는 하나의 동아리를 삭제한다")
-    public void Should_DeleteClub_When_ClubnameAndUniversity_Valid() {
+    @DisplayName("Club id를 parameter로 주면 동아리를 삭제한다")
+    public void Should_DeleteClub_When_ClubId_Valid() {
         //given
         clubService.register(testName, testAddress, testUniversity, testDescription, testCategoryName, null);
 
         //when
-        String invalidClubName = "존재하지 않는 동아리";
-        String invalidUniverity = "존재하지 않는 대학교";
-
-        long inValidDeleteQueryResult = clubService.delete(invalidClubName, invalidUniverity);
-        long validDeleteQueryResult = clubService.delete(testName, testUniversity);
+        Club club = clubService.getClub(testName, testUniversity);
+        clubService.delete(club.getId());
 
         //then
-        assertThat(inValidDeleteQueryResult).isEqualTo(0L);
-        assertThat(validDeleteQueryResult).isEqualTo(1L);
+        assertThrows(EntityNotFoundException.class, () -> clubService.getClub(testName, testUniversity));
     }
 }

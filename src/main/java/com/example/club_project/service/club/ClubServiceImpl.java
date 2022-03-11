@@ -59,7 +59,7 @@ public class ClubServiceImpl implements ClubService {
     }
 
     @Transactional
-    public long delete(String name, String university) {
-        return clubRepository.deleteByNameAndUniversity(name, university);
+    public void delete(Long id) {
+        clubRepository.deleteById(id);
     }
 }
