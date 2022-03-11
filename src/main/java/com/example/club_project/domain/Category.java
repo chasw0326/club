@@ -25,9 +25,16 @@ public class Category extends AuditingCreateEntity {
     @Column(length = 50, nullable = false)
     private String description;
 
-    @Builder
+    @Builder(access = AccessLevel.PRIVATE)
     private Category(String name, String description) {
         this.name = name;
         this.description = description;
+    }
+
+    public static Category of(String name, String description) {
+        return Category.builder()
+                .name(name)
+                .description(description)
+                .build();
     }
 }

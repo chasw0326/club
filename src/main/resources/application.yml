@@ -15,3 +15,8 @@ spring:
     console:
       enabled: true
       path: /h2-console
+
+# 쿼리 파라미터 로그 확인용
+logging:
+  level:
+    org.hibernate.type: trace
