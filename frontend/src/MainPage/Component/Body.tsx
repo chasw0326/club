@@ -1,6 +1,8 @@
 import React from 'react';
+import { clubItem } from '../../type/type';
+import ClubItem from './clubItem';
 
-const MainBody = () => {
+const MainBody = ({ clubItem }: { clubItem: clubItem }) => {
   return (
     <>
       <div>This is MainBody</div>
