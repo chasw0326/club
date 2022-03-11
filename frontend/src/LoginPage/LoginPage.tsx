@@ -1,5 +1,6 @@
 import React, { MutableRefObject, RefObject, useEffect, useRef } from 'react';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import SignUpModal from './Component/signUpModal';
 import './Style/login.scss';
 
@@ -7,7 +8,7 @@ const LoginPage = () => {
   const [modalState, setModalState] = useState(false);
   const [idState, setIdState] = useState('');
   const [pwState, setPwState] = useState('');
-
+  const navigate = useNavigate();
   const loginRef = useRef<HTMLDivElement>(null);
 
   const idInputChange = (e: any) => {
@@ -32,7 +33,11 @@ const LoginPage = () => {
 
     const realData = await data;
 
-    console.log(realData);
+    if (realData.status === 'ok') {
+      navigate('/home');
+    } else {
+      alert('정보가 올바르지 않습니다.');
+    }
   };
 
   const modalOnOff = () => {
@@ -90,7 +95,12 @@ const LoginPage = () => {
           </label>
         </div>
       </div>
-      {modalState ? <SignUpModal modalState={modalOnOff}></SignUpModal> : null}
+      {modalState ? (
+        <SignUpModal
+          modalOnOffA={modalOnOff}
+          modalOnOffB={modalOnOff}
+        ></SignUpModal>
+      ) : null}
     </>
   );
 };
