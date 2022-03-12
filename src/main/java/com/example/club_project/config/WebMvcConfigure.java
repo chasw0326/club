@@ -20,4 +20,5 @@ public class WebMvcConfigure implements WebMvcConfigurer {
     public QueryParamArgumentResolver queryParamArgumentResolver() {
         return new QueryParamArgumentResolver();
     }
+
 }
