@@ -61,8 +61,9 @@ public class ClubDTO {
     /**
      * ResponseBody
      */
-    @Getter
     @Builder
+    @Getter
+    @JsonNaming(SnakeCaseStrategy.class)
     public static class Response {
         private Long id;
         private String name;

@@ -1,6 +1,8 @@
 package com.example.club_project.service.club;
 
 import com.example.club_project.controller.club.ClubDTO;
+import com.example.club_project.domain.Category;
+import com.example.club_project.domain.Club;
 import com.example.club_project.service.category.CategoryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,8 +34,6 @@ class ClubServiceTest {
     @Autowired
     private ClubService clubService;
 
-    private ClubDTO.Response registeredClub;
-
     private String testName = "테스트 동아리";
     private String testAddress = "테스트 주소";
     private String testUniversity = "테스트 대학교";
@@ -55,10 +55,30 @@ class ClubServiceTest {
     }
 
     @Test
-    @DisplayName("{동아리명, 대학교} 정보가 중복된 동아리는 등록할 수 없다")
+    @DisplayName("동아리 Entity를 DTO로 변환할 수 있다")
+    public void Should_TranslateEntity() {
+        //given
+        Club registeredClub = clubService.register(testName, testAddress, testUniversity, testDescription, testCategoryName, null);
+
+        //when
+        ClubDTO.Response registeredClubDTO = ClubDTO.Response.from(registeredClub);
+
+        //then
+        assertThat(registeredClubDTO.getId()).isEqualTo(registeredClub.getId());
+        assertThat(registeredClubDTO.getName()).isEqualTo(registeredClub.getName());
+        assertThat(registeredClubDTO.getAddress()).isEqualTo(registeredClub.getAddress());
+        assertThat(registeredClubDTO.getUniversity()).isEqualTo(registeredClub.getUniversity());
+        assertThat(registeredClubDTO.getDescription()).isEqualTo(registeredClub.getDescription());
+        assertThat(registeredClubDTO.getImageUrl()).isEqualTo(registeredClub.getImageUrl());
+        assertThat(registeredClubDTO.getCategory()).isEqualTo(registeredClub.getCategory().getName());
+    }
+
+    @Test
+    @DisplayName("동아리를 등록할 수 있다")
     public void Should_CreateEntity() {
         //given
-        registeredClub = clubService.register(testName, testAddress, testUniversity, testDescription, testCategoryName, null);
+        Club registeredClub = clubService.register(testName, testAddress, testUniversity, testDescription, testCategoryName, null);
+        Category testCategory = categoryService.getCategory(testCategoryName);
 
         //when
         //then
@@ -66,21 +86,21 @@ class ClubServiceTest {
         assertThat(registeredClub.getAddress()).isEqualTo(testAddress);
         assertThat(registeredClub.getUniversity()).isEqualTo(testUniversity);
         assertThat(registeredClub.getDescription()).isEqualTo(testDescription);
-        assertThat(registeredClub.getCategory()).isEqualTo(testCategoryName);
+        assertThat(registeredClub.getCategory()).isEqualTo(testCategory);
     }
 
     @Test
     @DisplayName("동아리 정보를 수정할 수 있다")
     public void Should_UpdateEntity() {
         //given
-        registeredClub = clubService.register(testName, testAddress, testUniversity, testDescription, testCategoryName, null);
+        Club registeredClub = clubService.register(testName, testAddress, testUniversity, testDescription, testCategoryName, null);
 
         //when
         String newName = "새 동아리 이름";
         String newAddress = "새 주소";
         String newUniversity = "새 대학교";
         String newDescription = "새 소개";
-        ClubDTO.Response updatedClub = clubService.update(registeredClub.getId(), newName, newAddress, newUniversity, newDescription, null, null);
+        Club updatedClub = clubService.update(registeredClub.getId(), newName, newAddress, newUniversity, newDescription, null, null);
 
         //then
         assertThat(updatedClub.getId()).isEqualTo(registeredClub.getId());
@@ -121,10 +141,10 @@ class ClubServiceTest {
     @DisplayName("Id에 속하는 하나의 동아리를 반환한다.")
     public void Should_ReturnClub_When_ClubId_Valid() {
         //given
-        registeredClub = clubService.register(testName, testAddress, testUniversity, testDescription, testCategoryName, null);
+        Club registeredClub = clubService.register(testName, testAddress, testUniversity, testDescription, testCategoryName, null);
 
         //when
-        ClubDTO.Response club = clubService.getClub(registeredClub.getId());
+        Club club = clubService.getClub(registeredClub.getId());
 
         //then
         assertThat(club).isNotNull();
@@ -139,7 +159,7 @@ class ClubServiceTest {
         clubService.register(testName, testAddress, testUniversity, testDescription, testCategoryName, null);
 
         //when
-        ClubDTO.Response club = clubService.getClub(testName, testUniversity);
+        Club club = clubService.getClub(testName, testUniversity);
 
         //then
         assertThat(club).isNotNull();
@@ -212,21 +232,21 @@ class ClubServiceTest {
         //then
         for (int i = 0; i < categories.size(); ++i) {
             List<String> categorySubSet = categories.subList(i, categories.size());
-            List<ClubDTO.Response> clubs = clubService.getClubs(categorySubSet, testUniversity, testPageRequest);
+            List<Club> clubs = clubService.getClubs(categorySubSet, testUniversity, testPageRequest);
 
             assertThat(clubs.size()).isEqualTo(0);
         }
 
         for (int i = 0; i < categories.size(); ++i) {
             List<String> categorySubSet = categories.subList(i, categories.size());
-            List<ClubDTO.Response> clubs = clubService.getClubs(categorySubSet, aUniversity, testPageRequest);
+            List<Club> clubs = clubService.getClubs(categorySubSet, aUniversity, testPageRequest);
 
             assertThat(clubs.size()).isEqualTo(categorySubSet.size());
         }
 
         for (int i = 0; i < categories.size() / 2; ++i) {
             List<String> categorySubSet = categories.subList(i, categories.size() / 2);
-            List<ClubDTO.Response> clubs = clubService.getClubs(categorySubSet, bUniversity, testPageRequest);
+            List<Club> clubs = clubService.getClubs(categorySubSet, bUniversity, testPageRequest);
 
             assertThat(clubs.size()).isEqualTo(categorySubSet.size());
         }
@@ -239,7 +259,7 @@ class ClubServiceTest {
         clubService.register(testName, testAddress, testUniversity, testDescription, testCategoryName, null);
 
         //when
-        ClubDTO.Response club = clubService.getClub(testName, testUniversity);
+        Club club = clubService.getClub(testName, testUniversity);
         clubService.delete(club.getId());
 
         //then
