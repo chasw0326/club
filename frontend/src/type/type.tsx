@@ -1,6 +1,6 @@
 type fetchState = {
   loading: boolean;
-  data: any;
+  data: any | clubItem[];
   error: any;
 };
 

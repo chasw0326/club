@@ -20,8 +20,8 @@ const MainPage = () => {
 
   return (
     <>
-      <MainHeader test="This is props from MainPage."></MainHeader>
-      <MainBody clubItem={res}></MainBody>
+      <MainHeader test="This is props fgrom MainPage."></MainHeader>
+      <MainBody clubItem={res?.clubInfo}></MainBody>
     </>
   );
 };
