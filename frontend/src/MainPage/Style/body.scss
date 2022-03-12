@@ -15,9 +15,9 @@
     height: 500px;
     width: 100vw;
     background-color: aquamarine;
-
+    flex-wrap: wrap;
     &-clubItem {
-      width: 100px;
+      width: 200px;
       height: 100px;
       background-color: white;
       margin-right: 10px;

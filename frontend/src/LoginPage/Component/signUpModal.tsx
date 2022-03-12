@@ -1,6 +1,10 @@
+import { sign } from 'crypto';
+import { type } from 'os';
 import React, { FunctionComponent, MouseEventHandler } from 'react';
 import { useState } from 'react';
 import { SignUp } from '../../type/type';
+import { uploadController } from '../utils/uploadController';
+import { UsePostAPI } from '../../hooks/useFetch';
 
 const SignUpModal = ({
   modalOnOffA,
@@ -47,17 +51,10 @@ const SignUpModal = ({
   };
 
   const upload = async () => {
-    const formData = new FormData();
-
     if (isValidity(signInfo.email, signInfo.password)) {
-      const fData = await fetch('http://localhost:3001/test', {
-        method: 'POST',
-        credentials: 'include',
-        body: JSON.stringify(signInfo),
-      });
-
-      const res = await fData.json();
-
+      console.log(
+        await UsePostAPI(uploadController(signInfo), 'form', '/signUp')
+      );
       alert('등록이 완료되었습니다');
       modalOnOffB();
     }
