@@ -1,3 +1,4 @@
+import { request } from 'http';
 import { useReducer, useEffect } from 'react';
 
 function reducer(state: any, action: any) {
@@ -49,4 +50,31 @@ function useAsync(callback: any, deps = []) {
   return [state, fetchData];
 }
 
-export { useAsync };
+const UsePostAPI = async (requestData: any, checkType: string, api: string) => {
+  if (checkType === 'form') {
+    const fData = await fetch(`${process.env.REACT_APP_TEST_API}${api}`, {
+      method: 'POST',
+      body: requestData,
+    });
+
+    const res = await fData.json();
+
+    return res;
+  } else if (checkType === 'json') {
+    const fData = await fetch(`${process.env.REACT_APP_TEST_API}${api}`, {
+      method: 'POST',
+      body: JSON.stringify(requestData),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const res = await fData.json();
+
+    return res;
+  } else {
+    return;
+  }
+};
+
+export { useAsync, UsePostAPI };

@@ -22,7 +22,7 @@ const LoginPage = () => {
   const login = async () => {
     const testData = { email: idState, password: pwState };
 
-    const data = await fetch('http://localhost:3001/test', {
+    const data = await fetch(`${process.env.REACT_APP_TEST_API}/login`, {
       method: 'POST',
       credentials: 'include',
       body: JSON.stringify(testData),

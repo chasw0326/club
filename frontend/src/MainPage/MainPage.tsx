@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useAsync } from '../util/useFetch';
+import { useAsync } from '../hooks/useFetch';
 import MainBody from './Component/Body';
 import MainHeader from './Component/Header';
 import { fetchState } from '../type/type';
