@@ -56,9 +56,10 @@ CREATE TABLE clubs
 CREATE TABLE club_join_states
 (
     id                  bigint          NOT NULL AUTO_INCREMENT COMMENT 'id',
-    join_state          varchar(10)     NOT NULL COMMENT '가입 상태(관리자, 운영진, 일반 회원, 미가입)',
+    join_state          tinyint         NOT NULL COMMENT '가입 상태(관리자, 운영진, 일반 회원, 미가입)',
     is_used             boolean         NOT NULL DEFAULT 0 COMMENT '동아리 탈퇴 여부 판단',
     created_at          datetime        NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일시',
+    updated_at          datetime        DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일시',
     user_id             bigint          DEFAULT NULL COMMENT '사용자 id',
     club_id             bigint          DEFAULT NULL COMMENT '동아리 id',
     PRIMARY KEY (id),
