@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.MethodParameter;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -21,7 +22,7 @@ public class QueryParamArgumentResolver implements HandlerMethodArgumentResolver
     @Value("${club.query-param.offset-size:0}")
     private int defaultOffset;
 
-    @Value("${club.query-param.limit-size:5}")
+    @Value("${club.query-param.limit-size:20}")
     private int defaultLimit;
 
     @Override
@@ -41,6 +42,6 @@ public class QueryParamArgumentResolver implements HandlerMethodArgumentResolver
         offset = offset < 0 ? defaultOffset : offset;
         limit = limit < 0 ? defaultLimit : limit;
 
-        return PageRequest.of(offset, limit);
+        return PageRequest.of(offset, limit, Sort.by(Sort.Direction.DESC, "id"));
     }
 }

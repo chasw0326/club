@@ -24,7 +24,7 @@ logging:
 # 커스텀 yml 설정값
 club:
   query-param:
-    offset-name: "offset"
+    offset-name: "page"
     offset-size: 0
-    limit-name: "limit"
+    limit-name: "size"
     limit-size: 10
