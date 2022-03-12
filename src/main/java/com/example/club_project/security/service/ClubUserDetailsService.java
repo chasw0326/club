@@ -11,11 +11,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Service
 @Slf4j
+@Service
 @RequiredArgsConstructor
 public class ClubUserDetailsService implements UserDetailsService {
 
@@ -27,13 +28,8 @@ public class ClubUserDetailsService implements UserDetailsService {
         log.info("Login in progress..................");
         log.info("InstaUserDetailsService loadUserByUsername " + username);
 
-        Optional<User> result = userRepository.findByEmail(username);
-
-        if(!result.isPresent()){
-            throw new UsernameNotFoundException("Check Email or Social ");
-        }
-
-        User user = result.get();
+        User user = userRepository.findByEmail(username).
+                orElseThrow(() -> new UsernameNotFoundException("Check Email: " + username));
 
         log.info("-----------------------------");
         log.info(user.toString());

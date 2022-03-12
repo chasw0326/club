@@ -52,8 +52,8 @@ public class ApiCheckFilter extends OncePerRequestFilter {
 
         boolean needToCheckToken = antPathMatcher.match(pattern, request.getRequestURI());
 
-        for (String exclude : excludes){
-            if(antPathMatcher.match(exclude, request.getRequestURI())){
+        for (String exclude : excludes) {
+            if (antPathMatcher.match(exclude, request.getRequestURI())) {
                 needToCheckToken = false;
             }
         }
@@ -94,6 +94,7 @@ public class ApiCheckFilter extends OncePerRequestFilter {
 
     /**
      * 헤더의 jwt를 체크합니다.
+     *
      * @param request
      * @return email
      */
@@ -106,8 +107,9 @@ public class ApiCheckFilter extends OncePerRequestFilter {
         if (StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer ")) {
             log.info("Authorization exist: " + authHeader);
 
+            String tokenWithoutBearer = authHeader.substring(7);
             try {
-                email = jwtUtil.validateAndExtract(authHeader.substring(7));
+                email = jwtUtil.validateAndExtract(tokenWithoutBearer);
                 log.info("validate result: " + email);
                 return email;
             } catch (Exception e) {

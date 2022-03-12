@@ -10,11 +10,11 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
-@Entity
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
 @Table(name = "comments")
-@JsonIgnoreProperties({"post", "user"})
 public class Comment {
 
     @Id

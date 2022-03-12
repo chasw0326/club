@@ -5,11 +5,12 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.DefaultClaims;
 import io.jsonwebtoken.impl.DefaultJws;
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.ZonedDateTime;
 import java.util.Date;
 
-@Log4j2
+@Slf4j
 public class JWTUtil {
 
     /**
@@ -52,8 +53,8 @@ public class JWTUtil {
             DefaultJws defaultJws = (DefaultJws) Jwts.parser()
                     .setSigningKey(SECRET_KEY.getBytes("UTF-8")).parseClaimsJws(tokenStr);
 
-            log.info(defaultJws);
-            log.info(defaultJws.getBody().getClass());
+            log.info(defaultJws.toString());
+            log.info(defaultJws.getBody().getClass().toString());
 
             DefaultClaims claims = (DefaultClaims) defaultJws.getBody();
 

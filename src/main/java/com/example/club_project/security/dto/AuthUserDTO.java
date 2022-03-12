@@ -4,15 +4,14 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
 import java.util.Collection;
 
-@Log4j2
+@Slf4j
 @Getter
-@Setter
-@ToString
 // 도메인의 User가 아닌 UserDetails의 User
 public class AuthUserDTO extends User {
 
