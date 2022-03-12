@@ -9,4 +9,6 @@ public interface UserService {
     Long updateUserInfo(Long principalId, String name, String nickname, String university, String introduction);
 
     void updatePassword(Long principalId, String oldPw, String newPw, String checkPw);
+
+    User getUser(Long principalId);
 }

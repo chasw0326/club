@@ -65,5 +65,10 @@ public class UserServiceImpl implements UserService{
         userRepository.save(user);
     }
 
-
+    @Override
+    @Transactional
+    public User getUser(Long principalId){
+        return userRepository.findById(principalId)
+                .orElseThrow(() -> new EntityNotFoundException("throw notFoundException"));
+    }
 }

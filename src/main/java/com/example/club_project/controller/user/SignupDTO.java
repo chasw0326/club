@@ -1,13 +1,19 @@
 package com.example.club_project.controller.user;
 
 import com.example.club_project.domain.User;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 public class SignupDTO {
 
@@ -29,8 +35,6 @@ public class SignupDTO {
 
     private String university;
 
-    // 소개는 유저정보 수정에서 수정하려함
-    @Nullable
     private String introduction;
 
     public User toEntity(SignupDTO signupDTO) {
