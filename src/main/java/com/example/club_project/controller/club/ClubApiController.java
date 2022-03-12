@@ -21,9 +21,9 @@ public class ClubApiController {
     @GetMapping("clubs")
     public List<ClubDTO.Response> searchClubs(@RequestBody ClubDTO.MultiSearchOption searchOption, Pageable pageable) {
         if (ObjectUtils.isEmpty(searchOption.getCategories())) {
-            return clubService.getClubs(searchOption.getUniversity(), pageable);
+            return clubService.getClubDtos(searchOption.getUniversity(), pageable);
         }
-        return clubService.getClubs(searchOption.getCategories(), searchOption.getUniversity(), pageable);
+        return clubService.getClubDtos(searchOption.getCategories(), searchOption.getUniversity(), pageable);
     }
 
     /**
@@ -31,12 +31,12 @@ public class ClubApiController {
      */
     @GetMapping("club")
     public ClubDTO.Response searchClub(@RequestBody ClubDTO.SingleSearchOption searchOption) {
-        return clubService.getClub(searchOption.getName(), searchOption.getUniversity());
+        return clubService.getClubDto(searchOption.getName(), searchOption.getUniversity());
     }
 
     @GetMapping("club/{id}")
     public ClubDTO.Response searchClub(@PathVariable("id") Long id) {
-        return clubService.getClub(id);
+        return clubService.getClubDto(id);
     }
 
     /**
@@ -44,7 +44,7 @@ public class ClubApiController {
      */
     @PostMapping("club")
     public ClubDTO.Response registerClub(@RequestBody ClubDTO.RegisterRequest req) {
-        return clubService.register(
+        return clubService.registerClub(
                 req.getName(),
                 req.getAddress(),
                 req.getUniversity(),
@@ -59,7 +59,7 @@ public class ClubApiController {
      */
     @PutMapping("club/{id}")
     public ClubDTO.Response updateClub(@PathVariable("id") Long id, @RequestBody ClubDTO.UpdateRequest req) {
-        return clubService.update(
+        return clubService.updateClub(
                 id,
                 req.getName(),
                 req.getAddress(),
