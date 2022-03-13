@@ -55,16 +55,16 @@ class ClubJoinStateServiceTest {
     @BeforeEach
     public void setupUserAndClub() {
         //init user
-        User user1 = User.builder().email("email1").name("na").password("pw").nickname("nick").university("uni").introduction("intro").build();
-        User user2 = User.builder().email("email2").name("na").password("pw").nickname("nick").university("uni").introduction("intro").build();
-        User user3 = User.builder().email("email3").name("na").password("pw").nickname("nick").university("uni").introduction("intro").build();
-        User user4 = User.builder().email("email4").name("na").password("pw").nickname("nick").university("uni").introduction("intro").build();
-        User user5 = User.builder().email("email5").name("na").password("pw").nickname("nick").university("uni").introduction("intro").build();
-        User user6 = User.builder().email("email6").name("na").password("pw").nickname("nick").university("uni").introduction("intro").build();
-        User user7 = User.builder().email("email7").name("na").password("pw").nickname("nick").university("uni").introduction("intro").build();
-        User user8 = User.builder().email("email8").name("na").password("pw").nickname("nick").university("uni").introduction("intro").build();
-        User user9 = User.builder().email("email9").name("na").password("pw").nickname("nick").university("uni").introduction("intro").build();
-        User user10 = User.builder().email("email10").name("na").password("pw").nickname("nick").university("uni").introduction("intro").build();
+        User user1 = User.builder().email("email1").name("test").password("test").nickname("test").university("test").introduction("test").build();
+        User user2 = User.builder().email("email2").name("test").password("test").nickname("test").university("test").introduction("test").build();
+        User user3 = User.builder().email("email3").name("test").password("test").nickname("test").university("test").introduction("test").build();
+        User user4 = User.builder().email("email4").name("test").password("test").nickname("test").university("test").introduction("test").build();
+        User user5 = User.builder().email("email5").name("test").password("test").nickname("test").university("test").introduction("test").build();
+        User user6 = User.builder().email("email6").name("test").password("test").nickname("test").university("test").introduction("test").build();
+        User user7 = User.builder().email("email7").name("test").password("test").nickname("test").university("test").introduction("test").build();
+        User user8 = User.builder().email("email8").name("test").password("test").nickname("test").university("test").introduction("test").build();
+        User user9 = User.builder().email("email9").name("test").password("test").nickname("test").university("test").introduction("test").build();
+        User user10 = User.builder().email("email10").name("test").password("test").nickname("test").university("test").introduction("test").build();
 
         Long userId1 = userService.signup(user1);
         Long userId2 = userService.signup(user2);
@@ -102,11 +102,11 @@ class ClubJoinStateServiceTest {
         Category mockCategory5 = categoryService.register(category5.getName(), category5.getDescription());
 
         //init Club
-        Club club1 = Club.builder().name("club1").address("add").university("uni").description("des").category(mockCategory1).imageUrl(null).build();
-        Club club2 = Club.builder().name("club2").address("add").university("uni").description("des").category(mockCategory2).imageUrl(null).build();
-        Club club3 = Club.builder().name("club3").address("add").university("uni").description("des").category(mockCategory3).imageUrl(null).build();
-        Club club4 = Club.builder().name("club4").address("add").university("uni").description("des").category(mockCategory4).imageUrl(null).build();
-        Club club5 = Club.builder().name("club5").address("add").university("uni").description("des").category(mockCategory5).imageUrl(null).build();
+        Club club1 = Club.builder().name("club1").address("test").university("test").description("test").category(mockCategory1).imageUrl(null).build();
+        Club club2 = Club.builder().name("club2").address("test").university("test").description("test").category(mockCategory2).imageUrl(null).build();
+        Club club3 = Club.builder().name("club3").address("test").university("test").description("test").category(mockCategory3).imageUrl(null).build();
+        Club club4 = Club.builder().name("club4").address("test").university("test").description("test").category(mockCategory4).imageUrl(null).build();
+        Club club5 = Club.builder().name("club5").address("test").university("test").description("test").category(mockCategory5).imageUrl(null).build();
 
         mockClub1 = clubService.register(club1.getName(), club1.getAddress(), club1.getUniversity(), club1.getDescription(), club1.getCategory().getName(), null);
         mockClub2 = clubService.register(club2.getName(), club2.getAddress(), club2.getUniversity(), club2.getDescription(), club2.getCategory().getName(), null);

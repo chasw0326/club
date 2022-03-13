@@ -8,11 +8,15 @@ public interface CategoryService {
 
     Category register(String name, String description);
 
+    Category getCategory(Long id);
+
     Category getCategory(String name);
 
     List<Category> getCategories();
 
-    List<Category> getCategories(List<String> categoryNames);
+    List<Category> getCategoriesById(List<Long> categories);
+
+    List<Category> getCategoriesByName(List<String> categoryNames);
 
     long delete(String name);
 }

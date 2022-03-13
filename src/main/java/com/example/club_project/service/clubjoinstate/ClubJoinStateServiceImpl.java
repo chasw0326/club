@@ -53,13 +53,11 @@ public class ClubJoinStateServiceImpl implements ClubJoinStateService {
         Club club = clubService.getClub(clubId);
         JoinState joinState = JoinState.from(joinStateCode);
 
-        ClubJoinState clubJoinState = ClubJoinState.builder()
+        return ClubJoinState.builder()
                 .club(club)
                 .user(user)
                 .joinState(joinState)
                 .build();
-
-        return clubJoinState;
     }
 
     @Override

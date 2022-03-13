@@ -12,8 +12,11 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     Optional<Category> findByName(String name);
 
+    @Query("select c from Category c where c.id in :categories")
+    List<Category> findAllById(@Param("categories") List<Long> categories);
+
     @Query("select c from Category c where c.name in :categoryNames")
-    List<Category> findAll(@Param("categoryNames") List<String> categoryNames);
+    List<Category> findAllNames(@Param("categoryNames") List<String> categoryNames);
 
     long deleteByName(String name);
 }
