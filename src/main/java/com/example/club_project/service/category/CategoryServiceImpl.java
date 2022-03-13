@@ -18,7 +18,14 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional
     public Category register(String name, String description) {
-        return categoryRepository.save(Category.builder().name(name).description(description).build());
+        return categoryRepository.save(createCategory(name, description));
+    }
+
+    private Category createCategory(String name, String description) {
+        return Category.builder()
+                .name(name)
+                .description(description)
+                .build();
     }
 
     @Override

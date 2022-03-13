@@ -17,7 +17,7 @@ public interface ClubJoinStateRepository extends JpaRepository<ClubJoinState, Lo
                         "join fetch c.club club " +
                         "join fetch club.category " +
                     "where c.id = :id")
-    Optional<ClubJoinState> findById(@Param("id") long id);
+    Optional<ClubJoinState> findById(@Param("id") Long id);
 
 
     /**
@@ -29,7 +29,7 @@ public interface ClubJoinStateRepository extends JpaRepository<ClubJoinState, Lo
                         "join fetch club.category " +
                     "where c.user.id = :userId " +
                         "and c.club.id = :clubId")
-    Optional<ClubJoinState> find(@Param("userId") long userId, @Param("clubId") long clubId);
+    Optional<ClubJoinState> find(@Param("userId") Long userId, @Param("clubId") Long clubId);
 
     @Query("select c from ClubJoinState c " +
                         "join fetch c.user " +
@@ -38,8 +38,8 @@ public interface ClubJoinStateRepository extends JpaRepository<ClubJoinState, Lo
                     "where c.user.id = :userId " +
                         "and c.club.id = :clubId " +
                         "and c.joinState = :joinState")
-    Optional<ClubJoinState> find(@Param("userId") long userId,
-                                 @Param("clubId") long clubId,
+    Optional<ClubJoinState> find(@Param("userId") Long userId,
+                                 @Param("clubId") Long clubId,
                                  @Param("joinState") JoinState joinState);
 
     @Query("select c from ClubJoinState c " +
@@ -49,8 +49,8 @@ public interface ClubJoinStateRepository extends JpaRepository<ClubJoinState, Lo
                     "where c.user.id = :userId " +
                         "and c.club.id = :clubId " +
                         "and c.joinState <> :joinState")
-    Optional<ClubJoinState> findExceptJoinState(@Param("userId") long userId,
-                                                @Param("clubId") long clubId,
+    Optional<ClubJoinState> findExceptJoinState(@Param("userId") Long userId,
+                                                @Param("clubId") Long clubId,
                                                 @Param("joinState") JoinState joinState);
 
     @Query("select c from ClubJoinState c " +
@@ -60,8 +60,8 @@ public interface ClubJoinStateRepository extends JpaRepository<ClubJoinState, Lo
                     "where c.user.id = :userId " +
                         "and c.club.id = :clubId " +
                         "and c.joinState <= :joinState")
-    Optional<ClubJoinState> findContainingJoinState(@Param("userId") long userId,
-                                                    @Param("clubId") long clubId,
+    Optional<ClubJoinState> findContainingJoinState(@Param("userId") Long userId,
+                                                    @Param("clubId") Long clubId,
                                                     @Param("joinState") JoinState joinState);
 
 
@@ -73,7 +73,7 @@ public interface ClubJoinStateRepository extends JpaRepository<ClubJoinState, Lo
                         "join fetch c.club club " +
                         "join fetch club.category " +
                     "where c.club.id = :clubId")
-    List<ClubJoinState> findAllByClub(@Param("clubId") long clubId, Pageable pageable);
+    List<ClubJoinState> findAllByClub(@Param("clubId") Long clubId, Pageable pageable);
 
     @Query("select c from ClubJoinState c " +
                         "join fetch c.user " +
@@ -81,7 +81,7 @@ public interface ClubJoinStateRepository extends JpaRepository<ClubJoinState, Lo
                         "join fetch club.category " +
                     "where c.club.id = :clubId " +
                         "and c.joinState = :joinState")
-    List<ClubJoinState> findAllByClub(@Param("clubId") long clubId,
+    List<ClubJoinState> findAllByClub(@Param("clubId") Long clubId,
                                       @Param("joinState") JoinState joinState,
                                       Pageable pageable);
 
@@ -91,7 +91,7 @@ public interface ClubJoinStateRepository extends JpaRepository<ClubJoinState, Lo
                         "join fetch club.category " +
                     "where c.club.id = :clubId " +
                         "and c.joinState <= :joinState")
-    List<ClubJoinState> findAllByClubContainingJoinState(@Param("clubId") long clubId,
+    List<ClubJoinState> findAllByClubContainingJoinState(@Param("clubId") Long clubId,
                                                          @Param("joinState") JoinState joinState,
                                                          Pageable pageable);
 
@@ -104,7 +104,7 @@ public interface ClubJoinStateRepository extends JpaRepository<ClubJoinState, Lo
                         "join fetch c.club club " +
                         "join fetch club.category " +
                     "where c.user.id = :userId")
-    List<ClubJoinState> findAllByUser(@Param("userId") long userId, Pageable pageable);
+    List<ClubJoinState> findAllByUser(@Param("userId") Long userId, Pageable pageable);
 
     @Query("select c from ClubJoinState c " +
                         "join fetch c.user " +
@@ -112,7 +112,7 @@ public interface ClubJoinStateRepository extends JpaRepository<ClubJoinState, Lo
                         "join fetch club.category " +
                     "where c.user.id = :userId " +
                         "and c.joinState = :joinState")
-    List<ClubJoinState> findAllByUser(@Param("userId") long userId,
+    List<ClubJoinState> findAllByUser(@Param("userId") Long userId,
                                       @Param("joinState") JoinState joinState,
                                       Pageable pageable);
 
@@ -122,7 +122,7 @@ public interface ClubJoinStateRepository extends JpaRepository<ClubJoinState, Lo
                         "join fetch club.category " +
                     "where c.user.id = :userId " +
                         "and c.joinState <= :joinState")
-    List<ClubJoinState> findAllByUserContainingJoinState(@Param("userId") long userId,
+    List<ClubJoinState> findAllByUserContainingJoinState(@Param("userId") Long userId,
                                                          @Param("joinState") JoinState joinState,
                                                          Pageable pageable);
 }
