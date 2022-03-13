@@ -30,11 +30,20 @@ public class ClubJoinState extends AuditingCreateUpdateEntity {
     @JoinColumn(name = "club_id")
     private Club club;
 
+    public boolean isNotUsed() {
+        return !isUsed;
+    }
+
     public void update(JoinState joinState) {
         this.joinState = joinState;
     }
 
     public void update(boolean isUsed) {
+        this.isUsed = isUsed;
+    }
+
+    public void update(JoinState joinState, boolean isUsed) {
+        this.joinState = joinState;
         this.isUsed = isUsed;
     }
 
