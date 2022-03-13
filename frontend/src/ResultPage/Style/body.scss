@@ -1,0 +1,26 @@
+@import '../../stylesheets//palette.scss';
+
+.MainBody {
+  font-family: 'Jua', Arial, Helvetica, sans-serif;
+
+  &-CategoryFrame {
+    width: 100vw;
+    height: 50px;
+    background-color: green;
+  }
+
+  &-itemFrame {
+    display: flex;
+    flex-direction: row;
+    height: 500px;
+    width: 100vw;
+    background-color: aquamarine;
+    flex-wrap: wrap;
+    &-clubItem {
+      width: 200px;
+      height: 100px;
+      background-color: white;
+      margin-right: 10px;
+    }
+  }
+}
