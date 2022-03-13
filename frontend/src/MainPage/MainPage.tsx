@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
 import { useAsync } from '../hooks/useFetch';
 import MainBody from './Component/Body';
-import MainHeader from './Component/Header';
+import MainHeader from '../SharedComponent/Header';
 import { fetchState } from '../type/type';
+import { useLocation } from 'react-router-dom';
 const MainPage = () => {
   const abc = async () => {
-    const rData = await fetch('http://localhost:3001/api?abc=푸들');
+    const rData = await fetch('http://localhost:3001/api');
 
     const data = await rData.json();
 
@@ -18,9 +19,11 @@ const MainPage = () => {
 
   useEffect(() => {}, []);
 
+  console.log('render');
+
   return (
     <>
-      <MainHeader test="This is props fgrom MainPage."></MainHeader>
+      <MainHeader fetchData={fetchData}></MainHeader>
       <MainBody clubItem={res?.clubInfo}></MainBody>
     </>
   );

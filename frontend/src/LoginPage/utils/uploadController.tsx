@@ -11,7 +11,7 @@ const uploadController = (signInfo: SignUp) => {
   formData.append('nickname', signInfo.nickname);
   formData.append('university', signInfo.university);
   formData.append('profile', signInfo.profile);
-  formData.append('introduce', signInfo.introduce);
+  formData.append('introduction', signInfo.introduction);
 
   return formData;
 };

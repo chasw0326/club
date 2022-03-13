@@ -50,7 +50,11 @@ function useAsync(callback: any, deps = []) {
   return [state, fetchData];
 }
 
-const UsePostAPI = async (requestData: any, checkType: string, api: string) => {
+const postAPI: Function = async (
+  requestData: any,
+  checkType: string,
+  api: string
+) => {
   if (checkType === 'form') {
     const fData = await fetch(`${process.env.REACT_APP_TEST_API}${api}`, {
       method: 'POST',
@@ -77,4 +81,4 @@ const UsePostAPI = async (requestData: any, checkType: string, api: string) => {
   }
 };
 
-export { useAsync, UsePostAPI };
+export { useAsync, postAPI };

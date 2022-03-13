@@ -11,7 +11,7 @@ type SignUp = {
   nickname: string;
   university: string;
   profile: any;
-  introduce: string;
+  introduction: string;
 };
 
 type clubItem = {
