@@ -17,7 +17,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Transactional
     public Category register(String name, String description) {
-        return categoryRepository.save(Category.of(name, description));
+        return categoryRepository.save(Category.builder().name(name).description(description).build());
     }
 
     @Transactional(readOnly = true)
