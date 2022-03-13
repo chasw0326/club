@@ -1,10 +1,8 @@
-import { sign } from 'crypto';
-import { type } from 'os';
 import React, { FunctionComponent, MouseEventHandler } from 'react';
 import { useState } from 'react';
 import { SignUp } from '../../type/type';
 import { uploadController } from '../utils/uploadController';
-import { UsePostAPI } from '../../hooks/useFetch';
+import { postAPI } from '../../hooks/useFetch';
 
 const SignUpModal = ({
   modalOnOffA,
@@ -20,7 +18,7 @@ const SignUpModal = ({
     nickname: '',
     university: '',
     profile: null,
-    introduce: '',
+    introduction: '',
   };
 
   const isValidity = (id: string, pw: string) => {
@@ -52,9 +50,7 @@ const SignUpModal = ({
 
   const upload = async () => {
     if (isValidity(signInfo.email, signInfo.password)) {
-      console.log(
-        await UsePostAPI(uploadController(signInfo), 'form', '/signUp')
-      );
+      console.log(await postAPI(uploadController(signInfo), 'form', '/signUp'));
       alert('등록이 완료되었습니다');
       modalOnOffB();
     }
@@ -69,8 +65,8 @@ const SignUpModal = ({
         비밀번호
         <input id="password" type="password" onChange={setInput}></input>
         이름<input id="name" type="text" onChange={setInput}></input>
-        닉네임<input id="username" type="text" onChange={setInput}></input>
-        대학교<input id="university " type="text" onChange={setInput}></input>
+        닉네임<input id="nickname" type="text" onChange={setInput}></input>
+        대학교<input id="university" type="text" onChange={setInput}></input>
         프로필<input id="profile" type="file" onChange={setInput}></input>
         자기소개<textarea id="introduce" onChange={setInput}></textarea>
         <input type="button" value="등록" onClick={upload}></input>
