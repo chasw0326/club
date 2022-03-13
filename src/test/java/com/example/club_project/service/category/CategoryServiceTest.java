@@ -12,9 +12,11 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Transactional
 @ExtendWith(SpringExtension.class)
@@ -48,6 +50,35 @@ class CategoryServiceTest {
     }
 
     @Test
+    @DisplayName("카테고리 id(PK)가 존재하면 해당하는 Category를 반환한다")
+    public void Should_ReturnCategory_When_CategoryId_Exist() {
+        //given
+        Category savedCategory = categoryService.register(categoryName, categoryDescription);
+
+        //when
+        Category findCategory = categoryService.getCategory(savedCategory.getId());
+
+        //then
+        assertThat(findCategory).isSameAs(savedCategory);
+        assertThat(findCategory.getId()).isEqualTo(savedCategory.getId());
+        assertThat(findCategory.getName()).isEqualTo(savedCategory.getName());
+        assertThat(findCategory.getDescription()).isEqualTo(savedCategory.getDescription());
+    }
+
+    @Test
+    @DisplayName("없는 카테고리 id(PK)로 조회시 예외를 반환한다")
+    public void Should_ThrowException_When_CategoryId_NotExisted() {
+        //given
+        categoryService.register(categoryName, categoryDescription);
+
+        //when
+        Long invalidId = 999L;
+
+        //then
+        assertThrows(EntityNotFoundException.class, () -> categoryService.getCategory(invalidId));
+    }
+
+    @Test
     @DisplayName("카테고리명이 존재하면 해당 Category를 반환한다")
     public void Should_ReturnCategory_When_CategoryName_Exist() {
         //given
@@ -72,7 +103,111 @@ class CategoryServiceTest {
         String nonExistCategoryName = "존재하지 않는 카테고리명";
 
         //then
-        Assertions.assertThrows(EntityNotFoundException.class, () -> categoryService.getCategory(nonExistCategoryName));
+        assertThrows(EntityNotFoundException.class, () -> categoryService.getCategory(nonExistCategoryName));
+    }
+
+    @Test
+    @DisplayName("getCategoriesById 메서드 실행 시 id에 해당하는 모든 카테고리 엔티티를 반환한다")
+    public void Should_Return_All_Categories_By_Id() {
+        //given
+        List<Long> categories = new ArrayList<>();
+
+        int beforeCategorySize = categoryService.getCategories().size();
+        int newCategorySize = 10;
+        for (int i = 0; i < newCategorySize; ++i) {
+            String categoryName = String.format("%d번째 카테고리", i);
+            String categoryDescription = String.format("%d번째 테스트 카테고리 설명입니다", i);
+            Category registeredCategory = categoryService.register(categoryName, categoryDescription);
+            categories.add(registeredCategory.getId());
+        }
+
+        //when
+        List<Category> result = categoryService.getCategoriesById(categories);
+
+        //then
+        assertThat(result.size()).isEqualTo(beforeCategorySize + newCategorySize);
+    }
+
+    @Test
+    @DisplayName("getCategoriesById 메서드 실행 시 유효하지 않는 id에 대한 엔티티 결과는 반환하지 않는다")
+    public void Should_Not_ReturnCategories_When_CategoryId_NotExisted() {
+        //given
+        List<Long> categories = new ArrayList<>();
+        Long someInvalidId = 999L;
+
+        int beforeCategorySize = categoryService.getCategories().size();
+        int newCategorySize = 10;
+        for (int i = 0; i < newCategorySize; ++i) {
+            String categoryName = String.format("%d번째 카테고리", i);
+            String categoryDescription = String.format("%d번째 테스트 카테고리 설명입니다", i);
+            categoryService.register(categoryName, categoryDescription);
+        }
+
+        categories.add(someInvalidId++);
+        categories.add(someInvalidId++);
+        categories.add(someInvalidId++);
+        categories.add(someInvalidId++);
+        categories.add(someInvalidId++);
+
+        //when
+        List<Category> originSize = categoryService.getCategories();
+        List<Category> result = categoryService.getCategoriesById(categories);
+
+        //then
+        assertThat(originSize.size()).isEqualTo(beforeCategorySize + newCategorySize);
+        assertThat(result.size()).isEqualTo(0);
+    }
+
+    // List<Category> getCategoriesByName(List<String> categoryNames);
+    @Test
+    @DisplayName("getCategoriesByName 메서드 실행 시 Name이 일치하는 모든 카테고리 엔티티를 반환한다")
+    public void Should_Return_All_Categories_By_Names() {
+        //given
+        List<String> categories = new ArrayList<>();
+
+        int beforeCategorySize = categoryService.getCategories().size();
+        int newCategorySize = 10;
+        for (int i = 0; i < newCategorySize; ++i) {
+            String categoryName = String.format("%d번째 카테고리", i);
+            String categoryDescription = String.format("%d번째 테스트 카테고리 설명입니다", i);
+            Category registeredCategory = categoryService.register(categoryName, categoryDescription);
+            categories.add(registeredCategory.getName());
+        }
+
+        //when
+        List<Category> result = categoryService.getCategoriesByName(categories);
+
+        //then
+        assertThat(result.size()).isEqualTo(beforeCategorySize + newCategorySize);
+    }
+
+    @Test
+    @DisplayName("getCategoriesByName 메서드 실행 시 Name이 일치하는 모든 카테고리 엔티티를 반환한다")
+    public void Should_Not_ReturnCategories_When_CategoryNames_NotExisted() {
+        //given
+        List<String> categories = new ArrayList<>();
+
+        int beforeCategorySize = categoryService.getCategories().size();
+        int newCategorySize = 10;
+        for (int i = 0; i < newCategorySize; ++i) {
+            String categoryName = String.format("%d번째 카테고리", i);
+            String categoryDescription = String.format("%d번째 테스트 카테고리 설명입니다", i);
+            categoryService.register(categoryName, categoryDescription);
+        }
+
+        categories.add("Invalid_CategoryName1");
+        categories.add("Invalid_CategoryName2");
+        categories.add("Invalid_CategoryName3");
+        categories.add("Invalid_CategoryName4");
+        categories.add("Invalid_CategoryName5");
+
+        //when
+        List<Category> originSize = categoryService.getCategories();
+        List<Category> result = categoryService.getCategoriesByName(categories);
+
+        //then
+        assertThat(originSize.size()).isEqualTo(beforeCategorySize + newCategorySize);
+        assertThat(result.size()).isEqualTo(0);
     }
 
     @Test
