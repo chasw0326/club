@@ -27,6 +27,7 @@ public class PostServiceImpl implements PostService {
     private final UserService userService;
     private final ClubService clubService;
 
+    @Override
     @Transactional
     public PostDTO.Response getPostDto(Long postId) {
         Object result = postRepository.getPostById(postId);
@@ -104,7 +105,7 @@ public class PostServiceImpl implements PostService {
         Post post = postRepository.findById(postId).
                 orElseThrow(() -> new EntityNotFoundException("throw notFoundException"));
 
-        if (!post.getId().equals(userId)) {
+        if (!post.getUser().getId().equals(userId)) {
             throw new AccessDeniedException("수정할 권한이 없습니다.");
         }
 

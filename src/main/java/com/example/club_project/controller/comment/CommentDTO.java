@@ -34,7 +34,7 @@ public class CommentDTO {
     @Builder
     @AllArgsConstructor
     public static class CommentObject {
-        @NotEmpty
+
         private String profileUrl;
         @NotEmpty
         private String nickname;
