@@ -28,7 +28,7 @@ public class PostServiceImpl implements PostService {
     private final ClubService clubService;
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public PostDTO.Response getPostDto(Long postId) {
         Object result = postRepository.getPostById(postId);
         Object[] postData = (Object[]) result;
@@ -47,7 +47,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<PostDTO.Response> getPostDtos(Long clubId, Pageable pageable) {
         List<Object[]> posts = postRepository.getPostWithCommentCountByClubId(clubId, pageable);
         List<PostDTO.Response> postDtos = new ArrayList<>();
@@ -85,14 +85,14 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public Post getPost(Long postId) {
         return postRepository.findById(postId).
                 orElseThrow(() -> new EntityNotFoundException("throw notFoundException"));
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Post> getPosts(Long userId, Long clubId, Pageable pageable) {
         // TODO: 유저가 클럽에 가입했는지 확인해야함 join state이후 구현할것
         return postRepository.findByClub_IdOrderByIdDesc(clubId, pageable);
