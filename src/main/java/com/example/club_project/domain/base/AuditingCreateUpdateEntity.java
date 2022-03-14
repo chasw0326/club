@@ -1,5 +1,6 @@
 package com.example.club_project.domain.base;
 
+import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -16,6 +17,7 @@ public abstract class AuditingCreateUpdateEntity {
     /**
      * 생성 일시
      */
+    @Getter
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

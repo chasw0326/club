@@ -6,11 +6,6 @@ import javax.validation.constraints.Pattern;
 
 public class PasswordDTO {
 
-    static class Response{
-        String nickname;
-        String profile_url;
-    }
-
     static class Request{
         @NotEmpty(message = "이전 비밀번호 값이 없습니다.")
         String oldPw;
@@ -20,5 +15,10 @@ public class PasswordDTO {
         String newPw;
         @NotEmpty(message = "새 비밀번호 확인값이 없습니다.")
         String checkPw;
+    }
+
+    static class Response{
+        String nickname;
+        String profile_url;
     }
 }

@@ -5,17 +5,25 @@ import javax.validation.constraints.NotEmpty;
 
 public class UserUpdateDTO {
 
-    Long id;
+    public static class Request{
 
-    @NotEmpty
-    String name;
+        @NotEmpty
+        String name;
 
-    @NotEmpty
-    String nickname;
+        @NotEmpty
+        String nickname;
 
-    @NotEmpty
-    String introduction;
+        @NotEmpty
+        String introduction;
 
-    @NotEmpty
-    String university;
+        @NotEmpty
+        String university;
+    }
+
+    public static class Response{
+
+        @NotEmpty
+        String email;
+
+    }
 }

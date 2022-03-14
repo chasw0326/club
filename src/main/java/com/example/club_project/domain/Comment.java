@@ -1,6 +1,6 @@
 package com.example.club_project.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.example.club_project.domain.base.AuditingCreateUpdateEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,7 +15,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "comments")
-public class Comment {
+public class Comment extends AuditingCreateUpdateEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
