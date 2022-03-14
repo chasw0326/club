@@ -91,6 +91,7 @@ CREATE TABLE pictures
 CREATE TABLE posts
 (
     id                  bigint          NOT NULL AUTO_INCREMENT COMMENT 'id',
+    title               varchar(100)    NOT NULL COMMENT '게시물 제목',
     content             varchar(500)    NOT NULL COMMENT '게시물 내용',
     created_at          datetime        NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일시',
     updated_at          datetime        DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일시',
