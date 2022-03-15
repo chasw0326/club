@@ -10,7 +10,10 @@ public interface PostService {
 
     PostDTO.Response getPostDto(Long postId);
 
-    List<PostDTO.Response> getPostDtos(Long clubId, Pageable pageable);
+    List<PostDTO.Response> getPostDtos(Long userId, Long clubId, Pageable pageable);
+
+    // 테스트 추가 예정
+    List<PostDTO.Response> getMyPosts(Long userId, Pageable pageable);
 
     Long register(Long userId, Long clubId, String title, String content);
 
@@ -20,7 +23,9 @@ public interface PostService {
 
     Long update(Long userId, Long postId, String title, String content);
 
-    void delete(Long userId, Long postId);
+    void delete(Long userId, Long clubId, Long postId);
+
+    void deleteWhenLeaveClub(Long userId, Long clubId);
 
     boolean isExists(Long postId);
 }

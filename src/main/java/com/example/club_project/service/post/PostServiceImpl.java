@@ -6,6 +6,7 @@ import com.example.club_project.domain.Post;
 import com.example.club_project.domain.User;
 import com.example.club_project.repository.PostRepository;
 import com.example.club_project.service.club.ClubService;
+import com.example.club_project.service.clubjoinstate.ClubJoinStateService;
 import com.example.club_project.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,7 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final UserService userService;
     private final ClubService clubService;
+    private final ClubJoinStateService clubJoinStateService;
 
     @Override
     @Transactional(readOnly = true)
@@ -48,28 +50,22 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<PostDTO.Response> getPostDtos(Long clubId, Pageable pageable) {
-        List<Object[]> posts = postRepository.getPostWithCommentCountByClubId(clubId, pageable);
-        List<PostDTO.Response> postDtos = new ArrayList<>();
-        for (Object[] postData : posts) {
-            Post post = (Post) postData[0];
-            User user = (User) postData[1];
-            Long commentCnt = (Long) postData[2];
-            postDtos.add(PostDTO.Response.builder()
-                    .nickname(post.getUser().getNickname())
-                    .profileUrl(post.getUser().getProfileUrl())
-                    .title(post.getTitle())
-                    .content(post.getContent())
-                    .createdAt(post.getCreatedAt())
-                    .commentCnt(commentCnt)
-                    .build());
+    public List<PostDTO.Response> getPostDtos(Long userId, Long clubId, Pageable pageable) {
+        if (!clubJoinStateService.isJoined(userId, clubId)) {
+            // TODO: 수정예정
+            throw new AccessDeniedException("클럽 멤버가 아닙니다.");
         }
-        return postDtos;
+        List<Object[]> posts = postRepository.getPostWithCommentCountByClubId(clubId, pageable);
+        return getResponses(posts);
     }
 
     @Override
     @Transactional
     public Long register(Long userId, Long clubId, String title, String content) {
+        if (!clubJoinStateService.isJoined(userId, clubId)) {
+            // TODO: 수정예정
+            throw new AccessDeniedException("클럽 멤버가 아닙니다.");
+        }
         User user = userService.getUser(userId);
         Club club = clubService.getClub(clubId);
 
@@ -94,8 +90,18 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional(readOnly = true)
     public List<Post> getPosts(Long userId, Long clubId, Pageable pageable) {
-        // TODO: 유저가 클럽에 가입했는지 확인해야함 join state이후 구현할것
-        return postRepository.findByClub_IdOrderByIdDesc(clubId, pageable);
+        if (!clubJoinStateService.isJoined(userId, clubId)) {
+            // TODO: 예외 뭘로 할지 수정예정
+            throw new AccessDeniedException("클럽에 가입한 사람만 볼수 있습니다.");
+        }
+        return postRepository.findAllByClub_IdOrderByIdDesc(clubId, pageable);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<PostDTO.Response> getMyPosts(Long userId, Pageable pageable) {
+        List<Object[]> posts = postRepository.getPostWithCommentCountByUserId(userId, pageable);
+        return getResponses(posts);
     }
 
     @Override
@@ -116,22 +122,48 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public void delete(Long userId, Long postId) {
+    public void delete(Long userId, Long clubId, Long postId) {
         // TODO: 에러들 나중에 메시지들 혹은 에러타입 다 수정예정
         Post post = postRepository.findById(postId).
                 orElseThrow(() -> new EntityNotFoundException("throw notFoundException"));
 
-        if (!post.getUser().getId().equals(userId)) {
+        // 본인이 이거나 매니저면 글 삭제가 가능하다.
+        if (post.getUser().getId().equals(userId) || clubJoinStateService.hasManagerRole(userId, clubId)) {
+            postRepository.delete(post);
+        } else {
             throw new AccessDeniedException("삭제할 권한이 없습니다.");
         }
+    }
 
-        // TODO: 클럽매니저들은 본인이 아니라도 지울수 있게 해야한다. join 테이블 이후 구현예정
-        postRepository.delete(post);
+    @Override
+    @Transactional
+    public void deleteWhenLeaveClub(Long userId, Long clubId){
+        List<Post> posts = postRepository.findAllByUser_IdAndClub_Id(userId, clubId);
+        postRepository.deleteAll(posts);
     }
 
     @Override
     @Transactional
     public boolean isExists(Long postId) {
         return postRepository.existsById(postId);
+    }
+
+
+    private List<PostDTO.Response> getResponses(List<Object[]> posts) {
+        List<PostDTO.Response> postDtos = new ArrayList<>();
+        for (Object[] postData : posts) {
+            Post post = (Post) postData[0];
+            User user = (User) postData[1];
+            Long commentCnt = (Long) postData[2];
+            postDtos.add(PostDTO.Response.builder()
+                    .nickname(user.getNickname())
+                    .profileUrl(user.getProfileUrl())
+                    .title(post.getTitle())
+                    .content(post.getContent())
+                    .createdAt(post.getCreatedAt())
+                    .commentCnt(commentCnt)
+                    .build());
+        }
+        return postDtos;
     }
 }

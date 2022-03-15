@@ -51,7 +51,11 @@ public class PostServiceTest {
                 .build());
 
         Category category = categoryRepository.save(
-                Category.of("어학", "토익, 토플, 오픽 등등"));
+                Category.builder()
+                        .name("어학")
+                        .description("토익, 토플, 오픽 등등")
+                        .build());
+
 
         Club club = clubRepository.save(Club.builder()
                 .name("토익동아리")
@@ -109,7 +113,7 @@ public class PostServiceTest {
     @Order(value = 3)
     void Should_GetPostDtos() {
         Pageable pageable = PageRequest.of(0, 5, Sort.by("id").descending());
-        List<PostDTO.Response> dtos = postService.getPostDtos(1L, pageable);
+        List<PostDTO.Response> dtos = postService.getPostDtos(1L, 1L, pageable);
         int i = 10;
         for (PostDTO.Response dto : dtos) {
             assertEquals("C:\\user", dto.getProfileUrl());
@@ -162,7 +166,7 @@ public class PostServiceTest {
     @Order(value = 7)
     void Should_ThrowException_WhenDeleteByStranger() {
         Throwable ex = assertThrows(AccessDeniedException.class, () ->
-                postService.delete(1000000L, 4L)
+                postService.delete(1000000L, 4L, 1L)
         );
         assertEquals("삭제할 권한이 없습니다.", ex.getMessage());
     }
@@ -174,8 +178,8 @@ public class PostServiceTest {
         assertDoesNotThrow(() ->
                 postService.getPost(3L)
         );
-
-        postService.delete(1L, 3L);
+//수정예정
+        postService.delete(1L, 1L, 1L);
 
         Throwable ex = assertThrows(EntityNotFoundException.class, () ->
                 postService.getPost(3L)
