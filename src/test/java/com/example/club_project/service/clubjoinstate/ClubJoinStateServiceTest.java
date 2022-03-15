@@ -29,6 +29,7 @@ class ClubJoinStateServiceTest {
 
     @Autowired
     private CategoryService categoryService;
+
     @Autowired
     private ClubService clubService;
 
@@ -108,11 +109,11 @@ class ClubJoinStateServiceTest {
         Club club4 = Club.builder().name("club4").address("test").university("test").description("test").category(mockCategory4).imageUrl(null).build();
         Club club5 = Club.builder().name("club5").address("test").university("test").description("test").category(mockCategory5).imageUrl(null).build();
 
-        mockClub1 = clubService.register(club1.getName(), club1.getAddress(), club1.getUniversity(), club1.getDescription(), club1.getCategory().getName(), null);
-        mockClub2 = clubService.register(club2.getName(), club2.getAddress(), club2.getUniversity(), club2.getDescription(), club2.getCategory().getName(), null);
-        mockClub3 = clubService.register(club3.getName(), club3.getAddress(), club3.getUniversity(), club3.getDescription(), club3.getCategory().getName(), null);
-        mockClub4 = clubService.register(club4.getName(), club4.getAddress(), club4.getUniversity(), club4.getDescription(), club4.getCategory().getName(), null);
-        mockClub5 = clubService.register(club5.getName(), club5.getAddress(), club5.getUniversity(), club5.getDescription(), club5.getCategory().getName(), null);
+        mockClub1 = clubService.register(club1.getName(), club1.getAddress(), club1.getUniversity(), club1.getDescription(), club1.getCategory().getId(), null);
+        mockClub2 = clubService.register(club2.getName(), club2.getAddress(), club2.getUniversity(), club2.getDescription(), club2.getCategory().getId(), null);
+        mockClub3 = clubService.register(club3.getName(), club3.getAddress(), club3.getUniversity(), club3.getDescription(), club3.getCategory().getId(), null);
+        mockClub4 = clubService.register(club4.getName(), club4.getAddress(), club4.getUniversity(), club4.getDescription(), club4.getCategory().getId(), null);
+        mockClub5 = clubService.register(club5.getName(), club5.getAddress(), club5.getUniversity(), club5.getDescription(), club5.getCategory().getId(), null);
     }
 
     /**

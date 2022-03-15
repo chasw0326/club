@@ -5,6 +5,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
 
@@ -24,6 +26,11 @@ public class Category extends AuditingCreateEntity {
 
     @Column(length = 50, nullable = false)
     private String description;
+
+    public void update(String name, String description) {
+        this.name = StringUtils.isEmpty(name) ? this.name : name;
+        this.description = StringUtils.isEmpty(description) ? this.description : description;
+    }
 
     @Builder
     private Category(String name, String description) {

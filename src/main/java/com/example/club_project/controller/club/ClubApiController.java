@@ -6,9 +6,10 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
-@RequestMapping("api")
+@RequestMapping("api/clubs")
 @RestController
 @RequiredArgsConstructor
 public class ClubApiController {
@@ -16,64 +17,72 @@ public class ClubApiController {
     private final ClubService clubService;
 
     /**
-     * 복수 건 조회 요청
+     * 사용자가 등록한 대학교와 같은 대학교에 있는 동아리를 반환한다.
+     *
+     * GET /api/clubs
+     *
+     * 검색조건1: None
+     * 검색조건2: 카테고리
+     * 검색조건3: 동아리 이름
+     * 검색조건4: 카테고리 + 동아리 이름
      */
-    @GetMapping("clubs")
-    public List<ClubDTO.Response> searchClubs(@RequestBody ClubDTO.MultiSearchOption searchOption, Pageable pageable) {
-        if (ObjectUtils.isEmpty(searchOption.getCategories())) {
-            return clubService.getClubDtos(searchOption.getUniversity(), pageable);
+    @GetMapping
+    public List<ClubDTO.Response> searchClubs(ClubDTO.SearchOption searchOption, Pageable pageable) {
+
+        String mockUniversity = "서울사이버대학교";
+
+        if (ObjectUtils.isEmpty(searchOption.getName()) && ObjectUtils.isEmpty(searchOption.getCategories())) {
+            return clubService.getClubDtos(mockUniversity, pageable);
+        } else if (ObjectUtils.isEmpty(searchOption.getCategories())) {
+            return clubService.getClubDtos(searchOption.getName(), mockUniversity, pageable);
+        } else if (ObjectUtils.isEmpty(searchOption.getName())) {
+            return clubService.getClubDtos(searchOption.getCategories(), mockUniversity, pageable);
+        } else {
+            return clubService.getClubDtos(searchOption.getCategories(), mockUniversity, searchOption.getName(), pageable);
         }
-        return clubService.getClubDtos(searchOption.getCategories(), searchOption.getUniversity(), pageable);
     }
 
     /**
-     * 단 건 조회 요청
+     * 동아리를 생성할 수 있다.
+     *
+     * POST /api/clubs
      */
-    @GetMapping("club")
-    public ClubDTO.Response searchClub(@RequestBody ClubDTO.SingleSearchOption searchOption) {
-        return clubService.getClubDto(searchOption.getName(), searchOption.getUniversity());
-    }
-
-    @GetMapping("club/{id}")
-    public ClubDTO.Response searchClub(@PathVariable("id") Long id) {
-        return clubService.getClubDto(id);
-    }
-
-    /**
-     * 등록 요청
-     */
-    @PostMapping("club")
+    @PostMapping
     public ClubDTO.Response registerClub(@RequestBody ClubDTO.RegisterRequest req) {
         return clubService.registerClub(
                 req.getName(),
                 req.getAddress(),
                 req.getUniversity(),
                 req.getDescription(),
-                req.getCategoryName(),
+                req.getCategory(),
                 req.getImageUrl()
         );
     }
 
     /**
-     * 수정 요청
+     * 동아리 정보를 수정할 수 있다.
+     *
+     * PUT /api/clubs/:club-id
      */
-    @PutMapping("club/{id}")
-    public ClubDTO.Response updateClub(@PathVariable("id") Long id, @RequestBody ClubDTO.UpdateRequest req) {
+    @PutMapping("{id}")
+    public ClubDTO.Response updateClub(@PathVariable("id") Long id, @Valid @RequestBody ClubDTO.UpdateRequest req) {
         return clubService.updateClub(
                 id,
                 req.getName(),
                 req.getAddress(),
                 req.getUniversity(),
                 req.getDescription(),
-                req.getCategoryName(),
+                req.getCategory(),
                 req.getImageUrl()
         );
     }
 
     /**
-     * 삭제 요청
+     * 동아리를 삭제할 수 있다.
+     *
+     * DELETE /api/clubs/:club-id
      */
-    @DeleteMapping("club/{id}")
+    @DeleteMapping("{id}")
     public void deleteClub(@PathVariable("id") Long id) {
         clubService.delete(id);
     }

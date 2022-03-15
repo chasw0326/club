@@ -11,32 +11,40 @@ public interface ClubService {
     /**
      * DTO Region (for other controllers)
      */
-    ClubDTO.Response registerClub(String name, String address, String university, String description, String categoryName, String imageUrl);
-
-    ClubDTO.Response getClubDto(String name, String university);
+    ClubDTO.Response registerClub(String name, String address, String university, String description, Long categoryId, String imageUrl);
 
     ClubDTO.Response getClubDto(Long id);
 
-    List<ClubDTO.Response> getClubDtos(List<String> categories, String university, Pageable pageable);
-
     List<ClubDTO.Response> getClubDtos(String university, Pageable pageable);
 
-    ClubDTO.Response updateClub(Long id, String name, String address, String university, String description, String categoryName, String imageUrl);
+    List<ClubDTO.Response> getClubDtos(String name, String university, Pageable pageable);
+
+    List<ClubDTO.Response> getClubDtos(List<Long> categories, String university, Pageable pageable);
+
+    List<ClubDTO.Response> getClubDtos(List<Long> categories, String university, String name, Pageable pageable);
+
+    ClubDTO.Response updateClub(Long id, String name, String address, String university, String description, Long categoryId, String imageUrl);
 
     /**
      * Entity Region (for other services)
      */
-    Club register(String name, String address, String university, String description, String categoryName, String imageUrl);
-
-    Club getClub(String name, String university);
+    Club register(String name, String address, String university, String description, Long categoryId, String imageUrl);
 
     Club getClub(Long id);
 
-    List<Club> getClubs(List<String> categories, String university, Pageable pageable);
+    /* 정확히 동아리명이 일치하는 경우만 리턴 */
+    Club getClub(String name, String university);
 
     List<Club> getClubs(String university, Pageable pageable);
 
-    Club update(Long id, String name, String address, String university, String description, String categoryName, String imageUrl);
+    /* 동아리명이 검색어를 포함하는 경우도 리턴 (ex. clubName = ABCD & ABCDE, 검색어 = BC인 경우 ABCD, ABCDE 모두 결과값으로 리턴 */
+    List<Club> getClubs(String name, String university, Pageable pageable);
+
+    List<Club> getClubs(List<Long> categories, String university, Pageable pageable);
+
+    List<Club> getClubs(List<Long> categories, String university, String name, Pageable pageable);
+
+    Club update(Long id, String name, String address, String university, String description, Long categoryId, String imageUrl);
 
     /**
      * Common Region

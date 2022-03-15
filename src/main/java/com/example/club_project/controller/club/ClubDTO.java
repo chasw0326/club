@@ -7,27 +7,43 @@ import lombok.Builder;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.validation.constraints.NotBlank;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
+import static java.util.stream.Collectors.*;
 
 public class ClubDTO {
 
     /**
-     * GET 복수 건 조회
+     * GET
+     *
+     * 조회 옵션
      */
+    @Builder
     @Getter
-    public static class MultiSearchOption {
-        List<String> categories;
-        String university;
-    }
+    public static class SearchOption {
+        List<Long> categories;
+        String name;
 
-    /**
-     * GET 단 건 조회
-     */
-    @Getter
-    public static class SingleSearchOption {
-        private String name;
-        private String university;
+        public static SearchOption of(String name, String category) {
+
+            if (StringUtils.isEmpty(category)) {
+                return SearchOption.builder()
+                        .name(name)
+                        .categories(Collections.emptyList())
+                        .build();
+            } else {
+                List<Long> categoryIds = Arrays.stream(category.split(","))
+                        .map(Long::valueOf).collect(toList());
+
+                return SearchOption.builder()
+                        .name(name)
+                        .categories(categoryIds)
+                        .build();
+            }
+        }
     }
 
     /**
@@ -40,7 +56,7 @@ public class ClubDTO {
         private String address;
         private String university;
         private String description;
-        private String categoryName;
+        private Long category;
         private String imageUrl;
     }
 
@@ -50,11 +66,13 @@ public class ClubDTO {
     @Getter
     @JsonNaming(SnakeCaseStrategy.class)
     public static class UpdateRequest {
+        @NotBlank(message = "name 필드는 반드시 있어야 합니다.")
         private String name;
         private String address;
+        @NotBlank(message = "university 필드는 반드시 있어야 합니다.")
         private String university;
         private String description;
-        private String categoryName;
+        private Long category;
         private String imageUrl;
     }
 
@@ -71,7 +89,7 @@ public class ClubDTO {
         private String university;
         private String description;
         private String imageUrl;
-        private String category;
+        private Long category;
 
         public static ClubDTO.Response from(Club club) {
             return Response.builder()
@@ -81,7 +99,7 @@ public class ClubDTO {
                     .university(club.getUniversity())
                     .description(club.getDescription())
                     .imageUrl(StringUtils.isEmpty(club.getImageUrl()) ? club.getImageUrl() : "")
-                    .category(club.getCategory().getName())
+                    .category(club.getCategory().getId())
                     .build();
         }
     }
