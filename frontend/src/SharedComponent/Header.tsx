@@ -1,10 +1,10 @@
 import React, { EventHandler, KeyboardEventHandler } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import './Style/header.scss';
+import './Style/shared.scss';
 import person from '../image/person.svg';
 
-const MainHeader = ({ fetchData }: { fetchData: any }) => {
+const MainHeader = () => {
   const [inputState, setInputState] = useState('');
   const navigate = useNavigate();
   const locations = useLocation();
@@ -22,7 +22,7 @@ const MainHeader = ({ fetchData }: { fetchData: any }) => {
   return (
     <>
       <div className="MainHeader">
-        <div className="MainHeader-university">대학교명</div>
+        <div className="MainHeader-university">대학교명(API)</div>
         <input
           className="MainHeader-searchBar"
           type="search"

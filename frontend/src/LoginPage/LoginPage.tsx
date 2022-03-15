@@ -1,7 +1,7 @@
 import React, { MutableRefObject, RefObject, useEffect, useRef } from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import SignUpModal from './Component/signUpModal';
+import SignUpModal from './Component/SignUpModal';
 import './Style/login.scss';
 
 const LoginPage = () => {

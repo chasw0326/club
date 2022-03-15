@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { useAsync } from '../hooks/useFetch';
-import MainBody from './Component/Body';
+import ResultBody from './Component/ResultBody';
 import MainHeader from '../SharedComponent/Header';
 import { fetchState } from '../type/type';
-import { useLocation } from 'react-router-dom';
+import ClubItem from '../SharedComponent/ClubItem';
 const ResultPage = () => {
   const abc = async () => {
     const rData = await fetch('http://localhost:3001/api/search');
@@ -23,8 +23,8 @@ const ResultPage = () => {
 
   return (
     <>
-      <MainHeader fetchData={fetchData}></MainHeader>
-      <MainBody clubItem={res?.clubInfo}></MainBody>
+      <MainHeader></MainHeader>
+      <ResultBody clubItem={res?.clubInfo}></ResultBody>
     </>
   );
 };

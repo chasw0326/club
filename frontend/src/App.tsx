@@ -10,6 +10,7 @@ import MainPage from './MainPage/MainPage';
 import LoginPage from './LoginPage/LoginPage';
 import './App.css';
 import ResultPage from './ResultPage/ResultPage';
+import ClubPage from './ClubPage/ClubPage';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/*" element={<LoginPage />} />
         <Route path="/home*" element={<MainPage />} />
         <Route path="/result" element={<ResultPage />} />
+        <Route path="/club" element={<ClubPage />} />
       </Routes>
     </>
   );
