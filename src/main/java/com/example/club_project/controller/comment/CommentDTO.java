@@ -4,15 +4,17 @@ import com.example.club_project.controller.post.PostDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
 import java.util.List;
 
 
-@Getter
+
 public class CommentDTO {
 
+    @Getter
     public static class Request{
 
         @NotEmpty(message = "postId는 필수 입니다.")
@@ -23,17 +25,20 @@ public class CommentDTO {
     }
 
     @Builder
-    @AllArgsConstructor
+    @Getter
     public static class Response{
 
         private PostDTO.Response postDto;
 
-        private List<CommentObject> commentObjects;
+        private List<CommentData> commentData;
     }
 
     @Builder
-    @AllArgsConstructor
-    public static class CommentObject {
+    @Getter
+    public static class CommentData {
+
+        @NotEmpty
+        private Long commentId;
 
         private String profileUrl;
         @NotEmpty
@@ -42,6 +47,15 @@ public class CommentDTO {
         private String content;
         @NotEmpty
         private LocalDateTime createdAt;
+    }
 
+    @Builder
+    @Getter
+    public static class myCommentResp {
+
+        @NotEmpty
+        private Long postId;
+
+        private CommentData commentData;
     }
 }

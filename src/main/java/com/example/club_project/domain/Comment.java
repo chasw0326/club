@@ -34,6 +34,10 @@ public class Comment extends AuditingCreateUpdateEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
+    public void update(String content){
+        this.content = content;
+    }
+
     @Builder
     private Comment(String content, Post post, User user){
         this.content = content;
