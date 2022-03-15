@@ -35,6 +35,12 @@ public class ClubDTO {
                         .categories(Collections.emptyList())
                         .build();
             } else {
+                /**
+                 * <예시>
+                 * queryString = ?name=친목&category=1,2,3,4,5
+                 * category = 1,2,3,4,5
+                 * categoryIds = [1,2,3,4,5]
+                 */
                 List<Long> categoryIds = Arrays.stream(category.split(","))
                         .map(Long::valueOf).collect(toList());
 
