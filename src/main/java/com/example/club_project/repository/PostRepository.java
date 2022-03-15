@@ -48,15 +48,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "WHERE p.id =:postId")
     Object getPostById(@Param("postId") Long postId);
 
-
-    /**
-     * 글과 댓글 가져오기
-     * (아직 미사용...)
-     */
-    @Query("SELECT p, c FROM Post p LEFT JOIN Comment c " +
-            "ON c.post = p " +
-            "WHERE p.id =:postId")
-    List<Object[]> getPostWithComment(@Param("postId") Long postId);
-
     boolean existsById(Long id);
 }
