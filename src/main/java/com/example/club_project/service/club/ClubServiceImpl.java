@@ -29,21 +29,25 @@ public class ClubServiceImpl implements ClubService {
      * DTO region
      * for Controller
      */
+    @Override
     @Transactional
     public ClubDTO.Response registerClub(String name, String address, String university, String description, String categoryName, String imageUrl) {
         return convertToDTO(this.register(name, address, university, description, categoryName, imageUrl));
     }
 
+    @Override
     @Transactional(readOnly = true)
     public ClubDTO.Response getClubDto(String name, String university) {
         return convertToDTO(this.getClub(name, university));
     }
 
+    @Override
     @Transactional(readOnly = true)
     public ClubDTO.Response getClubDto(Long id) {
         return convertToDTO(this.getClub(id));
     }
 
+    @Override
     @Transactional(readOnly = true)
     public List<ClubDTO.Response> getClubDtos(List<String> categories, String university, Pageable pageable) {
         return this.getClubs(categories, university, pageable)
@@ -52,6 +56,7 @@ public class ClubServiceImpl implements ClubService {
                 .collect(toList());
     }
 
+    @Override
     @Transactional(readOnly = true)
     public List<ClubDTO.Response> getClubDtos(String university, Pageable pageable) {
         return this.getClubs(university, pageable)
@@ -60,6 +65,7 @@ public class ClubServiceImpl implements ClubService {
                 .collect(toList());
     }
 
+    @Override
     @Transactional
     public ClubDTO.Response updateClub(Long id, String name, String address, String university, String description, String categoryName, String imageUrl) {
         return convertToDTO(this.update(id, name, address, university, description, categoryName, imageUrl));
@@ -73,6 +79,7 @@ public class ClubServiceImpl implements ClubService {
      * Service Region
      * for other Services
      */
+    @Override
     @Transactional
     public Club register(String name, String address, String university, String description, String categoryName, String imageUrl) {
         Objects.requireNonNull(name, "name 입력값은 필수입니다.");
@@ -99,6 +106,7 @@ public class ClubServiceImpl implements ClubService {
         return clubRepository.save(club);
     }
 
+    @Override
     @Transactional(readOnly = true)
     public Club getClub(String name, String university) {
         Objects.requireNonNull(name, "name 입력값은 필수입니다.");
@@ -108,6 +116,7 @@ public class ClubServiceImpl implements ClubService {
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 클럽입니다."));
     }
 
+    @Override
     @Transactional(readOnly = true)
     public Club getClub(Long id) {
         Objects.requireNonNull(id, "id 입력값은 필수입니다.");
@@ -116,16 +125,18 @@ public class ClubServiceImpl implements ClubService {
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 클럽입니다."));
     }
 
+    @Override
     @Transactional(readOnly = true)
     public List<Club> getClubs(List<String> categories, String university, Pageable pageable) {
         Objects.requireNonNull(categories, "categories 입력값은 필수입니다.");
         Objects.requireNonNull(university, "university 입력값은 필수입니다.");
 
-        List<Category> clubCategories = categoryService.getCategories(categories);
+        List<Category> clubCategories = categoryService.getCategoriesByName(categories);
 
         return clubRepository.findAll(clubCategories, university, pageable);
     }
 
+    @Override
     @Transactional(readOnly = true)
     public List<Club> getClubs(String university, Pageable pageable) {
         Objects.requireNonNull(university, "university 입력값은 필수입니다.");
@@ -133,6 +144,7 @@ public class ClubServiceImpl implements ClubService {
         return clubRepository.findAllByUniversity(university, pageable);
     }
 
+    @Override
     @Transactional
     public Club update(Long id, String name, String address, String university, String description, String categoryName, String imageUrl) {
         Club updatedClub = clubRepository.findById(id)
@@ -148,6 +160,7 @@ public class ClubServiceImpl implements ClubService {
         return updatedClub;
     }
 
+    @Override
     @Transactional
     public void delete(Long id) {
         Objects.requireNonNull(id, "id 입력값은 필수입니다.");
@@ -155,6 +168,7 @@ public class ClubServiceImpl implements ClubService {
         clubRepository.deleteById(id);
     }
 
+    @Override
     @Transactional(readOnly = true)
     public boolean existed(String name, String university) {
         Objects.requireNonNull(name, "name 입력값은 필수입니다.");

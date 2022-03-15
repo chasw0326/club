@@ -56,9 +56,10 @@ CREATE TABLE clubs
 CREATE TABLE club_join_states
 (
     id                  bigint          NOT NULL AUTO_INCREMENT COMMENT 'id',
-    join_state          varchar(10)     NOT NULL COMMENT '가입 상태(관리자, 운영진, 일반 회원, 미가입)',
+    join_state          int             NOT NULL COMMENT '가입 상태(관리자, 운영진, 일반 회원, 미가입)',
     is_used             boolean         NOT NULL DEFAULT 0 COMMENT '동아리 탈퇴 여부 판단',
     created_at          datetime        NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일시',
+    updated_at          datetime        DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일시',
     user_id             bigint          DEFAULT NULL COMMENT '사용자 id',
     club_id             bigint          DEFAULT NULL COMMENT '동아리 id',
     PRIMARY KEY (id),
@@ -66,8 +67,8 @@ CREATE TABLE club_join_states
     KEY join_states_idx_club (club_id),
     KEY join_states_idx_user_join_state (user_id, join_state),
     KEY join_states_idx_club_join_state (club_id, join_state),
-    CONSTRAINT fk_join_state_to_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE RESTRICT ON UPDATE RESTRICT,
-    CONSTRAINT fk_join_state_to_club FOREIGN KEY (club_id) REFERENCES clubs (id) ON DELETE RESTRICT ON UPDATE RESTRICT
+    CONSTRAINT fk_join_state_to_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_join_state_to_club FOREIGN KEY (club_id) REFERENCES clubs (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 
@@ -91,6 +92,7 @@ CREATE TABLE pictures
 CREATE TABLE posts
 (
     id                  bigint          NOT NULL AUTO_INCREMENT COMMENT 'id',
+    title               varchar(100)    NOT NULL COMMENT '게시물 제목',
     content             varchar(500)    NOT NULL COMMENT '게시물 내용',
     created_at          datetime        NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일시',
     updated_at          datetime        DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일시',
