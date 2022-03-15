@@ -21,15 +21,19 @@ public class AuthUserDTO extends User {
 
     private Long id;
 
+    private String university;
+
     public AuthUserDTO(
             String username,
             String password,
             Collection<? extends GrantedAuthority> authorities,
-            Long id) {
+            Long id,
+            String university) {
 
         super(username, password, authorities);
         this.email = username;
         this.password = password;
         this.id = id;
+        this.university = university;
     }
 }

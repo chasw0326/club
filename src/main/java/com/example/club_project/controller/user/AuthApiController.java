@@ -24,4 +24,5 @@ public class AuthApiController {
         Long userId = userService.signup(user);
         return ResponseEntity.ok().body(userId);
     }
+
 }

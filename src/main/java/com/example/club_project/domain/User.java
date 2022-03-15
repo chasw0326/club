@@ -59,6 +59,10 @@ public class User extends AuditingCreateUpdateEntity {
         this.university = university;
     }
 
+    public void updateProfilePicture(String saveName){
+        this.profileUrl = saveName;
+    }
+
     @Builder
     private User(String email, String name, String profileUrl, String password, String nickname, String university, String introduction){
         this.email = email;
@@ -69,4 +73,6 @@ public class User extends AuditingCreateUpdateEntity {
         this.university = university;
         this.introduction = introduction;
     }
+
+
 }
