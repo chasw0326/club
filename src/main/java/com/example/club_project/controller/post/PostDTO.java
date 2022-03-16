@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public class PostDTO {
 
     @Getter
-    public static class Request{
+    public static class Request {
 
         //TODO: 메시지 추가 예정
         @NotEmpty
@@ -22,7 +22,7 @@ public class PostDTO {
 
     @Getter
     @Builder
-    public static class Response{
+    public static class Response {
 
         private String profileUrl;
 

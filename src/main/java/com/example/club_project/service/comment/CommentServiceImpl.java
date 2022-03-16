@@ -85,11 +85,11 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<CommentDTO.myCommentResp> getMyComment(Long userId) {
+    public List<CommentDTO.myComment> getMyComment(Long userId) {
         List<Comment> myCommentList = commentRepository.getAllByUser_IdOrderByIdDesc(userId);
-        List<CommentDTO.myCommentResp> myComments = new ArrayList<>();
+        List<CommentDTO.myComment> myComments = new ArrayList<>();
         for (Comment comment : myCommentList) {
-            myComments.add(CommentDTO.myCommentResp.builder()
+            myComments.add(CommentDTO.myComment.builder()
                     .postId(comment.getPost().getId())
                     .commentData(CommentDTO.CommentData.builder()
                             .commentId(comment.getId())

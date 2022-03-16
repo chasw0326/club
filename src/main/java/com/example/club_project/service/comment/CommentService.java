@@ -16,7 +16,7 @@ public interface CommentService {
     /*
     내가 쓴 댓글 목록 with postId
      */
-    List<CommentDTO.myCommentResp> getMyComment(Long userId);
+    List<CommentDTO.myComment> getMyComment(Long userId);
 
     Long register(Long userId, Long postId, String content);
 

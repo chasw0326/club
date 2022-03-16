@@ -2,16 +2,21 @@ package com.example.club_project.repository;
 
 import com.example.club_project.domain.Post;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    List<Post> findAllByClub_IdOrderByIdDesc(Long id, Pageable pageable);
+    // TODO: (삭제예정)서비스 끼리 쓸 일이 있을까...
+//    @EntityGraph(attributePaths = {"user"}, type = EntityGraph.EntityGraphType.LOAD)
+//    List<Post> findAllByClub_IdOrderByIdDesc(Long id, Pageable pageable);
 
+    // 연관관계 가져오는일 없고 삭제용
     List<Post> findAllByUser_IdAndClub_Id(Long userId, Long clubId);
 
     /**
@@ -44,9 +49,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      */
     @Query("SELECT p, u, count(c) " +
             "FROM Post p LEFT JOIN p.user u " +
-            "LEFT OUTER JOIN Comment c ON c.post = p " +
+            "LEFT JOIN Comment c ON c.post = p " +
             "WHERE p.id =:postId")
-    Object getPostById(@Param("postId") Long postId);
+    Optional<Object> findPostById(@Param("postId") Long postId);
 
     boolean existsById(Long id);
 }

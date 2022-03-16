@@ -9,11 +9,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 
-
 public class CommentDTO {
 
     @Getter
-    public static class Request{
+    public static class Request {
 
         @NotEmpty(message = "postId는 필수 입니다.")
         private String postId;
@@ -24,7 +23,7 @@ public class CommentDTO {
 
     @Builder
     @Getter
-    public static class Response{
+    public static class Response {
 
         private PostDTO.Response postDto;
 
@@ -49,7 +48,7 @@ public class CommentDTO {
 
     @Builder
     @Getter
-    public static class myCommentResp {
+    public static class myComment {
 
         @NotEmpty
         private Long postId;

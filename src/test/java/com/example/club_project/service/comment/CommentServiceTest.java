@@ -204,9 +204,9 @@ public class CommentServiceTest {
         for (int i = 1; i <= 10; i++) {
             commentService.register(3L, 1L, "content " + i);
         }
-        List<CommentDTO.myCommentResp> myComments = commentService.getMyComment(3L);
+        List<CommentDTO.myComment> myComments = commentService.getMyComment(3L);
         Long commentId = 31L;
-        for (CommentDTO.myCommentResp myComment : myComments) {
+        for (CommentDTO.myComment myComment : myComments) {
             CommentDTO.CommentData commentData = myComment.getCommentData();
             assertEquals(commentId--, commentData.getCommentId());
         }
