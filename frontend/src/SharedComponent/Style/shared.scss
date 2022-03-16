@@ -120,4 +120,8 @@
     background-color: rgb(52, 152, 219);
     cursor: pointer;
   }
+
+  &-signIn:hover {
+    background-color: blue;
+  }
 }
