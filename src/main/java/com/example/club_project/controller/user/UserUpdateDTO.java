@@ -1,21 +1,32 @@
 package com.example.club_project.controller.user;
 
 
+import lombok.Getter;
+
 import javax.validation.constraints.NotEmpty;
 
 public class UserUpdateDTO {
 
-    Long id;
+    @Getter
+    public static class Request{
 
-    @NotEmpty
-    String name;
+        @NotEmpty
+        private String name;
 
-    @NotEmpty
-    String nickname;
+        @NotEmpty
+        private String nickname;
 
-    @NotEmpty
-    String introduction;
+        @NotEmpty
+        private String introduction;
 
-    @NotEmpty
-    String university;
+        @NotEmpty
+        private String university;
+    }
+
+    public static class Response{
+
+        @NotEmpty
+        private String email;
+
+    }
 }

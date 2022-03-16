@@ -60,9 +60,10 @@ public class User extends AuditingCreateUpdateEntity {
     }
 
     @Builder
-    private User(String email, String name, String password, String nickname, String university, String introduction){
+    private User(String email, String name, String profileUrl, String password, String nickname, String university, String introduction){
         this.email = email;
         this.name = name;
+        this.profileUrl = profileUrl;
         this.password = password;
         this.nickname = nickname;
         this.university = university;
