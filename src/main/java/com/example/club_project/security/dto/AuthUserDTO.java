@@ -1,9 +1,6 @@
 package com.example.club_project.security.dto;
 
 import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -21,15 +18,19 @@ public class AuthUserDTO extends User {
 
     private Long id;
 
+    private String university;
+
     public AuthUserDTO(
             String username,
             String password,
             Collection<? extends GrantedAuthority> authorities,
-            Long id) {
+            Long id,
+            String university) {
 
         super(username, password, authorities);
         this.email = username;
         this.password = password;
         this.id = id;
+        this.university = university;
     }
 }
