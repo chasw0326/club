@@ -19,7 +19,7 @@ public class AuthApiController {
     private final UserService userService;
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@RequestBody @Valid SignupDTO signupDTO){
+    public ResponseEntity<?> registerUser(@RequestBody @Valid SignupDTO signupDTO) {
         User user = signupDTO.toEntity(signupDTO);
         Long userId = userService.signup(user);
         return ResponseEntity.ok().body(userId);

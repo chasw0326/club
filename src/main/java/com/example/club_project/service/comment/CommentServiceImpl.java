@@ -115,5 +115,4 @@ public class CommentServiceImpl implements CommentService {
             throw new RuntimeException("지울 수 있는 권한이 없습니다.");
         }
     }
-
 }
