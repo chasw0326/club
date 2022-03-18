@@ -1,6 +1,5 @@
 package com.example.club_project.exception;
 
-
 import com.example.club_project.exception.custom.ClubRuntimeException;
 import com.example.club_project.exception.custom.DuplicateElementException;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +26,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
     }
 
+    // return CONFLICT
     @ExceptionHandler({DuplicateElementException.class})
     public ResponseEntity<ExceptionDTO> duplicateElementHandler(DuplicateElementException ex){
         log.error("DuplicateElementException: {}", ex.getMessage());

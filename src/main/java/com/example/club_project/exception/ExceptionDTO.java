@@ -15,7 +15,6 @@ public class ExceptionDTO {
     @NotEmpty
     String message;
 
-
     public static ExceptionDTO toDto(Exception e){
         e.printStackTrace();
         return ExceptionDTO.builder()

@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
+// Valid 어노테이션을 위한 DTO
 @Getter
 @Builder
 public class ValidExceptionDTO {
