@@ -25,6 +25,8 @@ public interface ClubService {
 
     ClubDTO.Response updateClub(Long id, String name, String address, String university, String description, Long categoryId, String imageUrl);
 
+    ClubDTO.Response convertToDTO(Club club);
+
     /**
      * Entity Region (for other services)
      */

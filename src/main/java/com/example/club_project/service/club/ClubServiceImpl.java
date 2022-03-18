@@ -83,7 +83,8 @@ public class ClubServiceImpl implements ClubService {
         return convertToDTO(this.update(id, name, address, university, description, categoryId, imageUrl));
     }
 
-    private ClubDTO.Response convertToDTO(Club club) {
+    @Override
+    public ClubDTO.Response convertToDTO(Club club) {
         return ClubDTO.Response.from(club);
     }
 

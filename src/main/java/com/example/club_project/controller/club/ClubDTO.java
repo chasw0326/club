@@ -60,7 +60,6 @@ public class ClubDTO {
     public static class RegisterRequest {
         private String name;
         private String address;
-        private String university;
         private String description;
         private Long category;
         private String imageUrl;
@@ -75,8 +74,6 @@ public class ClubDTO {
         @NotBlank(message = "name 필드는 반드시 있어야 합니다.")
         private String name;
         private String address;
-        @NotBlank(message = "university 필드는 반드시 있어야 합니다.")
-        private String university;
         private String description;
         private Long category;
         private String imageUrl;
@@ -108,5 +105,11 @@ public class ClubDTO {
                     .category(club.getCategory().getId())
                     .build();
         }
+    }
+
+    @Builder
+    @Getter
+    @JsonNaming(SnakeCaseStrategy.class)
+    public static class DetailResponse {
     }
 }
