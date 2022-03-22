@@ -4,10 +4,7 @@ import com.example.club_project.controller.club.ClubDTO;
 import com.example.club_project.domain.Category;
 import com.example.club_project.domain.Club;
 import com.example.club_project.service.category.CategoryService;
-import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,34 +22,31 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@Slf4j
 @Transactional
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 class ClubServiceTest {
 
     @Autowired
-    private CategoryService categoryService;
-
-    @Autowired
     private ClubService clubService;
 
-    private final String testName = "테스트 동아리";
-    private final String testAddress = "테스트 주소";
-    private final String testUniversity = "테스트 대학교";
-    private final String testDescription = "테스트 동아리 소개";
-    private final String testCategoryName = "테스트 카테고리 이름";
-    private final String[] testCategoriesName = {"문화/예술/공연", "봉사/사회활동", "학술/교양", "창업/취업", "어학", "체육", "친목"};
-    private Long testCategoryId;
-    private Long[] testCategoryIds;
+    private static final String testName = "테스트 동아리";
+    private static final String testAddress = "테스트 주소";
+    private static final String testUniversity = "테스트 대학교";
+    private static final String testDescription = "테스트 동아리 소개";
+    private static final String testCategoryName = "테스트 카테고리 이름";
+    private static final String[] testCategoriesName = {"문화/예술/공연", "봉사/사회활동", "학술/교양", "창업/취업", "어학", "체육", "친목"};
+    private static Long testCategoryId;
+    private static Long[] testCategoryIds;
+    private static Category testCategory;
 
 
     private final int testPagingOffsetSize = 0;
     private final int testPagingLimitSize = 50;
     private final PageRequest testPageRequest = PageRequest.of(testPagingOffsetSize, testPagingLimitSize);
 
-    @BeforeEach
-    public void setup() {
+    @BeforeAll
+    public static void setup(@Autowired CategoryService categoryService) {
 
         List<Long> testCategoryLists = new ArrayList<>();
 
@@ -61,7 +55,8 @@ class ClubServiceTest {
             testCategoryLists.add(registeredCategory.getId());
         }
 
-        testCategoryId = categoryService.register(testCategoryName, "test").getId();
+        testCategory = categoryService.register(testCategoryName, "test");
+        testCategoryId = testCategory.getId();
         testCategoryIds = testCategoryLists.toArray(new Long[testCategoryLists.size()]);
     }
 
@@ -80,8 +75,9 @@ class ClubServiceTest {
         assertThat(registeredClubDTO.getAddress()).isEqualTo(registeredClub.getAddress());
         assertThat(registeredClubDTO.getUniversity()).isEqualTo(registeredClub.getUniversity());
         assertThat(registeredClubDTO.getDescription()).isEqualTo(registeredClub.getDescription());
-        assertThat(registeredClubDTO.getImageUrl()).isEqualTo(registeredClub.getImageUrl());
+        assertThat(registeredClubDTO.getImageUrl()).isEqualTo("");
         assertThat(registeredClubDTO.getCategory()).isEqualTo(registeredClub.getCategory().getId());
+
     }
 
     @Test
@@ -89,7 +85,6 @@ class ClubServiceTest {
     public void Should_CreateEntity() {
         //given
         Club registeredClub = clubService.register(testName, testAddress, testUniversity, testDescription, testCategoryId, null);
-        Category testCategory = categoryService.getCategory(testCategoryName);
 
         //when
         //then
@@ -97,7 +92,8 @@ class ClubServiceTest {
         assertThat(registeredClub.getAddress()).isEqualTo(testAddress);
         assertThat(registeredClub.getUniversity()).isEqualTo(testUniversity);
         assertThat(registeredClub.getDescription()).isEqualTo(testDescription);
-        assertThat(registeredClub.getCategory()).isEqualTo(testCategory);
+        assertThat(registeredClub.getCategory().getName()).isEqualTo(testCategory.getName());
+        assertThat(registeredClub.getCategory().getDescription()).isEqualTo(testCategory.getDescription());
     }
 
     @Test

@@ -11,7 +11,9 @@ import com.example.club_project.service.club.ClubService;
 import com.example.club_project.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +27,8 @@ import static java.util.stream.Collectors.toList;
 @RequiredArgsConstructor
 public class ClubJoinStateServiceImpl implements ClubJoinStateService {
 
+    private static final int CLUB_MEMBER_SIZE = 5;
+
     private final ClubJoinStateRepository clubJoinStateRepository;
     private final UserService userService;
     private final ClubService clubService;
@@ -33,6 +37,62 @@ public class ClubJoinStateServiceImpl implements ClubJoinStateService {
      * DTO region
      * for Controller
      */
+    @Override
+    @Transactional(readOnly = true)
+    public List<ClubDTO> getClubDtos(String university, Pageable pageable) {
+        Objects.requireNonNull(university, "university 입력값은 필수입니다.");
+        return clubJoinStateRepository.findAllByUniversity(university, getPageByClub(pageable));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ClubDTO> getClubDtos(String name, String university, Pageable pageable) {
+        Objects.requireNonNull(name, "name 입력값은 필수입니다.");
+        Objects.requireNonNull(university, "university 입력값은 필수입니다.");
+
+        return clubJoinStateRepository.findAllByNameAndUniversity(name, university, getPageByClub(pageable));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ClubDTO> getClubDtos(List<Long> categories, String university, Pageable pageable) {
+        Objects.requireNonNull(categories, "categories 입력값은 필수입니다.");
+        Objects.requireNonNull(university, "university 입력값은 필수입니다.");
+
+        return clubJoinStateRepository.findAll(categories, university, getPageByClub(pageable));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ClubDTO> getClubDtos(List<Long> categories, String university, String name, Pageable pageable) {
+        Objects.requireNonNull(categories, "categories 입력값은 필수입니다.");
+        Objects.requireNonNull(university, "university 입력값은 필수입니다.");
+        Objects.requireNonNull(name, "name 입력값은 필수입니다.");
+
+        return clubJoinStateRepository.findAll(categories, name, university, getPageByClub(pageable));
+    }
+
+    private Pageable getPageByClub(Pageable defaultPageable) {
+        return PageRequest.of(defaultPageable.getPageNumber(),
+                              defaultPageable.getPageSize(),
+                              Sort.by(Sort.Direction.DESC, "club"));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ClubDTO.DetailResponse getClubDetailDto(Long clubId) {
+        Objects.requireNonNull(clubId, "clubId 입력값은 필수입니다.");
+
+        Club club = clubService.getClub(clubId);
+        List<ClubJoinState> members = getAllMembers(clubId,
+                                    PageRequest.of(0, CLUB_MEMBER_SIZE, Sort.by(Sort.Direction.ASC, "joinState")))
+                                .stream()
+                                    .filter(ClubJoinState::isUsed)
+                                    .collect(toList());
+
+        return ClubDTO.DetailResponse.of(club, members);
+    }
+
     @Override
     @Transactional
     public ClubJoinStateDTO.Response join(Long userId, Long clubId) {

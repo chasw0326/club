@@ -1,8 +1,10 @@
 package com.example.club_project.controller.club;
 
 import com.example.club_project.domain.Club;
+import com.example.club_project.domain.ClubJoinState;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
@@ -14,7 +16,19 @@ import java.util.List;
 
 import static java.util.stream.Collectors.*;
 
+@AllArgsConstructor
+@Getter
+@JsonNaming(SnakeCaseStrategy.class)
 public class ClubDTO {
+
+    private Long id;
+    private String name;
+    private String address;
+    private String university;
+    private String description;
+    private String imageUrl;
+    private Long category;
+    private long clubMembers;
 
     /**
      * GET
@@ -101,7 +115,7 @@ public class ClubDTO {
                     .address(club.getAddress())
                     .university(club.getUniversity())
                     .description(club.getDescription())
-                    .imageUrl(StringUtils.isEmpty(club.getImageUrl()) ? club.getImageUrl() : "")
+                    .imageUrl(StringUtils.isEmpty(club.getImageUrl()) ? "" : club.getImageUrl())
                     .category(club.getCategory().getId())
                     .build();
         }
@@ -110,6 +124,44 @@ public class ClubDTO {
     @Builder
     @Getter
     @JsonNaming(SnakeCaseStrategy.class)
+    public static class MemberResponse {
+        private String joinState;
+        private String name;
+
+        public static MemberResponse from(ClubJoinState member) {
+            return MemberResponse.builder()
+                            .joinState(member.getJoinState().getState())
+                            .name(member.getUser().getName())
+                            .build();
+        }
+    }
+
+    @Builder
+    @Getter
+    @JsonNaming(SnakeCaseStrategy.class)
     public static class DetailResponse {
+        private Long id;
+        private String name;
+        private String address;
+        private String university;
+        private String description;
+        private String imageUrl;
+        private String category;
+        private List<MemberResponse> members;
+
+        public static ClubDTO.DetailResponse of(Club club, List<ClubJoinState> memberEntities) {
+            return DetailResponse.builder()
+                    .id(club.getId())
+                    .name(club.getName())
+                    .address(club.getAddress())
+                    .university(club.getUniversity())
+                    .description(club.getDescription())
+                    .imageUrl(club.getImageUrl())
+                    .category(club.getCategory().getName())
+                    .members(memberEntities.stream()
+                            .map(MemberResponse::from)
+                            .collect(toList()))
+                    .build();
+        }
     }
 }

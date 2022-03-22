@@ -13,16 +13,6 @@ public interface ClubService {
      */
     ClubDTO.Response registerClub(String name, String address, String university, String description, Long categoryId, String imageUrl);
 
-    ClubDTO.Response getClubDto(Long id);
-
-    List<ClubDTO.Response> getClubDtos(String university, Pageable pageable);
-
-    List<ClubDTO.Response> getClubDtos(String name, String university, Pageable pageable);
-
-    List<ClubDTO.Response> getClubDtos(List<Long> categories, String university, Pageable pageable);
-
-    List<ClubDTO.Response> getClubDtos(List<Long> categories, String university, String name, Pageable pageable);
-
     ClubDTO.Response updateClub(Long id, String name, String address, String university, String description, Long categoryId, String imageUrl);
 
     ClubDTO.Response convertToDTO(Club club);

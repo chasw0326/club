@@ -34,18 +34,18 @@ public class ClubApiController {
      * 검색조건4: 카테고리 + 동아리 이름
      */
     @GetMapping
-    public List<ClubDTO.Response> searchClubs(@AuthenticationPrincipal AuthUserDTO authUser,
+    public List<ClubDTO> searchClubs(@AuthenticationPrincipal AuthUserDTO authUser,
                                               ClubDTO.SearchOption searchOption,
                                               Pageable pageable) {
 
         if (ObjectUtils.isEmpty(searchOption.getName()) && ObjectUtils.isEmpty(searchOption.getCategories())) {
-            return clubService.getClubDtos(authUser.getUniversity(), pageable);
+            return clubJoinStateService.getClubDtos(authUser.getUniversity(), pageable);
         } else if (ObjectUtils.isEmpty(searchOption.getCategories())) {
-            return clubService.getClubDtos(searchOption.getName(), authUser.getUniversity(), pageable);
+            return clubJoinStateService.getClubDtos(searchOption.getName(), authUser.getUniversity(), pageable);
         } else if (ObjectUtils.isEmpty(searchOption.getName())) {
-            return clubService.getClubDtos(searchOption.getCategories(), authUser.getUniversity(), pageable);
+            return clubJoinStateService.getClubDtos(searchOption.getCategories(), authUser.getUniversity(), pageable);
         } else {
-            return clubService.getClubDtos(searchOption.getCategories(), authUser.getUniversity(), searchOption.getName(), pageable);
+            return clubJoinStateService.getClubDtos(searchOption.getCategories(), authUser.getUniversity(), searchOption.getName(), pageable);
         }
     }
 
@@ -56,9 +56,8 @@ public class ClubApiController {
      * GET /api/clubs/:club-id
      */
     @GetMapping("{clubId}")
-    public ClubDTO.DetailResponse searchClubDetails(@PathVariable("clubId") Long clubId, Pageable pageable) {
-
-        return null;
+    public ClubDTO.DetailResponse searchClubDetails(@PathVariable("clubId") Long clubId) {
+        return clubJoinStateService.getClubDetailDto(clubId);
     }
 
     /**

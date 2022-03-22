@@ -2,9 +2,7 @@ package com.example.club_project.service.category;
 
 import com.example.club_project.controller.category.CategoryDTO;
 import com.example.club_project.domain.Category;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,10 +24,10 @@ class CategoryServiceTest {
     @Autowired
     private CategoryService categoryService;
 
-    String categoryName, categoryDescription;
+    private static String categoryName, categoryDescription;
 
-    @BeforeEach
-    public void setup() {
+    @BeforeAll
+    public static void setup() {
         categoryName = "test";
         categoryDescription = "description";
     }
@@ -127,9 +125,8 @@ class CategoryServiceTest {
         //given
         List<Long> categories = new ArrayList<>();
 
-        int beforeCategorySize = categoryService.getCategories().size();
-        int newCategorySize = 10;
-        for (int i = 0; i < newCategorySize; ++i) {
+        int categorySize = 10;
+        for (int i = 0; i < categorySize; ++i) {
             String categoryName = String.format("%d번째 카테고리", i);
             String categoryDescription = String.format("%d번째 테스트 카테고리 설명입니다", i);
             Category registeredCategory = categoryService.register(categoryName, categoryDescription);
@@ -140,7 +137,7 @@ class CategoryServiceTest {
         List<Category> result = categoryService.getCategoriesById(categories);
 
         //then
-        assertThat(result.size()).isEqualTo(beforeCategorySize + newCategorySize);
+        assertThat(result.size()).isEqualTo(categorySize);
     }
 
     @Test
@@ -180,9 +177,8 @@ class CategoryServiceTest {
         //given
         List<String> categories = new ArrayList<>();
 
-        int beforeCategorySize = categoryService.getCategories().size();
-        int newCategorySize = 10;
-        for (int i = 0; i < newCategorySize; ++i) {
+        int categorySize = 10;
+        for (int i = 0; i < categorySize; ++i) {
             String categoryName = String.format("%d번째 카테고리", i);
             String categoryDescription = String.format("%d번째 테스트 카테고리 설명입니다", i);
             Category registeredCategory = categoryService.register(categoryName, categoryDescription);
@@ -193,7 +189,7 @@ class CategoryServiceTest {
         List<Category> result = categoryService.getCategoriesByName(categories);
 
         //then
-        assertThat(result.size()).isEqualTo(beforeCategorySize + newCategorySize);
+        assertThat(result.size()).isEqualTo(categorySize);
     }
 
     @Test

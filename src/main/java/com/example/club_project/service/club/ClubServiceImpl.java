@@ -16,7 +16,6 @@ import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Objects;
 
-import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
@@ -33,48 +32,6 @@ public class ClubServiceImpl implements ClubService {
     @Transactional
     public ClubDTO.Response registerClub(String name, String address, String university, String description, Long categoryId, String imageUrl) {
         return convertToDTO(this.register(name, address, university, description, categoryId, imageUrl));
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public ClubDTO.Response getClubDto(Long id) {
-        return convertToDTO(this.getClub(id));
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<ClubDTO.Response> getClubDtos(String university, Pageable pageable) {
-        return this.getClubs(university, pageable)
-                .stream()
-                .map(this::convertToDTO)
-                .collect(toList());
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<ClubDTO.Response> getClubDtos(String name, String university, Pageable pageable) {
-        return this.getClubs(name, university, pageable)
-                .stream()
-                .map(this::convertToDTO)
-                .collect(toList());
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<ClubDTO.Response> getClubDtos(List<Long> categories, String university, Pageable pageable) {
-        return this.getClubs(categories, university, pageable)
-                .stream()
-                .map(this::convertToDTO)
-                .collect(toList());
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<ClubDTO.Response> getClubDtos(List<Long> categories, String university, String name, Pageable pageable) {
-        return this.getClubs(categories, university, name, pageable)
-                .stream()
-                .map(this::convertToDTO)
-                .collect(toList());
     }
 
     @Override

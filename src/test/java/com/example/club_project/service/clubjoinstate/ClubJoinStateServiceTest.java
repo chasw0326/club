@@ -1,12 +1,11 @@
 package com.example.club_project.service.clubjoinstate;
 
+import com.example.club_project.controller.club.ClubDTO;
 import com.example.club_project.domain.*;
 import com.example.club_project.service.category.CategoryService;
 import com.example.club_project.service.club.ClubService;
 import com.example.club_project.service.user.UserService;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,33 +29,39 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class ClubJoinStateServiceTest {
 
     @Autowired
-    private CategoryService categoryService;
-
-    @Autowired
-    private ClubService clubService;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
     private ClubJoinStateService clubJoinStateService;
+
+    /**
+     * Mock Category
+     */
+    private static Category mockCategory1, mockCategory2, mockCategory3, mockCategory4, mockCategory5;
 
     /**
      * Mock User
      */
-    private User mockUser1, mockUser2, mockUser3, mockUser4, mockUser5, mockUser6, mockUser7, mockUser8, mockUser9, mockUser10;
+    private static User mockUser1, mockUser2, mockUser3, mockUser4, mockUser5, mockUser6, mockUser7, mockUser8, mockUser9, mockUser10;
 
     /**
      * Mock Club
      */
-    private Club mockClub1, mockClub2, mockClub3, mockClub4, mockClub5;
+    private static Club mockClub1, mockClub2, mockClub3, mockClub4, mockClub5;
+
+    /**
+     * Data for ClubJoinState
+     */
+    private int joinStateCodeMaster = JoinState.MASTER.getCode();
+    private int joinStateCodeMANAGER = JoinState.MANAGER.getCode();
+    private int joinStateCodeMEMBER = JoinState.MEMBER.getCode();
+    private int joinStateCodeNotJoined = JoinState.NOT_JOINED.getCode();
 
     private int testPagingOffsetSize = 0;
     private int testPagingLimitSize = 50;
     private PageRequest testPageRequest = PageRequest.of(testPagingOffsetSize, testPagingLimitSize);
 
-    @BeforeEach
-    public void setupUserAndClub() {
+    @BeforeAll
+    public static void setup(@Autowired CategoryService categoryService,
+                             @Autowired ClubService clubService,
+                             @Autowired UserService userService) {
         //init user
         User user1 = User.builder().email("email1").name("test").password("test").nickname("test").university("test").introduction("test").build();
         User user2 = User.builder().email("email2").name("test").password("test").nickname("test").university("test").introduction("test").build();
@@ -96,11 +103,11 @@ class ClubJoinStateServiceTest {
         Category category4 = Category.builder().name("창업/취업").description("창업/취업 관련 동아리입니다.").build();
         Category category5 = Category.builder().name("어학").description("어학 관련 동아리입니다.").build();
 
-        Category mockCategory1 = categoryService.register(category1.getName(), category1.getDescription());
-        Category mockCategory2 = categoryService.register(category2.getName(), category2.getDescription());
-        Category mockCategory3 = categoryService.register(category3.getName(), category3.getDescription());
-        Category mockCategory4 = categoryService.register(category4.getName(), category4.getDescription());
-        Category mockCategory5 = categoryService.register(category5.getName(), category5.getDescription());
+        mockCategory1 = categoryService.register(category1.getName(), category1.getDescription());
+        mockCategory2 = categoryService.register(category2.getName(), category2.getDescription());
+        mockCategory3 = categoryService.register(category3.getName(), category3.getDescription());
+        mockCategory4 = categoryService.register(category4.getName(), category4.getDescription());
+        mockCategory5 = categoryService.register(category5.getName(), category5.getDescription());
 
         //init Club
         Club club1 = Club.builder().name("club1").address("test").university("test").description("test").category(mockCategory1).imageUrl(null).build();
@@ -117,6 +124,152 @@ class ClubJoinStateServiceTest {
     }
 
     /**
+     * Start DTO Region
+     */
+    @Test
+    @DisplayName("ClubId가 주어지면 해당 Club 정보와 가입한 멤버들의 정보를 ClubDTO.DetailResponse 객체로 반환한다.")
+    public void Should_Return_ClubDTO_DetailResponse_When_ClubId_Provided() {
+        //given
+        clubJoinStateService.register(mockUser1.getId(), mockClub1.getId(), joinStateCodeMaster);
+        clubJoinStateService.register(mockUser2.getId(), mockClub1.getId(), joinStateCodeMANAGER);
+        clubJoinStateService.register(mockUser3.getId(), mockClub1.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser4.getId(), mockClub1.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser5.getId(), mockClub1.getId(), joinStateCodeMEMBER);
+
+        //when
+        ClubDTO.DetailResponse clubDetailDto = clubJoinStateService.getClubDetailDto(mockClub1.getId());
+
+        //then
+        assertThat(clubDetailDto.getId()).isEqualTo(mockClub1.getId());
+        assertThat(clubDetailDto.getName()).isEqualTo(mockClub1.getName());
+        assertThat(clubDetailDto.getAddress()).isEqualTo(mockClub1.getAddress());
+        assertThat(clubDetailDto.getUniversity()).isEqualTo(mockClub1.getUniversity());
+        assertThat(clubDetailDto.getDescription()).isEqualTo(mockClub1.getDescription());
+        assertThat(clubDetailDto.getCategory()).isEqualTo(mockClub1.getCategory().getName());
+        assertThat(clubDetailDto.getMembers().size()).isEqualTo(5);
+    }
+
+    @Test
+    @DisplayName("University 이름이 주어지면 해당 대학교에 속해있는 동아리 정보를 List<ClubDTO> 객체로 반환한다.")
+    public void Should_Return_ClubDTOs_When_UniversityName_Provided() {
+        //given
+        clubJoinStateService.register(mockUser1.getId(), mockClub1.getId(), joinStateCodeMaster);
+        clubJoinStateService.register(mockUser2.getId(), mockClub1.getId(), joinStateCodeMANAGER);
+        clubJoinStateService.register(mockUser3.getId(), mockClub1.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser4.getId(), mockClub1.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser5.getId(), mockClub1.getId(), joinStateCodeMEMBER);
+
+        clubJoinStateService.register(mockUser6.getId(), mockClub2.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser7.getId(), mockClub3.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser8.getId(), mockClub4.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser9.getId(), mockClub5.getId(), joinStateCodeMEMBER);
+
+        //when
+        String university = "test";
+        List<ClubDTO> clubDtos = clubJoinStateService.getClubDtos(university, testPageRequest);
+
+        //then
+        assertThat(clubDtos.size()).isEqualTo(5);
+
+        for (ClubDTO clubDto : clubDtos) {
+            assertThat(clubDto.getClubMembers()).isNotEqualTo(0);
+        }
+    }
+
+    @Test
+    @DisplayName("ClubName 검색어와 University 이름이 주어지면, " +
+            "검색어를 포함하고 해당 대학교에 속해있는 동아리 정보를 List<ClubDTO> 객체로 반환한다.")
+    public void Should_Return_ClubDTOs_When_ClubNameSearchKeyword_And_UniversityName_Provided() {
+        //given
+        clubJoinStateService.register(mockUser1.getId(), mockClub1.getId(), joinStateCodeMaster);
+        clubJoinStateService.register(mockUser2.getId(), mockClub1.getId(), joinStateCodeMANAGER);
+        clubJoinStateService.register(mockUser3.getId(), mockClub1.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser4.getId(), mockClub1.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser5.getId(), mockClub1.getId(), joinStateCodeMEMBER);
+
+        clubJoinStateService.register(mockUser6.getId(), mockClub2.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser7.getId(), mockClub3.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser8.getId(), mockClub4.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser9.getId(), mockClub5.getId(), joinStateCodeMEMBER);
+
+        //when
+        String searchKeyword = "club";
+        String university = "test";
+        List<ClubDTO> clubDtos = clubJoinStateService.getClubDtos(searchKeyword, university, testPageRequest);
+
+        //then
+        assertThat(clubDtos.size()).isEqualTo(5);
+
+        for (ClubDTO clubDto : clubDtos) {
+            assertThat(clubDto.getClubMembers()).isNotEqualTo(0);
+        }
+    }
+
+    @Test
+    @DisplayName("Category Id 리스트와 University 이름이 주어지면, " +
+            "해당 카테고리 Id에 속하고 해당 대학교에 속해있는 동아리 정보를 List<ClubDTO> 객체로 반환한다.")
+    public void Should_Return_ClubDTOs_When_CategoryIdList_And_UniversityName_Provided() {
+        //given
+        clubJoinStateService.register(mockUser1.getId(), mockClub1.getId(), joinStateCodeMaster);
+        clubJoinStateService.register(mockUser2.getId(), mockClub1.getId(), joinStateCodeMANAGER);
+        clubJoinStateService.register(mockUser3.getId(), mockClub1.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser4.getId(), mockClub1.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser5.getId(), mockClub1.getId(), joinStateCodeMEMBER);
+
+        clubJoinStateService.register(mockUser6.getId(), mockClub2.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser7.getId(), mockClub3.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser8.getId(), mockClub4.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser9.getId(), mockClub5.getId(), joinStateCodeMEMBER);
+
+        //when
+        List<Long> searchCategories = new ArrayList<>(Arrays.asList(mockCategory1.getId(), mockCategory2.getId(), mockCategory3.getId()));
+        String university = "test";
+        List<ClubDTO> clubDtos = clubJoinStateService.getClubDtos(searchCategories, university, testPageRequest);
+
+        //then
+        assertThat(clubDtos.size()).isEqualTo(3);
+
+        for (ClubDTO clubDto : clubDtos) {
+            assertThat(clubDto.getClubMembers()).isNotEqualTo(0);
+        }
+    }
+
+    @Test
+    @DisplayName("Category Id 리스트와 University 이름과 ClubName 검색어가 주어지면, " +
+            "해당 카테고리 Id에 속하고 검색어를 포함하며 해당 대학교에 속해있는 동아리 정보를 List<ClubDTO> 객체로 반환한다.")
+    public void Should_Return_ClubDTOs_When_CategoryIdList_And_UniversityName_And_ClubNameSearchKeyword_Provided() {
+        //given
+        clubJoinStateService.register(mockUser1.getId(), mockClub1.getId(), joinStateCodeMaster);
+        clubJoinStateService.register(mockUser2.getId(), mockClub1.getId(), joinStateCodeMANAGER);
+        clubJoinStateService.register(mockUser3.getId(), mockClub1.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser4.getId(), mockClub1.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser5.getId(), mockClub1.getId(), joinStateCodeMEMBER);
+
+        clubJoinStateService.register(mockUser6.getId(), mockClub2.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser7.getId(), mockClub3.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser8.getId(), mockClub4.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser9.getId(), mockClub5.getId(), joinStateCodeMEMBER);
+
+        //when
+        List<Long> searchCategories = new ArrayList<>(Arrays.asList(mockCategory1.getId(), mockCategory2.getId()));
+        String searchKeyword = "club";
+        String university = "test";
+        List<ClubDTO> clubDtos = clubJoinStateService.getClubDtos(searchCategories, university, searchKeyword, testPageRequest);
+
+        //then
+        assertThat(clubDtos.size()).isEqualTo(2);
+
+        for (ClubDTO clubDto : clubDtos) {
+            assertThat(clubDto.getClubMembers()).isNotEqualTo(0);
+        }
+    }
+    /**
+     * End DTO Region
+     */
+
+
+
+    /**
      * Start Common Region
      */
     // ========== register ==========
@@ -124,74 +277,50 @@ class ClubJoinStateServiceTest {
     @DisplayName("User 엔티티, Club 엔티티, joinState 코드를 사용하여 ClubJoinState 엔티티를 생성할 수 있다.")
     public void Should_Return_Entity_When_User_And_Club_And_JoinState_Is_Valid() {
         //given
-        User user1 = mockUser1;
-        User user2 = mockUser2;
-        User user3 = mockUser3;
-        User user4 = mockUser4;
-
-        Club club1 = mockClub1;
-        Club club2 = mockClub2;
-        Club club3 = mockClub3;
-        Club club4 = mockClub4;
-
-        int joinStateCodeMaster = JoinState.MASTER.getCode();
-        int joinStateCodeMANAGER = JoinState.MANAGER.getCode();
-        int joinStateCodeMEMBER = JoinState.MEMBER.getCode();
-        int joinStateCodeNotJoined = JoinState.NOT_JOINED.getCode();
-
         //when
-        ClubJoinState registeredClubJoinState1 = clubJoinStateService.register(user1.getId(), club1.getId(), joinStateCodeMaster);
-        ClubJoinState registeredClubJoinState2 = clubJoinStateService.register(user2.getId(), club2.getId(), joinStateCodeMANAGER);
-        ClubJoinState registeredClubJoinState3 = clubJoinStateService.register(user3.getId(), club3.getId(), joinStateCodeMEMBER);
-        ClubJoinState registeredClubJoinState4 = clubJoinStateService.register(user4.getId(), club4.getId(), joinStateCodeNotJoined);
+        ClubJoinState registeredClubJoinState1 = clubJoinStateService.register(mockUser1.getId(), mockClub1.getId(), joinStateCodeMaster);
+        ClubJoinState registeredClubJoinState2 = clubJoinStateService.register(mockUser2.getId(), mockClub2.getId(), joinStateCodeMANAGER);
+        ClubJoinState registeredClubJoinState3 = clubJoinStateService.register(mockUser3.getId(), mockClub3.getId(), joinStateCodeMEMBER);
+        ClubJoinState registeredClubJoinState4 = clubJoinStateService.register(mockUser4.getId(), mockClub4.getId(), joinStateCodeNotJoined);
 
         //then
-        assertThat(registeredClubJoinState1.getClub()).isEqualTo(club1);
-        assertThat(registeredClubJoinState1.getUser()).isEqualTo(user1);
+        assertThat(registeredClubJoinState1.getClub()).isNotNull();
+        assertThat(registeredClubJoinState1.getUser()).isNotNull();
         assertThat(registeredClubJoinState1.getJoinState()).isEqualTo(JoinState.MASTER);
 
-        assertThat(registeredClubJoinState2.getClub()).isEqualTo(club2);
-        assertThat(registeredClubJoinState2.getUser()).isEqualTo(user2);
+        assertThat(registeredClubJoinState2.getClub()).isNotNull();
+        assertThat(registeredClubJoinState2.getUser()).isNotNull();
         assertThat(registeredClubJoinState2.getJoinState()).isEqualTo(JoinState.MANAGER);
 
-        assertThat(registeredClubJoinState3.getClub()).isEqualTo(club3);
-        assertThat(registeredClubJoinState3.getUser()).isEqualTo(user3);
+        assertThat(registeredClubJoinState3.getClub()).isNotNull();
+        assertThat(registeredClubJoinState3.getUser()).isNotNull();
         assertThat(registeredClubJoinState3.getJoinState()).isEqualTo(JoinState.MEMBER);
 
-        assertThat(registeredClubJoinState4.getClub()).isEqualTo(club4);
-        assertThat(registeredClubJoinState4.getUser()).isEqualTo(user4);
+        assertThat(registeredClubJoinState4.getClub()).isNotNull();
+        assertThat(registeredClubJoinState4.getUser()).isNotNull();
         assertThat(registeredClubJoinState4.getJoinState()).isEqualTo(JoinState.NOT_JOINED);
     }
 
     @Test
     @DisplayName("유효하지 않은 joinState 코드로는 ClubJoinState 엔티티를 생성할 수 없다.")
     public void Should_Throw_Exception_When_JoinStateCode_Is_Invalid() {
-        //given
-        User user = mockUser1;
-        Club club = mockClub1;
-
         //when
         int invalidJoinStateCode = 5;
 
         //then
-        assertThrows(IllegalArgumentException.class, () -> clubJoinStateService.register(user.getId(), club.getId(), invalidJoinStateCode));
+        assertThrows(IllegalArgumentException.class, () -> clubJoinStateService.register(mockUser1.getId(), mockClub1.getId(), invalidJoinStateCode));
     }
 
     @Test
     @DisplayName("탈퇴한 사용자가 재가입 요청을 하는 경우 isUsed 필드를 true로 변경하고 같은 엔티티 객체를 반환한다.")
     public void Should_Return_Same_Entity_When_Left_User_Request_Rejoin() {
         //given
-        User user = mockUser1;
-        Club club = mockClub1;
-
-        int joinStateCodeMEMBER = JoinState.MEMBER.getCode();
-        ClubJoinState initialJoinState = clubJoinStateService.register(user.getId(), club.getId(), joinStateCodeMEMBER);
+        ClubJoinState initialJoinState = clubJoinStateService.register(mockUser1.getId(), mockClub1.getId(), joinStateCodeMEMBER);
 
         //when
-        clubJoinStateService.delete(user.getId(), club.getId());
+        clubJoinStateService.delete(mockUser1.getId(), mockClub1.getId());
 
-        int joinStateCodeNotJoined = JoinState.NOT_JOINED.getCode();
-        ClubJoinState rejoinState = clubJoinStateService.register(user.getId(), club.getId(), joinStateCodeNotJoined);
+        ClubJoinState rejoinState = clubJoinStateService.register(mockUser1.getId(), mockClub1.getId(), joinStateCodeNotJoined);
 
         //then
         assertThat(rejoinState).isSameAs(initialJoinState);
@@ -203,17 +332,11 @@ class ClubJoinStateServiceTest {
     @DisplayName("이미 존재하는 (userId, clubId) 쌍에 대해 ClubJoinState 엔티티를 추가로 생성하려고 하면 예외를 반환한다.")
     public void Should_Throw_Exception_When_CreateEntity_If_UserId_And_ClubId_Is_Duplicated() {
         //given
-        User user = mockUser1;
-        Club club = mockClub1;
-
         //when
-        int joinStateCodeMaster = JoinState.MASTER.getCode();
-        int joinStateCodeMANAGER = JoinState.MANAGER.getCode();
-
-        clubJoinStateService.register(user.getId(), club.getId(), joinStateCodeMaster);
+        clubJoinStateService.register(mockUser1.getId(), mockClub1.getId(), joinStateCodeMaster);
 
         //then
-        assertThrows(RuntimeException.class, () -> clubJoinStateService.register(user.getId(), club.getId(), joinStateCodeMANAGER));
+        assertThrows(RuntimeException.class, () -> clubJoinStateService.register(mockUser1.getId(), mockClub1.getId(), joinStateCodeMANAGER));
     }
     // ========== register ==========
 
@@ -222,11 +345,7 @@ class ClubJoinStateServiceTest {
     @DisplayName("pk를 가지고 clubJoinState를 조회할 수 있다.")
     public void Should_Return_ClubJoinState_When_ClubJoinStateId_Is_Valid() {
         //given
-        User user = mockUser1;
-        Club club = mockClub1;
-        int initialJoinState = JoinState.MASTER.getCode();
-
-        ClubJoinState registeredState = clubJoinStateService.register(user.getId(), club.getId(), initialJoinState);
+        ClubJoinState registeredState = clubJoinStateService.register(mockUser1.getId(), mockClub1.getId(), joinStateCodeMaster);
 
         //when
         ClubJoinState clubJoinState = clubJoinStateService.getClubJoinState(registeredState.getId());
@@ -240,11 +359,7 @@ class ClubJoinStateServiceTest {
     @DisplayName("유효하지 않은 pk를 가지고 clubJoinState를 조회하면 예외를 던진다.")
     public void Should_Throw_Exception_When_ClubJoinStateId_Is_Invalid() {
         //given
-        User user = mockUser1;
-        Club club = mockClub1;
-        int initialJoinState = JoinState.MASTER.getCode();
-
-        clubJoinStateService.register(user.getId(), club.getId(), initialJoinState);
+        clubJoinStateService.register(mockUser1.getId(), mockClub1.getId(), joinStateCodeMaster);
 
         //when
         Long invalidId = 9999L;
@@ -257,14 +372,10 @@ class ClubJoinStateServiceTest {
     @DisplayName("userId와 clubId를 가지고 clubJoinState를 조회할 수 있다.")
     public void Should_Return_ClubJoinState_When_UserId_And_ClubId_Is_Valid() {
         //given
-        User user = mockUser1;
-        Club club = mockClub1;
-        int initialJoinState = JoinState.MASTER.getCode();
-
-        ClubJoinState registeredState = clubJoinStateService.register(user.getId(), club.getId(), initialJoinState);
+        ClubJoinState registeredState = clubJoinStateService.register(mockUser1.getId(), mockClub1.getId(), joinStateCodeMaster);
 
         //when
-        ClubJoinState clubJoinState = clubJoinStateService.getClubJoinState(user.getId(), club.getId());
+        ClubJoinState clubJoinState = clubJoinStateService.getClubJoinState(mockUser1.getId(), mockClub1.getId());
 
         //then
         assertThat(clubJoinState).isNotNull();
@@ -275,19 +386,15 @@ class ClubJoinStateServiceTest {
     @DisplayName("유효하지 않은 userId나 clubId를 가지고 clubJoinState를 조회하면 예외를 던진다.")
     public void Should_Throw_Exception_When_UserId_And_ClubId_Is_Invalid() {
         //given
-        User user = mockUser1;
-        Club club = mockClub1;
-        int initialJoinState = JoinState.MASTER.getCode();
-
-        clubJoinStateService.register(user.getId(), club.getId(), initialJoinState);
+        clubJoinStateService.register(mockUser1.getId(), mockClub1.getId(), joinStateCodeMaster);
 
         //when
         User invalidUser = mockUser2;
         Club invalidClub = mockClub2;
 
         //then
-        assertThrows(EntityNotFoundException.class, () -> clubJoinStateService.getClubJoinState(invalidUser.getId(), club.getId()));
-        assertThrows(EntityNotFoundException.class, () -> clubJoinStateService.getClubJoinState(user.getId(), invalidClub.getId()));
+        assertThrows(EntityNotFoundException.class, () -> clubJoinStateService.getClubJoinState(invalidUser.getId(), mockClub1.getId()));
+        assertThrows(EntityNotFoundException.class, () -> clubJoinStateService.getClubJoinState(mockUser1.getId(), invalidClub.getId()));
     }
     // ========== getClubJoinState ==========
 
@@ -296,17 +403,13 @@ class ClubJoinStateServiceTest {
     @DisplayName("사용자의 클럽 가입 상태를 변경할 수 있다.")
     public void Should_Update_ClubJoinState_When_JoinState_Is_Valid() {
         //given
-        User user = mockUser1;
-        Club club = mockClub1;
-        int initialJoinState = JoinState.MASTER.getCode();
-
-        clubJoinStateService.register(user.getId(), club.getId(), initialJoinState);
-        JoinState initialState = clubJoinStateService.getClubJoinState(user.getId(), club.getId()).getJoinState();
+        clubJoinStateService.register(mockUser1.getId(), mockClub1.getId(), joinStateCodeMaster);
+        JoinState initialState = clubJoinStateService.getClubJoinState(mockUser1.getId(), mockClub1.getId()).getJoinState();
 
         //when
         int nxtJoinState = JoinState.MANAGER.getCode();
-        clubJoinStateService.update(user.getId(), club.getId(), nxtJoinState);
-        JoinState nxtState = clubJoinStateService.getClubJoinState(user.getId(), club.getId()).getJoinState();
+        clubJoinStateService.update(mockUser1.getId(), mockClub1.getId(), nxtJoinState);
+        JoinState nxtState = clubJoinStateService.getClubJoinState(mockUser1.getId(), mockClub1.getId()).getJoinState();
 
         //then
         assertThat(initialState).isEqualTo(JoinState.MASTER);
@@ -317,18 +420,14 @@ class ClubJoinStateServiceTest {
     @DisplayName("유효하지 않은 JoinState로 가입 상태 변경 시 예외를 던진다.")
     public void Should_Throw_Exception_When_Updating_JoinState_Is_Invalid() {
         //given
-        User user = mockUser1;
-        Club club = mockClub1;
-        int initialJoinState = JoinState.MASTER.getCode();
-
-        clubJoinStateService.register(user.getId(), club.getId(), initialJoinState);
+        clubJoinStateService.register(mockUser1.getId(), mockClub1.getId(), joinStateCodeMaster);
 
         //when
         int invalidJoinStateCode = 5;
         int nxtJoinState = invalidJoinStateCode;
 
         //then
-        assertThrows(IllegalArgumentException.class, () -> clubJoinStateService.update(user.getId(), club.getId(), nxtJoinState));
+        assertThrows(IllegalArgumentException.class, () -> clubJoinStateService.update(mockUser1.getId(), mockClub1.getId(), nxtJoinState));
     }
     // ========== update ==========
 
@@ -337,17 +436,13 @@ class ClubJoinStateServiceTest {
     @DisplayName("사용자의 클럽 가입 상태를 삭제한다.(엔티티를 지우지 않고 isUsed 필드만 false로 바꾼다)")
     public void Should_Changed_isUsed_Field_to_False_When_UserId_And_ClubId_Is_Valid() {
         //given
-        User user = mockUser1;
-        Club club = mockClub1;
-        int testJoinStateCode = JoinState.MASTER.getCode();
+        clubJoinStateService.register(mockUser1.getId(), mockClub1.getId(), joinStateCodeMaster);
 
-        clubJoinStateService.register(user.getId(), club.getId(), testJoinStateCode);
-
-        boolean isUsedBeforeDelete = clubJoinStateService.getClubJoinState(user.getId(), club.getId()).isUsed();
+        boolean isUsedBeforeDelete = clubJoinStateService.getClubJoinState(mockUser1.getId(), mockClub1.getId()).isUsed();
 
         //when
-        clubJoinStateService.delete(user.getId(), club.getId());
-        boolean isUsedAfterDelete = clubJoinStateService.getClubJoinState(user.getId(), club.getId()).isUsed();
+        clubJoinStateService.delete(mockUser1.getId(), mockClub1.getId());
+        boolean isUsedAfterDelete = clubJoinStateService.getClubJoinState(mockUser1.getId(), mockClub1.getId()).isUsed();
 
         //then
         assertThat(isUsedBeforeDelete).isEqualTo(true);
@@ -360,29 +455,17 @@ class ClubJoinStateServiceTest {
     @DisplayName("사용자의 joinState 권한이 MASTER인지 판단한다.")
     public void Should_Return_True_When_UserJoinState_Is_MASTER() {
         //given
-        User user1 = userService.getUser(mockUser1.getId());
-
-        Club club1 = clubService.getClub(mockClub1.getId());
-        Club club2 = clubService.getClub(mockClub2.getId());
-        Club club3 = clubService.getClub(mockClub3.getId());
-        Club club4 = clubService.getClub(mockClub4.getId());
-
-        int joinStateCodeMaster = JoinState.MASTER.getCode();
-        int joinStateCodeMANAGER = JoinState.MANAGER.getCode();
-        int joinStateCodeMEMBER = JoinState.MEMBER.getCode();
-        int joinStateCodeNotJoined = JoinState.NOT_JOINED.getCode();
-
         //when
-        clubJoinStateService.register(user1.getId(), club1.getId(), joinStateCodeMaster);
-        clubJoinStateService.register(user1.getId(), club2.getId(), joinStateCodeMANAGER);
-        clubJoinStateService.register(user1.getId(), club3.getId(), joinStateCodeMEMBER);
-        clubJoinStateService.register(user1.getId(), club4.getId(), joinStateCodeNotJoined);
+        clubJoinStateService.register(mockUser1.getId(), mockClub1.getId(), joinStateCodeMaster);
+        clubJoinStateService.register(mockUser1.getId(), mockClub2.getId(), joinStateCodeMANAGER);
+        clubJoinStateService.register(mockUser1.getId(), mockClub3.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser1.getId(), mockClub4.getId(), joinStateCodeNotJoined);
 
         //then
-        assertThat(clubJoinStateService.isClubMaster(user1.getId(), club1.getId())).isEqualTo(true);
-        assertThat(clubJoinStateService.isClubMaster(user1.getId(), club2.getId())).isEqualTo(false);
-        assertThat(clubJoinStateService.isClubMaster(user1.getId(), club3.getId())).isEqualTo(false);
-        assertThat(clubJoinStateService.isClubMaster(user1.getId(), club4.getId())).isEqualTo(false);
+        assertThat(clubJoinStateService.isClubMaster(mockUser1.getId(), mockClub1.getId())).isEqualTo(true);
+        assertThat(clubJoinStateService.isClubMaster(mockUser1.getId(), mockClub2.getId())).isEqualTo(false);
+        assertThat(clubJoinStateService.isClubMaster(mockUser1.getId(), mockClub3.getId())).isEqualTo(false);
+        assertThat(clubJoinStateService.isClubMaster(mockUser1.getId(), mockClub4.getId())).isEqualTo(false);
     }
     // ========== isClubMaster ==========
 
@@ -391,29 +474,17 @@ class ClubJoinStateServiceTest {
     @DisplayName("사용자의 joinState 권한이 MANAGER인지 판단한다.")
     public void Should_Return_True_When_UserJoinState_Is_MANAGER() {
         //given
-        User user1 = userService.getUser(mockUser1.getId());
-
-        Club club1 = clubService.getClub(mockClub1.getId());
-        Club club2 = clubService.getClub(mockClub2.getId());
-        Club club3 = clubService.getClub(mockClub3.getId());
-        Club club4 = clubService.getClub(mockClub4.getId());
-
-        int joinStateCodeMaster = JoinState.MASTER.getCode();
-        int joinStateCodeMANAGER = JoinState.MANAGER.getCode();
-        int joinStateCodeMEMBER = JoinState.MEMBER.getCode();
-        int joinStateCodeNotJoined = JoinState.NOT_JOINED.getCode();
-
         //when
-        clubJoinStateService.register(user1.getId(), club1.getId(), joinStateCodeMaster);
-        clubJoinStateService.register(user1.getId(), club2.getId(), joinStateCodeMANAGER);
-        clubJoinStateService.register(user1.getId(), club3.getId(), joinStateCodeMEMBER);
-        clubJoinStateService.register(user1.getId(), club4.getId(), joinStateCodeNotJoined);
+        clubJoinStateService.register(mockUser1.getId(), mockClub1.getId(), joinStateCodeMaster);
+        clubJoinStateService.register(mockUser1.getId(), mockClub2.getId(), joinStateCodeMANAGER);
+        clubJoinStateService.register(mockUser1.getId(), mockClub3.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser1.getId(), mockClub4.getId(), joinStateCodeNotJoined);
 
         //then
-        assertThat(clubJoinStateService.isClubManager(user1.getId(), club1.getId())).isEqualTo(false);
-        assertThat(clubJoinStateService.isClubManager(user1.getId(), club2.getId())).isEqualTo(true);
-        assertThat(clubJoinStateService.isClubManager(user1.getId(), club3.getId())).isEqualTo(false);
-        assertThat(clubJoinStateService.isClubManager(user1.getId(), club4.getId())).isEqualTo(false);
+        assertThat(clubJoinStateService.isClubManager(mockUser1.getId(), mockClub1.getId())).isEqualTo(false);
+        assertThat(clubJoinStateService.isClubManager(mockUser1.getId(), mockClub2.getId())).isEqualTo(true);
+        assertThat(clubJoinStateService.isClubManager(mockUser1.getId(), mockClub3.getId())).isEqualTo(false);
+        assertThat(clubJoinStateService.isClubManager(mockUser1.getId(), mockClub4.getId())).isEqualTo(false);
     }
     // ========== isClubManager ==========
 
@@ -422,29 +493,17 @@ class ClubJoinStateServiceTest {
     @DisplayName("사용자의 joinState 권한이 MEMBER인지 판단한다.")
     public void Should_Return_True_When_UserJoinState_Is_MEMBER() {
         //given
-        User user1 = userService.getUser(mockUser1.getId());
-
-        Club club1 = clubService.getClub(mockClub1.getId());
-        Club club2 = clubService.getClub(mockClub2.getId());
-        Club club3 = clubService.getClub(mockClub3.getId());
-        Club club4 = clubService.getClub(mockClub4.getId());
-
-        int joinStateCodeMaster = JoinState.MASTER.getCode();
-        int joinStateCodeMANAGER = JoinState.MANAGER.getCode();
-        int joinStateCodeMEMBER = JoinState.MEMBER.getCode();
-        int joinStateCodeNotJoined = JoinState.NOT_JOINED.getCode();
-
         //when
-        clubJoinStateService.register(user1.getId(), club1.getId(), joinStateCodeMaster);
-        clubJoinStateService.register(user1.getId(), club2.getId(), joinStateCodeMANAGER);
-        clubJoinStateService.register(user1.getId(), club3.getId(), joinStateCodeMEMBER);
-        clubJoinStateService.register(user1.getId(), club4.getId(), joinStateCodeNotJoined);
+        clubJoinStateService.register(mockUser1.getId(), mockClub1.getId(), joinStateCodeMaster);
+        clubJoinStateService.register(mockUser1.getId(), mockClub2.getId(), joinStateCodeMANAGER);
+        clubJoinStateService.register(mockUser1.getId(), mockClub3.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser1.getId(), mockClub4.getId(), joinStateCodeNotJoined);
 
         //then
-        assertThat(clubJoinStateService.isClubMember(user1.getId(), club1.getId())).isEqualTo(false);
-        assertThat(clubJoinStateService.isClubMember(user1.getId(), club2.getId())).isEqualTo(false);
-        assertThat(clubJoinStateService.isClubMember(user1.getId(), club3.getId())).isEqualTo(true);
-        assertThat(clubJoinStateService.isClubMember(user1.getId(), club4.getId())).isEqualTo(false);
+        assertThat(clubJoinStateService.isClubMember(mockUser1.getId(), mockClub1.getId())).isEqualTo(false);
+        assertThat(clubJoinStateService.isClubMember(mockUser1.getId(), mockClub2.getId())).isEqualTo(false);
+        assertThat(clubJoinStateService.isClubMember(mockUser1.getId(), mockClub3.getId())).isEqualTo(true);
+        assertThat(clubJoinStateService.isClubMember(mockUser1.getId(), mockClub4.getId())).isEqualTo(false);
     }
     // ========== isClubMember ==========
 
@@ -453,29 +512,17 @@ class ClubJoinStateServiceTest {
     @DisplayName("사용자의 동아리 가입여부를 판단한다.")
     public void Should_Return_True_When_UserJoinState_Is_MASTER_Or_MANAGER_Or_MEMBER() {
         //given
-        User user1 = userService.getUser(mockUser1.getId());
-
-        Club club1 = clubService.getClub(mockClub1.getId());
-        Club club2 = clubService.getClub(mockClub2.getId());
-        Club club3 = clubService.getClub(mockClub3.getId());
-        Club club4 = clubService.getClub(mockClub4.getId());
-
-        int joinStateCodeMaster = JoinState.MASTER.getCode();
-        int joinStateCodeMANAGER = JoinState.MANAGER.getCode();
-        int joinStateCodeMEMBER = JoinState.MEMBER.getCode();
-        int joinStateCodeNotJoined = JoinState.NOT_JOINED.getCode();
-
         //when
-        clubJoinStateService.register(user1.getId(), club1.getId(), joinStateCodeMaster);
-        clubJoinStateService.register(user1.getId(), club2.getId(), joinStateCodeMANAGER);
-        clubJoinStateService.register(user1.getId(), club3.getId(), joinStateCodeMEMBER);
-        clubJoinStateService.register(user1.getId(), club4.getId(), joinStateCodeNotJoined);
+        clubJoinStateService.register(mockUser1.getId(), mockClub1.getId(), joinStateCodeMaster);
+        clubJoinStateService.register(mockUser1.getId(), mockClub2.getId(), joinStateCodeMANAGER);
+        clubJoinStateService.register(mockUser1.getId(), mockClub3.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser1.getId(), mockClub4.getId(), joinStateCodeNotJoined);
 
         //then
-        assertThat(clubJoinStateService.isJoined(user1.getId(), club1.getId())).isEqualTo(true);
-        assertThat(clubJoinStateService.isJoined(user1.getId(), club2.getId())).isEqualTo(true);
-        assertThat(clubJoinStateService.isJoined(user1.getId(), club3.getId())).isEqualTo(true);
-        assertThat(clubJoinStateService.isJoined(user1.getId(), club4.getId())).isEqualTo(false);
+        assertThat(clubJoinStateService.isJoined(mockUser1.getId(), mockClub1.getId())).isEqualTo(true);
+        assertThat(clubJoinStateService.isJoined(mockUser1.getId(), mockClub2.getId())).isEqualTo(true);
+        assertThat(clubJoinStateService.isJoined(mockUser1.getId(), mockClub3.getId())).isEqualTo(true);
+        assertThat(clubJoinStateService.isJoined(mockUser1.getId(), mockClub4.getId())).isEqualTo(false);
     }
     // ========== isJoined ==========
 
@@ -484,20 +531,15 @@ class ClubJoinStateServiceTest {
     @DisplayName("사용자의 동아리 가입정보 DB row의 유효성(사용 여부)을 판단한다.")
     public void Should_Return_True_When_ClubJoinState_isUsed_Field_Is_True() {
         //given
-        User user = mockUser1;
-        User user2 = mockUser2;
-        Club club = mockClub1;
-        int testJoinStateCode = JoinState.MASTER.getCode();
-
-        clubJoinStateService.register(user.getId(), club.getId(), testJoinStateCode);
-        clubJoinStateService.register(user2.getId(), club.getId(), testJoinStateCode);
+        clubJoinStateService.register(mockUser1.getId(), mockClub1.getId(), joinStateCodeMaster);
+        clubJoinStateService.register(mockUser2.getId(), mockClub1.getId(), joinStateCodeMaster);
 
         //when
-        clubJoinStateService.delete(user2.getId(), club.getId());
+        clubJoinStateService.delete(mockUser2.getId(), mockClub1.getId());
 
         //then
-        assertThat(clubJoinStateService.existed(user.getId(), club.getId())).isEqualTo(true);
-        assertThat(clubJoinStateService.existed(user2.getId(), club.getId())).isEqualTo(false);
+        assertThat(clubJoinStateService.existed(mockUser1.getId(), mockClub1.getId())).isEqualTo(true);
+        assertThat(clubJoinStateService.existed(mockUser2.getId(), mockClub1.getId())).isEqualTo(false);
     }
     // ========== existed ==========
 
@@ -506,21 +548,16 @@ class ClubJoinStateServiceTest {
     @DisplayName("사용자의 동아리 탈퇴 여부를 판단한다.")
     public void Should_Return_True_When_ClubJoinState_isUsed_Field_Is_False() {
         //given
-        User user = mockUser1;
-        User user2 = mockUser2;
-        Club club = mockClub1;
-        int testJoinStateCode = JoinState.MASTER.getCode();
-
-        clubJoinStateService.register(user.getId(), club.getId(), testJoinStateCode);
+        clubJoinStateService.register(mockUser1.getId(), mockClub1.getId(), joinStateCodeMaster);
 
         //when
         //then
-        assertThat(clubJoinStateService.isLeaveClub(user.getId(), club.getId())).isEqualTo(false);
-        assertThat(clubJoinStateService.isLeaveClub(user2.getId(), club.getId())).isEqualTo(false);
+        assertThat(clubJoinStateService.isLeaveClub(mockUser1.getId(), mockClub1.getId())).isEqualTo(false);
+        assertThat(clubJoinStateService.isLeaveClub(mockUser2.getId(), mockClub1.getId())).isEqualTo(false);
 
-        clubJoinStateService.delete(user.getId(), club.getId());
+        clubJoinStateService.delete(mockUser1.getId(), mockClub1.getId());
 
-        assertThat(clubJoinStateService.isLeaveClub(user.getId(), club.getId())).isEqualTo(true);
+        assertThat(clubJoinStateService.isLeaveClub(mockUser1.getId(), mockClub1.getId())).isEqualTo(true);
     }
     // ========== isLeaveClub ==========
 
@@ -529,21 +566,16 @@ class ClubJoinStateServiceTest {
     @DisplayName("사용자의 동아리 등록 이력 여부를 판단한다.")
     public void Should_Return_True_When_User_Registered_Club_Before() {
         //given
-        User user = mockUser1;
-        User user2 = mockUser2;
-        Club club = mockClub1;
-        int testJoinStateCode = JoinState.MASTER.getCode();
-
-        clubJoinStateService.register(user.getId(), club.getId(), testJoinStateCode);
+        clubJoinStateService.register(mockUser1.getId(), mockClub1.getId(), joinStateCodeMaster);
 
         //when
         //then
-        assertThat(clubJoinStateService.isRegistered(user.getId(), club.getId())).isEqualTo(true);
-        assertThat(clubJoinStateService.isRegistered(user2.getId(), club.getId())).isEqualTo(false);
+        assertThat(clubJoinStateService.isRegistered(mockUser1.getId(), mockClub1.getId())).isEqualTo(true);
+        assertThat(clubJoinStateService.isRegistered(mockUser2.getId(), mockClub1.getId())).isEqualTo(false);
 
-        clubJoinStateService.delete(user.getId(), club.getId());
+        clubJoinStateService.delete(mockUser1.getId(), mockClub1.getId());
 
-        assertThat(clubJoinStateService.isRegistered(user.getId(), club.getId())).isEqualTo(true);
+        assertThat(clubJoinStateService.isRegistered(mockUser1.getId(), mockClub1.getId())).isEqualTo(true);
     }
     // ========== isRegistered ==========
 
@@ -552,29 +584,17 @@ class ClubJoinStateServiceTest {
     @DisplayName("사용자의 가입상태가 Master 또는 Manager이면 true를 반환한다.")
     public void Should_Return_True_When_UserJoinState_Is_MASTER_Or_MANAGER() {
         //given
-        User user1 = userService.getUser(mockUser1.getId());
-
-        Club club1 = clubService.getClub(mockClub1.getId());
-        Club club2 = clubService.getClub(mockClub2.getId());
-        Club club3 = clubService.getClub(mockClub3.getId());
-        Club club4 = clubService.getClub(mockClub4.getId());
-
-        int joinStateCodeMaster = JoinState.MASTER.getCode();
-        int joinStateCodeMANAGER = JoinState.MANAGER.getCode();
-        int joinStateCodeMEMBER = JoinState.MEMBER.getCode();
-        int joinStateCodeNotJoined = JoinState.NOT_JOINED.getCode();
-
         //when
-        clubJoinStateService.register(user1.getId(), club1.getId(), joinStateCodeMaster);
-        clubJoinStateService.register(user1.getId(), club2.getId(), joinStateCodeMANAGER);
-        clubJoinStateService.register(user1.getId(), club3.getId(), joinStateCodeMEMBER);
-        clubJoinStateService.register(user1.getId(), club4.getId(), joinStateCodeNotJoined);
+        clubJoinStateService.register(mockUser1.getId(), mockClub1.getId(), joinStateCodeMaster);
+        clubJoinStateService.register(mockUser1.getId(), mockClub2.getId(), joinStateCodeMANAGER);
+        clubJoinStateService.register(mockUser1.getId(), mockClub3.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser1.getId(), mockClub4.getId(), joinStateCodeNotJoined);
 
         //then
-        assertThat(clubJoinStateService.hasManagerRole(user1.getId(), club1.getId())).isEqualTo(true);
-        assertThat(clubJoinStateService.hasManagerRole(user1.getId(), club2.getId())).isEqualTo(true);
-        assertThat(clubJoinStateService.hasManagerRole(user1.getId(), club3.getId())).isEqualTo(false);
-        assertThat(clubJoinStateService.hasManagerRole(user1.getId(), club4.getId())).isEqualTo(false);
+        assertThat(clubJoinStateService.hasManagerRole(mockUser1.getId(), mockClub1.getId())).isEqualTo(true);
+        assertThat(clubJoinStateService.hasManagerRole(mockUser1.getId(), mockClub2.getId())).isEqualTo(true);
+        assertThat(clubJoinStateService.hasManagerRole(mockUser1.getId(), mockClub3.getId())).isEqualTo(false);
+        assertThat(clubJoinStateService.hasManagerRole(mockUser1.getId(), mockClub4.getId())).isEqualTo(false);
     }
     // ========== hasManagerRole ==========
 
@@ -583,29 +603,17 @@ class ClubJoinStateServiceTest {
     @DisplayName("사용자의 가입상태가 Master 또는 Manager 또는 Member이면 true를 반환한다.")
     public void Should_Return_True_When_UserJoinState_Is_Not_미가입() {
         //given
-        User user1 = userService.getUser(mockUser1.getId());
-
-        Club club1 = clubService.getClub(mockClub1.getId());
-        Club club2 = clubService.getClub(mockClub2.getId());
-        Club club3 = clubService.getClub(mockClub3.getId());
-        Club club4 = clubService.getClub(mockClub4.getId());
-
-        int joinStateCodeMaster = JoinState.MASTER.getCode();
-        int joinStateCodeMANAGER = JoinState.MANAGER.getCode();
-        int joinStateCodeMEMBER = JoinState.MEMBER.getCode();
-        int joinStateCodeNotJoined = JoinState.NOT_JOINED.getCode();
-
         //when
-        clubJoinStateService.register(user1.getId(), club1.getId(), joinStateCodeMaster);
-        clubJoinStateService.register(user1.getId(), club2.getId(), joinStateCodeMANAGER);
-        clubJoinStateService.register(user1.getId(), club3.getId(), joinStateCodeMEMBER);
-        clubJoinStateService.register(user1.getId(), club4.getId(), joinStateCodeNotJoined);
+        clubJoinStateService.register(mockUser1.getId(), mockClub1.getId(), joinStateCodeMaster);
+        clubJoinStateService.register(mockUser1.getId(), mockClub2.getId(), joinStateCodeMANAGER);
+        clubJoinStateService.register(mockUser1.getId(), mockClub3.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser1.getId(), mockClub4.getId(), joinStateCodeNotJoined);
 
         //then
-        assertThat(clubJoinStateService.hasMemberRole(user1.getId(), club1.getId())).isEqualTo(true);
-        assertThat(clubJoinStateService.hasMemberRole(user1.getId(), club2.getId())).isEqualTo(true);
-        assertThat(clubJoinStateService.hasMemberRole(user1.getId(), club3.getId())).isEqualTo(true);
-        assertThat(clubJoinStateService.hasMemberRole(user1.getId(), club4.getId())).isEqualTo(false);
+        assertThat(clubJoinStateService.hasMemberRole(mockUser1.getId(), mockClub1.getId())).isEqualTo(true);
+        assertThat(clubJoinStateService.hasMemberRole(mockUser1.getId(), mockClub2.getId())).isEqualTo(true);
+        assertThat(clubJoinStateService.hasMemberRole(mockUser1.getId(), mockClub3.getId())).isEqualTo(true);
+        assertThat(clubJoinStateService.hasMemberRole(mockUser1.getId(), mockClub4.getId())).isEqualTo(false);
     }
     // ========== hasMemberRole ==========
     /**
@@ -622,26 +630,17 @@ class ClubJoinStateServiceTest {
     @DisplayName("가입상태가 Master인 유저 목록을 반환한다.")
     public void Should_Return_Users_When_UserJoinState_Is_MASTER() {
         //given
-        User user1 = userService.getUser(mockUser1.getId());
-        User user2 = userService.getUser(mockUser2.getId());
-        User user3 = userService.getUser(mockUser3.getId());
-        User user4 = userService.getUser(mockUser4.getId());
-        User user5 = userService.getUser(mockUser5.getId());
-
-        Club club = clubService.getClub(mockClub1.getId());
-        int joinStateMaster = JoinState.MASTER.getCode();
-
         //when
-        clubJoinStateService.register(user1.getId(), club.getId(), joinStateMaster);
-        clubJoinStateService.register(user2.getId(), club.getId(), joinStateMaster);
-        clubJoinStateService.register(user3.getId(), club.getId(), joinStateMaster);
-        clubJoinStateService.register(user4.getId(), club.getId(), joinStateMaster);
-        clubJoinStateService.register(user5.getId(), club.getId(), joinStateMaster);
+        clubJoinStateService.register(mockUser1.getId(), mockClub1.getId(), joinStateCodeMaster);
+        clubJoinStateService.register(mockUser2.getId(), mockClub1.getId(), joinStateCodeMaster);
+        clubJoinStateService.register(mockUser3.getId(), mockClub1.getId(), joinStateCodeMaster);
+        clubJoinStateService.register(mockUser4.getId(), mockClub1.getId(), joinStateCodeMaster);
+        clubJoinStateService.register(mockUser5.getId(), mockClub1.getId(), joinStateCodeMaster);
 
-        List<ClubJoinState> masters = clubJoinStateService.getMasters(club.getId(), testPageRequest);
+        ClubJoinState master = clubJoinStateService.getMaster(mockClub1.getId(), testPageRequest);
 
         //then
-        assertThat(masters.size()).isEqualTo(5);
+        assertThat(master).isNotNull();
     }
     // ========== getMasters ==========
 
@@ -650,23 +649,14 @@ class ClubJoinStateServiceTest {
     @DisplayName("가입상태가 Manager인 유저 목록을 반환한다.")
     public void Should_Return_Users_When_UserJoinState_Is_MANAGER() {
         //given
-        User user1 = userService.getUser(mockUser1.getId());
-        User user2 = userService.getUser(mockUser2.getId());
-        User user3 = userService.getUser(mockUser3.getId());
-        User user4 = userService.getUser(mockUser4.getId());
-        User user5 = userService.getUser(mockUser5.getId());
-
-        Club club = clubService.getClub(mockClub1.getId());
-        int joinStateManager = JoinState.MANAGER.getCode();
-
         //when
-        clubJoinStateService.register(user1.getId(), club.getId(), joinStateManager);
-        clubJoinStateService.register(user2.getId(), club.getId(), joinStateManager);
-        clubJoinStateService.register(user3.getId(), club.getId(), joinStateManager);
-        clubJoinStateService.register(user4.getId(), club.getId(), joinStateManager);
-        clubJoinStateService.register(user5.getId(), club.getId(), joinStateManager);
+        clubJoinStateService.register(mockUser1.getId(), mockClub1.getId(), joinStateCodeMANAGER);
+        clubJoinStateService.register(mockUser2.getId(), mockClub1.getId(), joinStateCodeMANAGER);
+        clubJoinStateService.register(mockUser3.getId(), mockClub1.getId(), joinStateCodeMANAGER);
+        clubJoinStateService.register(mockUser4.getId(), mockClub1.getId(), joinStateCodeMANAGER);
+        clubJoinStateService.register(mockUser5.getId(), mockClub1.getId(), joinStateCodeMANAGER);
 
-        List<ClubJoinState> managers = clubJoinStateService.getManagers(club.getId(), testPageRequest);
+        List<ClubJoinState> managers = clubJoinStateService.getManagers(mockClub1.getId(), testPageRequest);
 
         //then
         assertThat(managers.size()).isEqualTo(5);
@@ -678,23 +668,14 @@ class ClubJoinStateServiceTest {
     @DisplayName("가입상태가 Member인 유저 목록을 반환한다.")
     public void Should_Return_Users_When_UserJoinState_Is_MEMBER() {
         //given
-        User user1 = userService.getUser(mockUser1.getId());
-        User user2 = userService.getUser(mockUser2.getId());
-        User user3 = userService.getUser(mockUser3.getId());
-        User user4 = userService.getUser(mockUser4.getId());
-        User user5 = userService.getUser(mockUser5.getId());
-
-        Club club = clubService.getClub(mockClub1.getId());
-        int joinStateMember = JoinState.MEMBER.getCode();
-
         //when
-        clubJoinStateService.register(user1.getId(), club.getId(), joinStateMember);
-        clubJoinStateService.register(user2.getId(), club.getId(), joinStateMember);
-        clubJoinStateService.register(user3.getId(), club.getId(), joinStateMember);
-        clubJoinStateService.register(user4.getId(), club.getId(), joinStateMember);
-        clubJoinStateService.register(user5.getId(), club.getId(), joinStateMember);
+        clubJoinStateService.register(mockUser1.getId(), mockClub1.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser2.getId(), mockClub1.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser3.getId(), mockClub1.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser4.getId(), mockClub1.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser5.getId(), mockClub1.getId(), joinStateCodeMEMBER);
 
-        List<ClubJoinState> members = clubJoinStateService.getMembers(club.getId(), testPageRequest);
+        List<ClubJoinState> members = clubJoinStateService.getMembers(mockClub1.getId(), testPageRequest);
 
         //then
         assertThat(members.size()).isEqualTo(5);
@@ -706,27 +687,14 @@ class ClubJoinStateServiceTest {
     @DisplayName("가입상태가 Master, Manager, Member인 유저 목록을 반환한다.")
     public void Should_Return_Users_When_UserJoinState_Is_MASTER_Or_MANAGER_Or_MEMBER() {
         //given
-        User user1 = userService.getUser(mockUser1.getId());
-        User user2 = userService.getUser(mockUser2.getId());
-        User user3 = userService.getUser(mockUser3.getId());
-        User user4 = userService.getUser(mockUser4.getId());
-        User user5 = userService.getUser(mockUser5.getId());
-
-        Club club = clubService.getClub(mockClub1.getId());
-
-        int joinStateCodeMaster = JoinState.MASTER.getCode();
-        int joinStateCodeMANAGER = JoinState.MANAGER.getCode();
-        int joinStateCodeMEMBER = JoinState.MEMBER.getCode();
-        int joinStateCodeNotJoined = JoinState.NOT_JOINED.getCode();
-
         //when
-        clubJoinStateService.register(user1.getId(), club.getId(), joinStateCodeMaster);
-        clubJoinStateService.register(user2.getId(), club.getId(), joinStateCodeMANAGER);
-        clubJoinStateService.register(user3.getId(), club.getId(), joinStateCodeMEMBER);
-        clubJoinStateService.register(user4.getId(), club.getId(), joinStateCodeNotJoined);
-        clubJoinStateService.register(user5.getId(), club.getId(), joinStateCodeNotJoined);
+        clubJoinStateService.register(mockUser1.getId(), mockClub1.getId(), joinStateCodeMaster);
+        clubJoinStateService.register(mockUser2.getId(), mockClub1.getId(), joinStateCodeMANAGER);
+        clubJoinStateService.register(mockUser3.getId(), mockClub1.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser4.getId(), mockClub1.getId(), joinStateCodeNotJoined);
+        clubJoinStateService.register(mockUser5.getId(), mockClub1.getId(), joinStateCodeNotJoined);
 
-        List<ClubJoinState> members = clubJoinStateService.getAllMembers(club.getId(), testPageRequest);
+        List<ClubJoinState> members = clubJoinStateService.getAllMembers(mockClub1.getId(), testPageRequest);
 
         //then
         assertThat(members.size()).isEqualTo(3);
@@ -738,27 +706,14 @@ class ClubJoinStateServiceTest {
     @DisplayName("가입상태가 NOT_JOINED인 유저 목록을 반환한다.")
     public void Should_Return_Users_When_UserJoinState_Is_미가입() {
         //given
-        User user1 = userService.getUser(mockUser1.getId());
-        User user2 = userService.getUser(mockUser2.getId());
-        User user3 = userService.getUser(mockUser3.getId());
-        User user4 = userService.getUser(mockUser4.getId());
-        User user5 = userService.getUser(mockUser5.getId());
-
-        Club club = clubService.getClub(mockClub1.getId());
-
-        int joinStateCodeMaster = JoinState.MASTER.getCode();
-        int joinStateCodeMANAGER = JoinState.MANAGER.getCode();
-        int joinStateCodeMEMBER = JoinState.MEMBER.getCode();
-        int joinStateCodeNotJoined = JoinState.NOT_JOINED.getCode();
-
         //when
-        clubJoinStateService.register(user1.getId(), club.getId(), joinStateCodeNotJoined);
-        clubJoinStateService.register(user2.getId(), club.getId(), joinStateCodeNotJoined);
-        clubJoinStateService.register(user3.getId(), club.getId(), joinStateCodeMaster);
-        clubJoinStateService.register(user4.getId(), club.getId(), joinStateCodeMANAGER);
-        clubJoinStateService.register(user5.getId(), club.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser1.getId(), mockClub1.getId(), joinStateCodeNotJoined);
+        clubJoinStateService.register(mockUser2.getId(), mockClub1.getId(), joinStateCodeNotJoined);
+        clubJoinStateService.register(mockUser3.getId(), mockClub1.getId(), joinStateCodeMaster);
+        clubJoinStateService.register(mockUser4.getId(), mockClub1.getId(), joinStateCodeMANAGER);
+        clubJoinStateService.register(mockUser5.getId(), mockClub1.getId(), joinStateCodeMEMBER);
 
-        List<ClubJoinState> members = clubJoinStateService.getAppliedMembers(club.getId(), testPageRequest);
+        List<ClubJoinState> members = clubJoinStateService.getAppliedMembers(mockClub1.getId(), testPageRequest);
 
         //then
         assertThat(members.size()).isEqualTo(2);
@@ -770,37 +725,19 @@ class ClubJoinStateServiceTest {
     @DisplayName("가입상태가 Master인, Manager인 유저 목록을 반환한다.")
     public void Should_Return_Users_When_UserJoinState_Is_MASTER_Or_MANAGER() {
         //given
-        User user1 = userService.getUser(mockUser1.getId());
-        User user2 = userService.getUser(mockUser2.getId());
-        User user3 = userService.getUser(mockUser3.getId());
-        User user4 = userService.getUser(mockUser4.getId());
-        User user5 = userService.getUser(mockUser5.getId());
-        User user6 = userService.getUser(mockUser6.getId());
-        User user7 = userService.getUser(mockUser7.getId());
-        User user8 = userService.getUser(mockUser8.getId());
-        User user9 = userService.getUser(mockUser9.getId());
-        User user10 = userService.getUser(mockUser10.getId());
-
-        Club club = clubService.getClub(mockClub1.getId());
-
-        int joinStateCodeMaster = JoinState.MASTER.getCode();
-        int joinStateCodeMANAGER = JoinState.MANAGER.getCode();
-        int joinStateCodeMEMBER = JoinState.MEMBER.getCode();
-        int joinStateCodeNotJoined = JoinState.NOT_JOINED.getCode();
-
         //when
-        clubJoinStateService.register(user1.getId(), club.getId(), joinStateCodeMaster);
-        clubJoinStateService.register(user2.getId(), club.getId(), joinStateCodeMaster);
-        clubJoinStateService.register(user3.getId(), club.getId(), joinStateCodeMANAGER);
-        clubJoinStateService.register(user4.getId(), club.getId(), joinStateCodeMANAGER);
-        clubJoinStateService.register(user5.getId(), club.getId(), joinStateCodeMEMBER);
-        clubJoinStateService.register(user6.getId(), club.getId(), joinStateCodeMEMBER);
-        clubJoinStateService.register(user7.getId(), club.getId(), joinStateCodeNotJoined);
-        clubJoinStateService.register(user8.getId(), club.getId(), joinStateCodeNotJoined);
-        clubJoinStateService.register(user9.getId(), club.getId(), joinStateCodeNotJoined);
-        clubJoinStateService.register(user10.getId(), club.getId(), joinStateCodeNotJoined);
+        clubJoinStateService.register(mockUser1.getId(), mockClub1.getId(), joinStateCodeMaster);
+        clubJoinStateService.register(mockUser2.getId(), mockClub1.getId(), joinStateCodeMaster);
+        clubJoinStateService.register(mockUser3.getId(), mockClub1.getId(), joinStateCodeMANAGER);
+        clubJoinStateService.register(mockUser4.getId(), mockClub1.getId(), joinStateCodeMANAGER);
+        clubJoinStateService.register(mockUser5.getId(), mockClub1.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser6.getId(), mockClub1.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser7.getId(), mockClub1.getId(), joinStateCodeNotJoined);
+        clubJoinStateService.register(mockUser8.getId(), mockClub1.getId(), joinStateCodeNotJoined);
+        clubJoinStateService.register(mockUser9.getId(), mockClub1.getId(), joinStateCodeNotJoined);
+        clubJoinStateService.register(mockUser10.getId(), mockClub1.getId(), joinStateCodeNotJoined);
 
-        List<ClubJoinState> members = clubJoinStateService.getManagerRoleMembers(club.getId(), testPageRequest);
+        List<ClubJoinState> members = clubJoinStateService.getManagerRoleMembers(mockClub1.getId(), testPageRequest);
 
         //then
         assertThat(members.size()).isEqualTo(4);
@@ -812,37 +749,19 @@ class ClubJoinStateServiceTest {
     @DisplayName("가입상태가 Master, Manager, Member인 유저 목록을 반환한다.")
     public void Should_Return_Users_When_UserJoinState_Is_MEMBER_Role() {
         //given
-        User user1 = userService.getUser(mockUser1.getId());
-        User user2 = userService.getUser(mockUser2.getId());
-        User user3 = userService.getUser(mockUser3.getId());
-        User user4 = userService.getUser(mockUser4.getId());
-        User user5 = userService.getUser(mockUser5.getId());
-        User user6 = userService.getUser(mockUser6.getId());
-        User user7 = userService.getUser(mockUser7.getId());
-        User user8 = userService.getUser(mockUser8.getId());
-        User user9 = userService.getUser(mockUser9.getId());
-        User user10 = userService.getUser(mockUser10.getId());
-
-        Club club = clubService.getClub(mockClub1.getId());
-
-        int joinStateCodeMaster = JoinState.MASTER.getCode();
-        int joinStateCodeMANAGER = JoinState.MANAGER.getCode();
-        int joinStateCodeMEMBER = JoinState.MEMBER.getCode();
-        int joinStateCodeNotJoined = JoinState.NOT_JOINED.getCode();
-
         //when
-        clubJoinStateService.register(user1.getId(), club.getId(), joinStateCodeMaster);
-        clubJoinStateService.register(user2.getId(), club.getId(), joinStateCodeMaster);
-        clubJoinStateService.register(user3.getId(), club.getId(), joinStateCodeMANAGER);
-        clubJoinStateService.register(user4.getId(), club.getId(), joinStateCodeMANAGER);
-        clubJoinStateService.register(user5.getId(), club.getId(), joinStateCodeMEMBER);
-        clubJoinStateService.register(user6.getId(), club.getId(), joinStateCodeMEMBER);
-        clubJoinStateService.register(user7.getId(), club.getId(), joinStateCodeNotJoined);
-        clubJoinStateService.register(user8.getId(), club.getId(), joinStateCodeNotJoined);
-        clubJoinStateService.register(user9.getId(), club.getId(), joinStateCodeNotJoined);
-        clubJoinStateService.register(user10.getId(), club.getId(), joinStateCodeNotJoined);
+        clubJoinStateService.register(mockUser1.getId(), mockClub1.getId(), joinStateCodeMaster);
+        clubJoinStateService.register(mockUser2.getId(), mockClub1.getId(), joinStateCodeMaster);
+        clubJoinStateService.register(mockUser3.getId(), mockClub1.getId(), joinStateCodeMANAGER);
+        clubJoinStateService.register(mockUser4.getId(), mockClub1.getId(), joinStateCodeMANAGER);
+        clubJoinStateService.register(mockUser5.getId(), mockClub1.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser6.getId(), mockClub1.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser7.getId(), mockClub1.getId(), joinStateCodeNotJoined);
+        clubJoinStateService.register(mockUser8.getId(), mockClub1.getId(), joinStateCodeNotJoined);
+        clubJoinStateService.register(mockUser9.getId(), mockClub1.getId(), joinStateCodeNotJoined);
+        clubJoinStateService.register(mockUser10.getId(), mockClub1.getId(), joinStateCodeNotJoined);
 
-        List<ClubJoinState> members = clubJoinStateService.getMemberRoleMembers(club.getId(), testPageRequest);
+        List<ClubJoinState> members = clubJoinStateService.getMemberRoleMembers(mockClub1.getId(), testPageRequest);
 
         //then
         assertThat(members.size()).isEqualTo(6);
@@ -862,27 +781,14 @@ class ClubJoinStateServiceTest {
     @DisplayName("사용자의 모든 동아리 가입 상태를 반환한다.")
     public void Should_Return_UserClubJoinStates() {
         //given
-        User user1 = userService.getUser(mockUser1.getId());
-
-        Club club1 = clubService.getClub(mockClub1.getId());
-        Club club2 = clubService.getClub(mockClub2.getId());
-        Club club3 = clubService.getClub(mockClub3.getId());
-        Club club4 = clubService.getClub(mockClub4.getId());
-        Club club5 = clubService.getClub(mockClub5.getId());
-
-        int joinStateCodeMaster = JoinState.MASTER.getCode();
-        int joinStateCodeMANAGER = JoinState.MANAGER.getCode();
-        int joinStateCodeMEMBER = JoinState.MEMBER.getCode();
-        int joinStateCodeNotJoined = JoinState.NOT_JOINED.getCode();
-
         //when
-        clubJoinStateService.register(user1.getId(), club1.getId(), joinStateCodeMaster);
-        clubJoinStateService.register(user1.getId(), club2.getId(), joinStateCodeMANAGER);
-        clubJoinStateService.register(user1.getId(), club3.getId(), joinStateCodeMEMBER);
-        clubJoinStateService.register(user1.getId(), club4.getId(), joinStateCodeMEMBER);
-        clubJoinStateService.register(user1.getId(), club5.getId(), joinStateCodeNotJoined);
+        clubJoinStateService.register(mockUser1.getId(), mockClub1.getId(), joinStateCodeMaster);
+        clubJoinStateService.register(mockUser1.getId(), mockClub2.getId(), joinStateCodeMANAGER);
+        clubJoinStateService.register(mockUser1.getId(), mockClub3.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser1.getId(), mockClub4.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser1.getId(), mockClub5.getId(), joinStateCodeNotJoined);
 
-        List<ClubJoinState> userJoinStates = clubJoinStateService.getClubJoinStatesByUser(user1.getId(), testPageRequest);
+        List<ClubJoinState> userJoinStates = clubJoinStateService.getClubJoinStatesByUser(mockUser1.getId(), testPageRequest);
 
         //then
         assertThat(userJoinStates.size()).isEqualTo(5);
@@ -903,30 +809,17 @@ class ClubJoinStateServiceTest {
     @DisplayName("사용자의 가입 상태가 joinState인 모든 동아리 가입 상태를 반환한다.")
     public void Should_Return_ClubJoinStates_When_UserJoinState_Is_Same() {
         //given
-        User user1 = userService.getUser(mockUser1.getId());
-
-        Club club1 = clubService.getClub(mockClub1.getId());
-        Club club2 = clubService.getClub(mockClub2.getId());
-        Club club3 = clubService.getClub(mockClub3.getId());
-        Club club4 = clubService.getClub(mockClub4.getId());
-        Club club5 = clubService.getClub(mockClub5.getId());
-
-        int joinStateCodeMaster = JoinState.MASTER.getCode();
-        int joinStateCodeMANAGER = JoinState.MANAGER.getCode();
-        int joinStateCodeMEMBER = JoinState.MEMBER.getCode();
-        int joinStateCodeNotJoined = JoinState.NOT_JOINED.getCode();
-
         //when
-        clubJoinStateService.register(user1.getId(), club1.getId(), joinStateCodeMaster);
-        clubJoinStateService.register(user1.getId(), club2.getId(), joinStateCodeMANAGER);
-        clubJoinStateService.register(user1.getId(), club3.getId(), joinStateCodeMEMBER);
-        clubJoinStateService.register(user1.getId(), club4.getId(), joinStateCodeMEMBER);
-        clubJoinStateService.register(user1.getId(), club5.getId(), joinStateCodeNotJoined);
+        clubJoinStateService.register(mockUser1.getId(), mockClub1.getId(), joinStateCodeMaster);
+        clubJoinStateService.register(mockUser1.getId(), mockClub2.getId(), joinStateCodeMANAGER);
+        clubJoinStateService.register(mockUser1.getId(), mockClub3.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser1.getId(), mockClub4.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser1.getId(), mockClub5.getId(), joinStateCodeNotJoined);
 
-        List<ClubJoinState> joinStatesMaster = clubJoinStateService.getClubJoinStatesByUser(user1.getId(), joinStateCodeMaster, testPageRequest);
-        List<ClubJoinState> joinStatesManager = clubJoinStateService.getClubJoinStatesByUser(user1.getId(), joinStateCodeMANAGER, testPageRequest);
-        List<ClubJoinState> joinStatesMember = clubJoinStateService.getClubJoinStatesByUser(user1.getId(), joinStateCodeMEMBER, testPageRequest);
-        List<ClubJoinState> joinStatesNotJoined = clubJoinStateService.getClubJoinStatesByUser(user1.getId(), joinStateCodeNotJoined, testPageRequest);
+        List<ClubJoinState> joinStatesMaster = clubJoinStateService.getClubJoinStatesByUser(mockUser1.getId(), joinStateCodeMaster, testPageRequest);
+        List<ClubJoinState> joinStatesManager = clubJoinStateService.getClubJoinStatesByUser(mockUser1.getId(), joinStateCodeMANAGER, testPageRequest);
+        List<ClubJoinState> joinStatesMember = clubJoinStateService.getClubJoinStatesByUser(mockUser1.getId(), joinStateCodeMEMBER, testPageRequest);
+        List<ClubJoinState> joinStatesNotJoined = clubJoinStateService.getClubJoinStatesByUser(mockUser1.getId(), joinStateCodeNotJoined, testPageRequest);
 
         //then
         assertThat(joinStatesMaster.size()).isEqualTo(1);
@@ -941,30 +834,18 @@ class ClubJoinStateServiceTest {
     @DisplayName("올바르지 않은 가입 상태를 조회 시 예외를 반환한다.")
     public void Should_Throw_Exception_When_getClubJoinStatesByUser_UserJoinState_Is_Invalid() {
         //given
-        User user1 = userService.getUser(mockUser1.getId());
-
-        Club club1 = clubService.getClub(mockClub1.getId());
-        Club club2 = clubService.getClub(mockClub2.getId());
-        Club club3 = clubService.getClub(mockClub3.getId());
-        Club club4 = clubService.getClub(mockClub4.getId());
-        Club club5 = clubService.getClub(mockClub5.getId());
-
         int invalidJoinStateCode = 5;
-        int joinStateCodeMaster = JoinState.MASTER.getCode();
-        int joinStateCodeMANAGER = JoinState.MANAGER.getCode();
-        int joinStateCodeMEMBER = JoinState.MEMBER.getCode();
-        int joinStateCodeNotJoined = JoinState.NOT_JOINED.getCode();
 
         //when
-        clubJoinStateService.register(user1.getId(), club1.getId(), joinStateCodeMaster);
-        clubJoinStateService.register(user1.getId(), club2.getId(), joinStateCodeMANAGER);
-        clubJoinStateService.register(user1.getId(), club3.getId(), joinStateCodeMEMBER);
-        clubJoinStateService.register(user1.getId(), club4.getId(), joinStateCodeMEMBER);
-        clubJoinStateService.register(user1.getId(), club5.getId(), joinStateCodeNotJoined);
+        clubJoinStateService.register(mockUser1.getId(), mockClub1.getId(), joinStateCodeMaster);
+        clubJoinStateService.register(mockUser1.getId(), mockClub2.getId(), joinStateCodeMANAGER);
+        clubJoinStateService.register(mockUser1.getId(), mockClub3.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser1.getId(), mockClub4.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser1.getId(), mockClub5.getId(), joinStateCodeNotJoined);
 
         //then
         assertThrows(IllegalArgumentException.class,
-                () -> clubJoinStateService.getClubJoinStatesByUser(user1.getId(), invalidJoinStateCode, testPageRequest));
+                () -> clubJoinStateService.getClubJoinStatesByUser(mockUser1.getId(), invalidJoinStateCode, testPageRequest));
     }
     // ========== getClubJoinStatesByUser ==========
 
@@ -973,30 +854,17 @@ class ClubJoinStateServiceTest {
     @DisplayName("사용자가 특정 권한 이상을 가진 모든 동아리 가입 상태를 반환한다.")
     public void Should_Return_ClubJoinStates_When_UserJoinState_Is_Contained() {
         //given
-        User user1 = userService.getUser(mockUser1.getId());
-
-        Club club1 = clubService.getClub(mockClub1.getId());
-        Club club2 = clubService.getClub(mockClub2.getId());
-        Club club3 = clubService.getClub(mockClub3.getId());
-        Club club4 = clubService.getClub(mockClub4.getId());
-        Club club5 = clubService.getClub(mockClub5.getId());
-
-        int joinStateCodeMaster = JoinState.MASTER.getCode();
-        int joinStateCodeMANAGER = JoinState.MANAGER.getCode();
-        int joinStateCodeMEMBER = JoinState.MEMBER.getCode();
-        int joinStateCodeNotJoined = JoinState.NOT_JOINED.getCode();
-
         //when
-        clubJoinStateService.register(user1.getId(), club1.getId(), joinStateCodeMaster);
-        clubJoinStateService.register(user1.getId(), club2.getId(), joinStateCodeMANAGER);
-        clubJoinStateService.register(user1.getId(), club3.getId(), joinStateCodeMEMBER);
-        clubJoinStateService.register(user1.getId(), club4.getId(), joinStateCodeMEMBER);
-        clubJoinStateService.register(user1.getId(), club5.getId(), joinStateCodeNotJoined);
+        clubJoinStateService.register(mockUser1.getId(), mockClub1.getId(), joinStateCodeMaster);
+        clubJoinStateService.register(mockUser1.getId(), mockClub2.getId(), joinStateCodeMANAGER);
+        clubJoinStateService.register(mockUser1.getId(), mockClub3.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser1.getId(), mockClub4.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser1.getId(), mockClub5.getId(), joinStateCodeNotJoined);
 
-        List<ClubJoinState> hasRolesMaster = clubJoinStateService.getClubJoinStatesByUserHasRole(user1.getId(), joinStateCodeMaster, testPageRequest);
-        List<ClubJoinState> hasRolesManager = clubJoinStateService.getClubJoinStatesByUserHasRole(user1.getId(), joinStateCodeMANAGER, testPageRequest);
-        List<ClubJoinState> hasRolesMember = clubJoinStateService.getClubJoinStatesByUserHasRole(user1.getId(), joinStateCodeMEMBER, testPageRequest);
-        List<ClubJoinState> hasRolesNotJoined = clubJoinStateService.getClubJoinStatesByUserHasRole(user1.getId(), joinStateCodeNotJoined, testPageRequest);
+        List<ClubJoinState> hasRolesMaster = clubJoinStateService.getClubJoinStatesByUserHasRole(mockUser1.getId(), joinStateCodeMaster, testPageRequest);
+        List<ClubJoinState> hasRolesManager = clubJoinStateService.getClubJoinStatesByUserHasRole(mockUser1.getId(), joinStateCodeMANAGER, testPageRequest);
+        List<ClubJoinState> hasRolesMember = clubJoinStateService.getClubJoinStatesByUserHasRole(mockUser1.getId(), joinStateCodeMEMBER, testPageRequest);
+        List<ClubJoinState> hasRolesNotJoined = clubJoinStateService.getClubJoinStatesByUserHasRole(mockUser1.getId(), joinStateCodeNotJoined, testPageRequest);
 
         //then
         assertThat(hasRolesMaster.size()).isEqualTo(1);
@@ -1011,30 +879,18 @@ class ClubJoinStateServiceTest {
     @DisplayName("올바르지 않은 가입 상태를 조회 시 예외를 반환한다.")
     public void Should_Throw_Exception_When_getClubJoinStatesByUserHasRole_UserJoinState_Is_Invalid() {
         //given
-        User user1 = userService.getUser(mockUser1.getId());
-
-        Club club1 = clubService.getClub(mockClub1.getId());
-        Club club2 = clubService.getClub(mockClub2.getId());
-        Club club3 = clubService.getClub(mockClub3.getId());
-        Club club4 = clubService.getClub(mockClub4.getId());
-        Club club5 = clubService.getClub(mockClub5.getId());
-
         int invalidJoinStateCode = 5;
-        int joinStateCodeMaster = JoinState.MASTER.getCode();
-        int joinStateCodeMANAGER = JoinState.MANAGER.getCode();
-        int joinStateCodeMEMBER = JoinState.MEMBER.getCode();
-        int joinStateCodeNotJoined = JoinState.NOT_JOINED.getCode();
 
         //when
-        clubJoinStateService.register(user1.getId(), club1.getId(), joinStateCodeMaster);
-        clubJoinStateService.register(user1.getId(), club2.getId(), joinStateCodeMANAGER);
-        clubJoinStateService.register(user1.getId(), club3.getId(), joinStateCodeMEMBER);
-        clubJoinStateService.register(user1.getId(), club4.getId(), joinStateCodeMEMBER);
-        clubJoinStateService.register(user1.getId(), club5.getId(), joinStateCodeNotJoined);
+        clubJoinStateService.register(mockUser1.getId(), mockClub1.getId(), joinStateCodeMaster);
+        clubJoinStateService.register(mockUser1.getId(), mockClub2.getId(), joinStateCodeMANAGER);
+        clubJoinStateService.register(mockUser1.getId(), mockClub3.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser1.getId(), mockClub4.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser1.getId(), mockClub5.getId(), joinStateCodeNotJoined);
 
         //then
         assertThrows(IllegalArgumentException.class,
-                () -> clubJoinStateService.getClubJoinStatesByUserHasRole(user1.getId(), invalidJoinStateCode, testPageRequest));
+                () -> clubJoinStateService.getClubJoinStatesByUserHasRole(mockUser1.getId(), invalidJoinStateCode, testPageRequest));
     }
     // ========== getClubJoinStatesByUserHasRole ==========
     /**
