@@ -31,7 +31,7 @@ public class UserApiController {
         return userService.getUserUpdateRespDTO(authUserDTO.getId());
     }
 
-    @PostMapping("/info")
+    @PutMapping("/info")
     public void updateUserInfo(@AuthenticationPrincipal AuthUserDTO authUser,
                                @RequestBody @Valid UserUpdateDTO.Request userUpdateDTO) {
         userService.updateUserInfo(
@@ -48,7 +48,7 @@ public class UserApiController {
         return userService.getPasswordRespDTO(authUserDTO.getId());
     }
 
-    @PostMapping("/password")
+    @PutMapping("/password")
     public void updatePassword(@AuthenticationPrincipal AuthUserDTO authUserDTO,
                                @RequestBody @Valid PasswordDTO.Request passwordDTO) {
 
