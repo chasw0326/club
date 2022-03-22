@@ -12,14 +12,25 @@ import java.util.List;
 public class CommentDTO {
 
     @Getter
-    public static class Request {
+    public static class PostRequest {
 
-//        @NotEmpty(message = "postId는 필수 입니다.")
-//        private String postId;
+        @NotEmpty
+        private Long postId;
 
         @NotEmpty(message = "댓글내용은 필수 입니다.")
         private String content;
     }
+
+    @Getter
+    public static class PutRequest {
+
+        @NotEmpty
+        private Long commentId;
+
+        @NotEmpty(message = "댓글내용은 필수 입니다.")
+        private String content;
+    }
+
 
     @Builder
     @Getter

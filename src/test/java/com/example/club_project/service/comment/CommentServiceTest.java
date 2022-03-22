@@ -11,6 +11,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -204,7 +207,8 @@ public class CommentServiceTest {
         for (int i = 1; i <= 10; i++) {
             commentService.register(3L, 1L, "content " + i);
         }
-        List<CommentDTO.myComment> myComments = commentService.getMyComment(3L);
+        Pageable pageable = PageRequest.of(0, 5, Sort.by("id").descending());
+        List<CommentDTO.myComment> myComments = commentService.getMyComment(3L, pageable);
         Long commentId = 31L;
         for (CommentDTO.myComment myComment : myComments) {
             CommentDTO.CommentData commentData = myComment.getCommentData();

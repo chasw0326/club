@@ -8,6 +8,7 @@ import com.example.club_project.service.post.PostService;
 import com.example.club_project.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -88,8 +89,8 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<CommentDTO.myComment> getMyComment(Long userId) {
-        List<Comment> myCommentList = commentRepository.getAllByUser_IdOrderByIdDesc(userId);
+    public List<CommentDTO.myComment> getMyComment(Long userId, Pageable pageable) {
+        List<Comment> myCommentList = commentRepository.getAllByUser_IdOrderByIdDesc(userId, pageable);
         List<CommentDTO.myComment> myComments = new ArrayList<>();
         for (Comment comment : myCommentList) {
             myComments.add(CommentDTO.myComment.builder()

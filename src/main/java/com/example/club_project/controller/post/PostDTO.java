@@ -22,6 +22,7 @@ public class PostDTO {
     }
 
 
+
     @Getter
     @Builder
     public static class Response {
