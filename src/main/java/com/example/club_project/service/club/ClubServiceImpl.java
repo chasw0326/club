@@ -7,6 +7,7 @@ import com.example.club_project.repository.ClubRepository;
 import com.example.club_project.service.category.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -139,24 +140,27 @@ public class ClubServiceImpl implements ClubService {
     @Transactional
     public Club update(Long id, String name, String address, String university, String description, Long categoryId, String imageUrl) {
         Objects.requireNonNull(id, "id 입력값은 필수입니다.");
-        Objects.requireNonNull(name, "name 입력값은 필수입니다.");
         Objects.requireNonNull(university, "university 입력값은 필수입니다.");
 
         Club updatedClub = clubRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 클럽입니다."));
 
-        clubRepository.findByNameAndUniversity(name, university).filter(club -> {
-            if (!club.getId().equals(updatedClub.getId())) {
-                throw new RuntimeException("이미 대학교에 존재하는 동아리명으로는 바꿀 수 없습니다");
-            }
-            return false;
-        });
+        final String updatedClubName = StringUtils.isNotEmpty(name) ? name : updatedClub.getName();
+
+        if (!updatedClubName.equals(updatedClub.getName())) {
+            clubRepository.findByNameAndUniversity(updatedClubName, university).filter(club -> {
+                if (!club.getId().equals(updatedClub.getId())) {
+                    throw new RuntimeException("이미 대학교에 존재하는 동아리명으로는 바꿀 수 없습니다");
+                }
+                return false;
+            });
+        }
 
         if (ObjectUtils.isEmpty(categoryId)) {
-            updatedClub.update(name, address, university, description, updatedClub.getCategory(), imageUrl);
+            updatedClub.update(updatedClubName, address, university, description, updatedClub.getCategory(), imageUrl);
         } else {
             Category category = categoryService.getCategory(categoryId);
-            updatedClub.update(name, address, university, description, category, imageUrl);
+            updatedClub.update(updatedClubName, address, university, description, category, imageUrl);
         }
 
         return updatedClub;

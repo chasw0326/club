@@ -67,7 +67,7 @@ public class ClubApiController {
      */
     @PostMapping
     public ClubDTO.Response registerClub(@AuthenticationPrincipal AuthUserDTO authUser,
-                                         @RequestBody ClubDTO.RegisterRequest req) {
+                                         @Valid @RequestBody ClubDTO.RegisterRequest req) {
 
         ClubDTO.Response registerClub = clubService.registerClub(
                 req.getName(),
@@ -93,7 +93,7 @@ public class ClubApiController {
     @PutMapping("{clubId}")
     public ClubDTO.Response updateClub(@AuthenticationPrincipal AuthUserDTO authUser,
                                        @PathVariable("clubId") Long clubId,
-                                       @Valid @RequestBody ClubDTO.UpdateRequest req) {
+                                       @RequestBody ClubDTO.UpdateRequest req) {
 
         if (clubJoinStateService.isClubMaster(authUser.getId(), clubId)) {
             return clubService.updateClub(

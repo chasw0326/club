@@ -72,9 +72,13 @@ public class ClubDTO {
     @Getter
     @JsonNaming(SnakeCaseStrategy.class)
     public static class RegisterRequest {
+        @NotBlank(message = "name 필드에는 빈 값이 허용되지 않습니다.")
         private String name;
+        @NotBlank(message = "address 필드에는 빈 값이 허용되지 않습니다.")
         private String address;
+        @NotBlank(message = "description 필드에는 빈 값이 허용되지 않습니다.")
         private String description;
+        @NotBlank(message = "category 필드에는 빈 값이 허용되지 않습니다.")
         private Long category;
         private String imageUrl;
     }
@@ -85,7 +89,6 @@ public class ClubDTO {
     @Getter
     @JsonNaming(SnakeCaseStrategy.class)
     public static class UpdateRequest {
-        @NotBlank(message = "name 필드는 반드시 있어야 합니다.")
         private String name;
         private String address;
         private String description;

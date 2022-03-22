@@ -81,6 +81,7 @@ public class ClubWithUserApiController {
         if (clubJoinStateService.isClubMember(authUser.getId(), clubId)) {
             clubJoinStateService.delete(authUser.getId(), clubId);
             postService.deleteWhenLeaveClub(authUser.getId(), clubId);
+            return;
         }
 
         throw new RuntimeException("가입한 동아리가 아니라서 탈퇴할 수 없습니다.");
@@ -99,11 +100,13 @@ public class ClubWithUserApiController {
         if (clubJoinStateService.isClubMaster(authUser.getId(), clubId)) {
             clubJoinStateService.delete(userId, clubId);
             postService.deleteWhenLeaveClub(userId, clubId);
+            return;
         } else if (clubJoinStateService.isClubManager(authUser.getId(), clubId)
                 && clubJoinStateService.isClubMember(userId, clubId)) {
 
             clubJoinStateService.delete(userId, clubId);
             postService.deleteWhenLeaveClub(userId, clubId);
+            return;
         }
 
         throw new RuntimeException("유효하지 않은 요청입니다.");
@@ -123,6 +126,7 @@ public class ClubWithUserApiController {
 
         if (clubJoinStateService.hasManagerRole(authUser.getId(), clubId)) {
             clubJoinStateService.toMember(userId, clubId);
+            return;
         }
 
         throw new RuntimeException("권한이 없습니다.");
@@ -142,6 +146,7 @@ public class ClubWithUserApiController {
 
         if (clubJoinStateService.isClubMaster(authUser.getId(), clubId)) {
             clubJoinStateService.toManager(userId, clubId);
+            return;
         }
 
         throw new RuntimeException("권한이 없습니다.");
@@ -161,6 +166,7 @@ public class ClubWithUserApiController {
 
         if (clubJoinStateService.isClubMaster(authUser.getId(), clubId)) {
             clubJoinStateService.changeMaster(authUser.getId(), userId, clubId);
+            return;
         }
 
         throw new RuntimeException("권한이 없습니다.");

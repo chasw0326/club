@@ -49,3 +49,7 @@ INSERT INTO club_join_states(id, join_state, is_used, user_id, club_id, created_
 INSERT INTO club_join_states(id, join_state, is_used, user_id, club_id, created_at) VALUES(null, 3, true, 2, 6, CURRENT_TIMESTAMP());
 INSERT INTO club_join_states(id, join_state, is_used, user_id, club_id, created_at) VALUES(null, 2, true, 3, 6, CURRENT_TIMESTAMP());
 INSERT INTO club_join_states(id, join_state, is_used, user_id, club_id, created_at) VALUES(null, 1, true, 4, 6, CURRENT_TIMESTAMP());
+
+INSERT INTO club_join_states(id, join_state, is_used, user_id, club_id, created_at) VALUES(null, 4, true, 2, 1, CURRENT_TIMESTAMP());
+INSERT INTO club_join_states(id, join_state, is_used, user_id, club_id, created_at) VALUES(null, 4, true, 3, 1, CURRENT_TIMESTAMP());
+INSERT INTO club_join_states(id, join_state, is_used, user_id, club_id, created_at) VALUES(null, 4, true, 4, 1, CURRENT_TIMESTAMP());
