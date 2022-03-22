@@ -6,10 +6,7 @@ import com.example.club_project.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -20,10 +17,15 @@ public class UserApiController {
 
     private final UserService userService;
 
+    @GetMapping("/update/info")
+    public UserUpdateDTO.Response getUserIngo(@AuthenticationPrincipal AuthUserDTO authUserDTO){
+        return userService.getUserUpdateRespDTO(authUserDTO.getId());
+    }
+
     // AuthUser 사용법
-    @PostMapping("/update")
-    public ResponseEntity<?> updateUserInfo(@AuthenticationPrincipal AuthUserDTO authUser,
-                                            @RequestBody @Valid UserUpdateDTO.Request userUpdateDTO) {
+    @PostMapping("/update/info")
+    public void updateUserInfo(@AuthenticationPrincipal AuthUserDTO authUser,
+                               @RequestBody @Valid UserUpdateDTO.Request userUpdateDTO) {
         userService.updateUserInfo(
                 authUser.getId(),
                 userUpdateDTO.getName(),
@@ -31,7 +33,22 @@ public class UserApiController {
                 userUpdateDTO.getUniversity(),
                 userUpdateDTO.getIntroduction()
         );
+    }
 
-        return ResponseEntity.ok().body("update");
+    @GetMapping("/update/password")
+    public PasswordDTO.Response getPasswordPageInfo(@AuthenticationPrincipal AuthUserDTO authUserDTO){
+        return userService.getPasswordRespDTO(authUserDTO.getId());
+    }
+
+    @PostMapping("/update/password")
+    public void updatePassword(@AuthenticationPrincipal AuthUserDTO authUserDTO,
+                               @RequestBody @Valid PasswordDTO.Request passwordDTO) {
+
+        userService.updatePassword(
+                authUserDTO.getId(),
+                passwordDTO.getOldPw(),
+                passwordDTO.getNewPw(),
+                passwordDTO.getCheckPw()
+        );
     }
 }

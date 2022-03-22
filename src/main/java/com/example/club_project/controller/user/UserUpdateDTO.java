@@ -1,6 +1,7 @@
 package com.example.club_project.controller.user;
 
 
+import lombok.Builder;
 import lombok.Getter;
 
 import javax.validation.constraints.NotEmpty;
@@ -23,6 +24,7 @@ public class UserUpdateDTO {
         private String university;
     }
 
+    @Builder
     public static class Response{
 
         @NotEmpty

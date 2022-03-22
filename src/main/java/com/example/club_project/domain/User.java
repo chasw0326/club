@@ -44,7 +44,7 @@ public class User extends AuditingCreateUpdateEntity {
     @Column(nullable = false, length = 100)
     private String introduction;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection(fetch = FetchType.LAZY)
     @JsonIgnore
     private Set<UserRole> roleSet = new HashSet<>();
 

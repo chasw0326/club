@@ -122,7 +122,7 @@ public class PostServiceTest {
     @Order(value = 3)
     void Should_GetPostDtos() {
         Pageable pageable = PageRequest.of(0, 5, Sort.by("id").descending());
-        List<PostDTO.Response> dtos = postService.getPostDtos(1L, 1L, pageable);
+        List<PostDTO.Response> dtos = postService.getClubPosts(1L, 1L, pageable);
         int i = 10;
         for (PostDTO.Response dto : dtos) {
             assertEquals("C:\\user", dto.getProfileUrl());
@@ -141,7 +141,7 @@ public class PostServiceTest {
         Pageable pageable = PageRequest.of(0, 5, Sort.by("id").descending());
         try {
             assertThrows(AccessDeniedException.class, () ->
-                    postService.getPostDtos(1L, 1L, pageable)
+                    postService.getClubPosts(1L, 1L, pageable)
             );
         }finally {
             clubJoinStateService.register(1L, 1L,JoinState.MEMBER.getCode());
@@ -165,7 +165,7 @@ public class PostServiceTest {
     @Order(value = 5)
     void Should_ThrowException_WhenUpdateByStranger() {
         Throwable ex = assertThrows(AccessDeniedException.class, () ->
-                postService.update(999999999L, 1L, "제목수정", "내용수정")
+                postService.update(999999999L, 1L,1L, "제목수정", "내용수정")
         );
         assertEquals("수정할 권한이 없습니다.", ex.getMessage());
     }
@@ -174,7 +174,7 @@ public class PostServiceTest {
     @Test
     @Order(value = 6)
     void Should_UpdatePost() {
-        postService.update(1L, 4L, "제목 수정", "내용 수정");
+        postService.update(1L, 1L, 4L, "제목 수정", "내용 수정");
         Post post = postService.getPost(4L);
 
         assertEquals("제목 수정", post.getTitle());

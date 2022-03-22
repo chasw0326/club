@@ -29,7 +29,9 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public Long register(Long userId, Long postId, String content) {
-
+        if (!postService.isExists(postId)) {
+            throw new EntityNotFoundException("throw notFoundException");
+        }
         log.info("userId: {} register Comment to postId: {}", userId, postId);
 
         Comment comment = Comment.builder()

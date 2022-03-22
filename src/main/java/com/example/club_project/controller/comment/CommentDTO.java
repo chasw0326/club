@@ -14,8 +14,8 @@ public class CommentDTO {
     @Getter
     public static class Request {
 
-        @NotEmpty(message = "postId는 필수 입니다.")
-        private String postId;
+//        @NotEmpty(message = "postId는 필수 입니다.")
+//        private String postId;
 
         @NotEmpty(message = "댓글내용은 필수 입니다.")
         private String content;

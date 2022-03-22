@@ -21,30 +21,34 @@ public class GlobalExceptionHandler {
             MethodArgumentTypeMismatchException.class,
             MethodArgumentConversionNotSupportedException.class})
     public ResponseEntity<ValidExceptionDTO> validExceptionHandler(BindException ex) {
-        log.error("valid Error: {}", ex.getMessage());
+        log.warn("valid Error: {}", ex.getMessage());
+        ex.printStackTrace();
         ValidExceptionDTO dto = ValidExceptionDTO.toDto(ex);
         return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
     }
 
     // return CONFLICT
     @ExceptionHandler({DuplicateElementException.class})
-    public ResponseEntity<ExceptionDTO> duplicateElementHandler(DuplicateElementException ex){
-        log.error("DuplicateElementException: {}", ex.getMessage());
-        ExceptionDTO dto = ExceptionDTO.toDto(ex);
-        return new ResponseEntity<>(dto, HttpStatus.CONFLICT);
+    public ResponseEntity<String> duplicateElementHandler(DuplicateElementException ex){
+        String message = ex.getMessage();
+        ex.printStackTrace();
+        log.warn("DuplicateElementException: {}", message);
+        return new ResponseEntity<>(message, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler({ClubRuntimeException.class})
-    public ResponseEntity<ExceptionDTO> clubRuntimeHandler(ClubRuntimeException ex){
-        log.error("ClubRuntimeException: {}", ex.getMessage());
-        ExceptionDTO dto = ExceptionDTO.toDto(ex);
-        return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<String> clubRuntimeHandler(ClubRuntimeException ex){
+        String message = ex.getMessage();
+        ex.printStackTrace();
+        log.warn("ClubRuntimeException: {}", message);
+        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({RuntimeException.class})
-    public ResponseEntity<ExceptionDTO> runtimeHandler(RuntimeException ex) {
-        log.error("RuntimeException: {}", ex.getMessage());
-        ExceptionDTO dto = ExceptionDTO.toDto(ex);
-        return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<String> runtimeHandler(RuntimeException ex) {
+        String message = ex.getMessage();
+        ex.printStackTrace();
+        log.error("RuntimeException: {}", message);
+        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }
 }

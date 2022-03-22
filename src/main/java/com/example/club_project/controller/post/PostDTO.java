@@ -18,7 +18,9 @@ public class PostDTO {
 
         @NotEmpty
         private String content;
+
     }
+
 
     @Getter
     @Builder

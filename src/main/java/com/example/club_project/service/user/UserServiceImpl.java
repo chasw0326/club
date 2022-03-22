@@ -1,5 +1,7 @@
 package com.example.club_project.service.user;
 
+import com.example.club_project.controller.user.PasswordDTO;
+import com.example.club_project.controller.user.UserUpdateDTO;
 import com.example.club_project.domain.User;
 import com.example.club_project.domain.UserRole;
 import com.example.club_project.repository.UserRepository;
@@ -18,6 +20,28 @@ public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
+    //TODO: userRepositoty.findById 있는 부분들 메서드로 추출할 것
+    @Override
+    @Transactional
+    public UserUpdateDTO.Response getUserUpdateRespDTO(Long id){
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("throw notFoundException"));
+        return UserUpdateDTO.Response.builder()
+                .email(user.getEmail())
+                .build();
+    }
+
+    @Override
+    @Transactional
+    public PasswordDTO.Response getPasswordRespDTO(Long id){
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("throw notFoundException"));
+        return PasswordDTO.Response.builder()
+                .nickname(user.getNickname())
+                .profile_url(user.getProfileUrl())
+                .build();
+    }
 
     @Override
     @Transactional

@@ -1,17 +1,22 @@
 package com.example.club_project.controller.user;
 
+import lombok.Builder;
+import lombok.Getter;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 public class PasswordDTO {
 
-    static class Response{
+    @Builder
+    public static class Response{
         String nickname;
         String profile_url;
     }
 
-    static class Request{
+    @Getter
+    public static class Request{
         @NotEmpty(message = "이전 비밀번호 값이 없습니다.")
         String oldPw;
         @NotNull(message = "새 비밀번호 값이 없습니다.")
