@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * User가 조회하는 클럽 관련 정보를 담당하는 API Controller
  */
-@RequestMapping("api/users")
+@RequestMapping("/api/users")
 @RestController
 @RequiredArgsConstructor
 public class UserWithClubApiController {
@@ -26,7 +26,7 @@ public class UserWithClubApiController {
      *
      * GET /api/users/joined-club
      */
-    @GetMapping("joined-club")
+    @GetMapping("/joined-club")
     public List<ClubDTO.Response> searchJoinedClubs(@AuthenticationPrincipal AuthUserDTO authUser, Pageable pageable) {
         return clubJoinStateService.getJoinedClubs(authUser.getId(), pageable);
     }
@@ -36,7 +36,7 @@ public class UserWithClubApiController {
      *
      * GET /api/users/not-joined-club
      */
-    @GetMapping("not-joined-club")
+    @GetMapping("/not-joined-club")
     public List<ClubDTO.Response> searchWaitingApprovalClubs(@AuthenticationPrincipal AuthUserDTO authUser,
                                                              Pageable pageable) {
 

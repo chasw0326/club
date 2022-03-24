@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Club에서 관리하는 사용자 정보 처리를 담당하는 API Controller
  */
-@RequestMapping("api/clubs")
+@RequestMapping("/api/clubs")
 @RestController
 @RequiredArgsConstructor
 public class ClubWithUserApiController {
@@ -26,7 +26,7 @@ public class ClubWithUserApiController {
      *
      * GET /api/clubs/:club-id/member
      */
-    @GetMapping("{clubId}/member")
+    @GetMapping("/{clubId}/member")
     public List<ClubJoinStateDTO.Response> searchMember(@AuthenticationPrincipal AuthUserDTO authUser,
                                                         @PathVariable("clubId") Long clubId,
                                                         Pageable pageable) {
@@ -43,7 +43,7 @@ public class ClubWithUserApiController {
      *
      * GET /api/clubs/:club-id/non-member
      */
-    @GetMapping("{clubId}/non-member")
+    @GetMapping("/{clubId}/non-member")
     public List<ClubJoinStateDTO.Response> searchNonMember(@AuthenticationPrincipal AuthUserDTO authUser,
                                                            @PathVariable("clubId") Long clubId,
                                                            Pageable pageable) {
@@ -60,7 +60,7 @@ public class ClubWithUserApiController {
      *
      * POST api/clubs/{clubId}/member
      */
-    @PostMapping("{clubId}/member")
+    @PostMapping("/{clubId}/member")
     public void join(@AuthenticationPrincipal AuthUserDTO authUser, @PathVariable("clubId") Long clubId) {
         if (clubJoinStateService.isJoined(authUser.getId(), clubId)) {
             throw new RuntimeException("이미 가입한 동아리입니다.");
@@ -76,7 +76,7 @@ public class ClubWithUserApiController {
      *
      * DELETE api/clubs/{clubId}/member
      */
-    @DeleteMapping("{clubId}/member")
+    @DeleteMapping("/{clubId}/member")
     public void leave(@AuthenticationPrincipal AuthUserDTO authUser, @PathVariable("clubId") Long clubId) {
         if (clubJoinStateService.isClubMember(authUser.getId(), clubId)) {
             clubJoinStateService.delete(authUser.getId(), clubId);
@@ -92,7 +92,7 @@ public class ClubWithUserApiController {
      *
      * DELETE api/clubs/{clubId}/member/{userId}
      */
-    @DeleteMapping("{clubId}/member/{userId}")
+    @DeleteMapping("/{clubId}/member/{userId}")
     public void deleteMember(@AuthenticationPrincipal AuthUserDTO authUser,
                              @PathVariable("clubId") Long clubId,
                              @PathVariable("userId") Long userId) {
@@ -119,7 +119,7 @@ public class ClubWithUserApiController {
      *
      * requestBody userId
      */
-    @PutMapping("{clubId}/member/{userId}")
+    @PutMapping("/{clubId}/member/{userId}")
     public void toMember(@AuthenticationPrincipal AuthUserDTO authUser,
                          @PathVariable("clubId") Long clubId,
                          @PathVariable("userId") Long userId) {
@@ -139,7 +139,7 @@ public class ClubWithUserApiController {
      *
      * requestBody userId
      */
-    @PutMapping("{clubId}/manager/{userId}")
+    @PutMapping("/{clubId}/manager/{userId}")
     public void toManager(@AuthenticationPrincipal AuthUserDTO authUser,
                           @PathVariable("clubId") Long clubId,
                           @PathVariable("userId") Long userId) {
@@ -159,7 +159,7 @@ public class ClubWithUserApiController {
      *
      * requestBody userId
      */
-    @PutMapping("{clubId}/master/{userId}")
+    @PutMapping("/{clubId}/master/{userId}")
     public void changeMaster(@AuthenticationPrincipal AuthUserDTO authUser,
                              @PathVariable("clubId") Long clubId,
                              @PathVariable("userId") Long userId) {

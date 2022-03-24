@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Club 자체에 대한 CRUD만 담당하는 API Controller
  */
-@RequestMapping("api/clubs")
+@RequestMapping("/api/clubs")
 @RestController
 @RequiredArgsConstructor
 public class ClubApiController {
@@ -49,13 +49,12 @@ public class ClubApiController {
         }
     }
 
-    //TODO
     /**
      * 동아리 상세 정보를 반환한다.
      *
      * GET /api/clubs/:club-id
      */
-    @GetMapping("{clubId}")
+    @GetMapping("/{clubId}")
     public ClubDTO.DetailResponse searchClubDetails(@PathVariable("clubId") Long clubId) {
         return clubJoinStateService.getClubDetailDto(clubId);
     }
@@ -90,7 +89,7 @@ public class ClubApiController {
      *
      * TODO: 동아리 '대학교명'은 별도의 필드로 두지 않고 update시 사용자의 대학교명을 그대로 따라가게 하는 건 어떤지 (관리포인트 줄이기)
      */
-    @PutMapping("{clubId}")
+    @PutMapping("/{clubId}")
     public ClubDTO.Response updateClub(@AuthenticationPrincipal AuthUserDTO authUser,
                                        @PathVariable("clubId") Long clubId,
                                        @RequestBody ClubDTO.UpdateRequest req) {
@@ -115,7 +114,7 @@ public class ClubApiController {
      *
      * DELETE /api/clubs/:club-id
      */
-    @DeleteMapping("{clubId}")
+    @DeleteMapping("/{clubId}")
     public void deleteClub(@AuthenticationPrincipal AuthUserDTO authUser,
                            @PathVariable("clubId") Long clubId) {
 

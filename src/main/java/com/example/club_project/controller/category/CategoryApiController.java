@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequestMapping("api/category")
+@RequestMapping("/api/category")
 @RestController
 @RequiredArgsConstructor
 public class CategoryApiController {
@@ -18,7 +18,7 @@ public class CategoryApiController {
      *
      * GET /api/category/:id
      */
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public CategoryDTO.Response getCategories(@PathVariable Long id) {
         return categoryService.getCategoryDto(id);
     }
@@ -48,7 +48,7 @@ public class CategoryApiController {
      *
      * PUT /api/category/:id
      */
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     public CategoryDTO.Response updateCategory(@PathVariable Long id, @RequestBody CategoryDTO.UpdateRequest request) {
         return categoryService.updateCategory(id, request.getName(), request.getDescription());
     }
@@ -58,7 +58,7 @@ public class CategoryApiController {
      *
      * DELETE /api/category/:id
      */
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public void deleteCategory(@PathVariable Long id) {
         categoryService.delete(id);
     }
