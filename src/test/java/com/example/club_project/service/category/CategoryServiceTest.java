@@ -1,10 +1,8 @@
 package com.example.club_project.service.category;
 
+import com.example.club_project.controller.category.CategoryDTO;
 import com.example.club_project.domain.Category;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,12 +24,27 @@ class CategoryServiceTest {
     @Autowired
     private CategoryService categoryService;
 
-    String categoryName, categoryDescription;
+    private static String categoryName, categoryDescription;
 
-    @BeforeEach
-    public void init() {
+    @BeforeAll
+    public static void setup() {
         categoryName = "test";
         categoryDescription = "description";
+    }
+
+    @Test
+    @DisplayName("카테고리 Entity를 DTO로 변환할 수 있다")
+    public void Should_TranslateEntity() {
+        //given
+        Category registeredCategory = categoryService.register(categoryName, categoryDescription);
+
+        //when
+        CategoryDTO.Response registeredCategoryDTO = CategoryDTO.Response.from(registeredCategory);
+
+        //then
+        assertThat(registeredCategoryDTO.getId()).isEqualTo(registeredCategory.getId());
+        assertThat(registeredCategoryDTO.getName()).isEqualTo(registeredCategory.getName());
+        assertThat(registeredCategoryDTO.getDescription()).isEqualTo(registeredCategory.getDescription());
     }
 
     @Test
@@ -112,9 +125,8 @@ class CategoryServiceTest {
         //given
         List<Long> categories = new ArrayList<>();
 
-        int beforeCategorySize = categoryService.getCategories().size();
-        int newCategorySize = 10;
-        for (int i = 0; i < newCategorySize; ++i) {
+        int categorySize = 10;
+        for (int i = 0; i < categorySize; ++i) {
             String categoryName = String.format("%d번째 카테고리", i);
             String categoryDescription = String.format("%d번째 테스트 카테고리 설명입니다", i);
             Category registeredCategory = categoryService.register(categoryName, categoryDescription);
@@ -125,7 +137,7 @@ class CategoryServiceTest {
         List<Category> result = categoryService.getCategoriesById(categories);
 
         //then
-        assertThat(result.size()).isEqualTo(beforeCategorySize + newCategorySize);
+        assertThat(result.size()).isEqualTo(categorySize);
     }
 
     @Test
@@ -165,9 +177,8 @@ class CategoryServiceTest {
         //given
         List<String> categories = new ArrayList<>();
 
-        int beforeCategorySize = categoryService.getCategories().size();
-        int newCategorySize = 10;
-        for (int i = 0; i < newCategorySize; ++i) {
+        int categorySize = 10;
+        for (int i = 0; i < categorySize; ++i) {
             String categoryName = String.format("%d번째 카테고리", i);
             String categoryDescription = String.format("%d번째 테스트 카테고리 설명입니다", i);
             Category registeredCategory = categoryService.register(categoryName, categoryDescription);
@@ -178,7 +189,7 @@ class CategoryServiceTest {
         List<Category> result = categoryService.getCategoriesByName(categories);
 
         //then
-        assertThat(result.size()).isEqualTo(beforeCategorySize + newCategorySize);
+        assertThat(result.size()).isEqualTo(categorySize);
     }
 
     @Test
@@ -230,17 +241,15 @@ class CategoryServiceTest {
     }
 
     @Test
-    @DisplayName("Entity 삭제 시 삭제된 엔티티 갯수를 리턴한다")
-    public void Should_Return_1L_When_Remove_OneEntity() {
+    @DisplayName("Entity 삭제 시 id를 가지고 엔티티를 삭제한다")
+    public void Should_Delete_Entity_When_Removed_Id_isValid() {
         //given
-        int beforeCategorySize = categoryService.getCategories().size();
-        categoryService.register(categoryName, categoryDescription);
+        Category registeredCategory = categoryService.register(categoryName, categoryDescription);
 
         //when
-        long deleteEntitySize = categoryService.delete(categoryName);
+        categoryService.delete(registeredCategory.getId());
 
         //then
-        assertThat(categoryService.getCategories().size()).isEqualTo(beforeCategorySize);
-        assertThat(deleteEntitySize).isEqualTo(1);
+        assertThrows(EntityNotFoundException.class, () -> categoryService.getCategory(registeredCategory.getId()));
     }
 }

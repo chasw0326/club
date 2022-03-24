@@ -7,6 +7,7 @@ import com.example.club_project.repository.ClubRepository;
 import com.example.club_project.service.category.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +17,6 @@ import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Objects;
 
-import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
@@ -31,47 +31,18 @@ public class ClubServiceImpl implements ClubService {
      */
     @Override
     @Transactional
-    public ClubDTO.Response registerClub(String name, String address, String university, String description, String categoryName, String imageUrl) {
-        return convertToDTO(this.register(name, address, university, description, categoryName, imageUrl));
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public ClubDTO.Response getClubDto(String name, String university) {
-        return convertToDTO(this.getClub(name, university));
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public ClubDTO.Response getClubDto(Long id) {
-        return convertToDTO(this.getClub(id));
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<ClubDTO.Response> getClubDtos(List<String> categories, String university, Pageable pageable) {
-        return this.getClubs(categories, university, pageable)
-                .stream()
-                .map(this::convertToDTO)
-                .collect(toList());
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<ClubDTO.Response> getClubDtos(String university, Pageable pageable) {
-        return this.getClubs(university, pageable)
-                .stream()
-                .map(this::convertToDTO)
-                .collect(toList());
+    public ClubDTO.Response registerClub(String name, String address, String university, String description, Long categoryId, String imageUrl) {
+        return convertToDTO(this.register(name, address, university, description, categoryId, imageUrl));
     }
 
     @Override
     @Transactional
-    public ClubDTO.Response updateClub(Long id, String name, String address, String university, String description, String categoryName, String imageUrl) {
-        return convertToDTO(this.update(id, name, address, university, description, categoryName, imageUrl));
+    public ClubDTO.Response updateClub(Long id, String name, String address, String university, String description, Long categoryId, String imageUrl) {
+        return convertToDTO(this.update(id, name, address, university, description, categoryId, imageUrl));
     }
 
-    private ClubDTO.Response convertToDTO(Club club) {
+    @Override
+    public ClubDTO.Response convertToDTO(Club club) {
         return ClubDTO.Response.from(club);
     }
 
@@ -81,18 +52,18 @@ public class ClubServiceImpl implements ClubService {
      */
     @Override
     @Transactional
-    public Club register(String name, String address, String university, String description, String categoryName, String imageUrl) {
+    public Club register(String name, String address, String university, String description, Long categoryId, String imageUrl) {
         Objects.requireNonNull(name, "name 입력값은 필수입니다.");
         Objects.requireNonNull(address, "address 입력값은 필수입니다.");
         Objects.requireNonNull(university, "university 입력값은 필수입니다.");
         Objects.requireNonNull(description, "description 입력값은 필수입니다.");
-        Objects.requireNonNull(categoryName, "categoryName 입력값은 필수입니다.");
+        Objects.requireNonNull(categoryId, "categoryId 입력값은 필수입니다.");
 
         if (existed(name, university)) {
             throw new EntityExistsException("이미 존재하는 클럽입니다");
         }
 
-        Category category = categoryService.getCategory(categoryName);
+        Category category = categoryService.getCategory(categoryId);
 
         Club club = Club.builder()
                 .name(name)
@@ -108,16 +79,6 @@ public class ClubServiceImpl implements ClubService {
 
     @Override
     @Transactional(readOnly = true)
-    public Club getClub(String name, String university) {
-        Objects.requireNonNull(name, "name 입력값은 필수입니다.");
-        Objects.requireNonNull(university, "university 입력값은 필수입니다.");
-
-        return clubRepository.findByNameAndUniversity(name, university)
-                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 클럽입니다."));
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     public Club getClub(Long id) {
         Objects.requireNonNull(id, "id 입력값은 필수입니다.");
 
@@ -127,13 +88,12 @@ public class ClubServiceImpl implements ClubService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Club> getClubs(List<String> categories, String university, Pageable pageable) {
-        Objects.requireNonNull(categories, "categories 입력값은 필수입니다.");
+    public Club getClub(String name, String university) {
+        Objects.requireNonNull(name, "name 입력값은 필수입니다.");
         Objects.requireNonNull(university, "university 입력값은 필수입니다.");
 
-        List<Category> clubCategories = categoryService.getCategoriesByName(categories);
-
-        return clubRepository.findAll(clubCategories, university, pageable);
+        return clubRepository.findByNameAndUniversity(name, university)
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 클럽입니다."));
     }
 
     @Override
@@ -145,16 +105,62 @@ public class ClubServiceImpl implements ClubService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<Club> getClubs(String name, String university, Pageable pageable) {
+        Objects.requireNonNull(name, "name 입력값은 필수입니다.");
+        Objects.requireNonNull(university, "university 입력값은 필수입니다.");
+
+        return clubRepository.findAllByNameAndUniversity(name, university, pageable);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Club> getClubs(List<Long> categories, String university, Pageable pageable) {
+        Objects.requireNonNull(categories, "categories 입력값은 필수입니다.");
+        Objects.requireNonNull(university, "university 입력값은 필수입니다.");
+
+        List<Category> clubCategories = categoryService.getCategoriesById(categories);
+
+        return clubRepository.findAll(clubCategories, university, pageable);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Club> getClubs(List<Long> categories, String university, String name, Pageable pageable) {
+        Objects.requireNonNull(categories, "categories 입력값은 필수입니다.");
+        Objects.requireNonNull(university, "university 입력값은 필수입니다.");
+        Objects.requireNonNull(name, "name 입력값은 필수입니다.");
+
+        List<Category> clubCategories = categoryService.getCategoriesById(categories);
+
+        return clubRepository.findAll(clubCategories, name, university, pageable);
+    }
+
+    @Override
     @Transactional
-    public Club update(Long id, String name, String address, String university, String description, String categoryName, String imageUrl) {
+    public Club update(Long id, String name, String address, String university, String description, Long categoryId, String imageUrl) {
+        Objects.requireNonNull(id, "id 입력값은 필수입니다.");
+        Objects.requireNonNull(university, "university 입력값은 필수입니다.");
+
         Club updatedClub = clubRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 클럽입니다."));
 
-        if (ObjectUtils.isEmpty(categoryName)) {
-            updatedClub.update(name, address, university, description, updatedClub.getCategory(), imageUrl);
+        final String updatedClubName = StringUtils.isNotEmpty(name) ? name : updatedClub.getName();
+
+        if (!updatedClubName.equals(updatedClub.getName())) {
+            clubRepository.findByNameAndUniversity(updatedClubName, university).filter(club -> {
+                if (!club.getId().equals(updatedClub.getId())) {
+                    throw new RuntimeException("이미 대학교에 존재하는 동아리명으로는 바꿀 수 없습니다");
+                }
+                return false;
+            });
+        }
+
+        if (ObjectUtils.isEmpty(categoryId)) {
+            updatedClub.update(updatedClubName, address, university, description, updatedClub.getCategory(), imageUrl);
         } else {
-            Category category = categoryService.getCategory(categoryName);
-            updatedClub.update(name, address, university, description, category, imageUrl);
+            Category category = categoryService.getCategory(categoryId);
+            updatedClub.update(updatedClubName, address, university, description, category, imageUrl);
         }
 
         return updatedClub;
@@ -165,7 +171,10 @@ public class ClubServiceImpl implements ClubService {
     public void delete(Long id) {
         Objects.requireNonNull(id, "id 입력값은 필수입니다.");
 
-        clubRepository.deleteById(id);
+        Club deleteClub = clubRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("삭제하려는 id값이 존재하지 않습니다."));
+
+        clubRepository.delete(deleteClub);
     }
 
     @Override
