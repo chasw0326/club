@@ -8,7 +8,7 @@ public interface UserService {
 
     UserUpdateDTO.Response getUserUpdateRespDTO(Long id);
 
-    PasswordDTO.Response getPasswordRespDTO(Long id);
+    PasswordDTO.changeScreenData getPasswordRespDTO(Long id);
 
     Long signup(User user);
 

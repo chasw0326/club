@@ -12,16 +12,16 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-@RequestMapping("/api")
+@RequestMapping("/api/post")
 @RestController
 @RequiredArgsConstructor
 public class PostApiController {
 
     private final PostService postService;
 
-    @PostMapping("/post")
+    @PostMapping
     public void register(@AuthenticationPrincipal AuthUserDTO authUser,
-                         Long clubId,
+                         @RequestParam(value = "clubId") Long clubId,
                          @RequestBody @Valid PostDTO.Request request) {
         postService.register(
                 authUser.getId(),
@@ -30,7 +30,7 @@ public class PostApiController {
                 request.getContent());
     }
 
-    @GetMapping("/post")
+    @GetMapping
     public List<PostDTO.Response> getClubPosts(@AuthenticationPrincipal AuthUserDTO authUser,
                                                Long clubId,
                                                @PageableDefault(
@@ -40,9 +40,9 @@ public class PostApiController {
         return postService.getClubPosts(authUser.getId(), clubId, pageable);
     }
 
-    @PutMapping("/post/{postId}")
+    @PutMapping("/{postId}")
     public void update(@AuthenticationPrincipal AuthUserDTO authUser,
-                       Long clubId,
+                       @RequestParam(value = "clubId") Long clubId,
                        @PathVariable("postId") Long postId,
                        @RequestBody PostDTO.Request request) {
 
@@ -55,9 +55,9 @@ public class PostApiController {
         );
     }
 
-    @DeleteMapping("/post/{postId}")
+    @DeleteMapping("/{postId}")
     public void delete(@AuthenticationPrincipal AuthUserDTO authUser,
-                       Long clubId,
+                       @RequestParam(value = "clubId") Long clubId,
                        @PathVariable("postId") Long postId) {
 
         postService.delete(

@@ -21,4 +21,5 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
      */
     @EntityGraph(attributePaths = {"user"}, type = EntityGraph.EntityGraphType.LOAD)
     List<Comment> getAllByUser_IdOrderByIdDesc(Long userId, Pageable pageable);
+
 }

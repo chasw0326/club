@@ -4,6 +4,7 @@ package com.example.club_project.controller.user;
 import lombok.Builder;
 import lombok.Getter;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 
 public class UserUpdateDTO {
@@ -11,23 +12,23 @@ public class UserUpdateDTO {
     @Getter
     public static class Request{
 
-        @NotEmpty
+        @NotBlank
         private String name;
 
-        @NotEmpty
+        @NotBlank
         private String nickname;
 
-        @NotEmpty
+        @NotBlank
         private String introduction;
 
-        @NotEmpty
+        @NotBlank
         private String university;
     }
 
     @Builder
     public static class Response{
 
-        @NotEmpty
+        @NotBlank
         private String email;
 
     }

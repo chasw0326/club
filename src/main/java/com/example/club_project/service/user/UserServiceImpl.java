@@ -13,8 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 
-@Service
 @Slf4j
+@Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService{
 
@@ -23,7 +23,7 @@ public class UserServiceImpl implements UserService{
 
     //TODO: userRepositoty.findById 있는 부분들 메서드로 추출할 것
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public UserUpdateDTO.Response getUserUpdateRespDTO(Long id){
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("throw notFoundException"));
@@ -33,13 +33,13 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    @Transactional
-    public PasswordDTO.Response getPasswordRespDTO(Long id){
+    @Transactional(readOnly = true)
+    public PasswordDTO.changeScreenData getPasswordRespDTO(Long id){
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("throw notFoundException"));
-        return PasswordDTO.Response.builder()
+        return PasswordDTO.changeScreenData.builder()
                 .nickname(user.getNickname())
-                .profile_url(user.getProfileUrl())
+                .profileUrl(user.getProfileUrl())
                 .build();
     }
 

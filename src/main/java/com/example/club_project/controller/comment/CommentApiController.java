@@ -6,21 +6,23 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/api")
+import javax.validation.Valid;
+
+@RequestMapping("/api/comment")
 @RestController
 @RequiredArgsConstructor
 public class CommentApiController {
 
     private final CommentService commentService;
 
-    @GetMapping("/comment")
-    public CommentDTO.Response getAllCommentsWithPost(Long postId){
+    @GetMapping
+    public CommentDTO.Response getAllCommentsWithPost(Long postId) {
         return commentService.getCommentDtos(postId);
     }
 
-    @PostMapping("/comment")
+    @PostMapping
     public void register(@AuthenticationPrincipal AuthUserDTO authUser,
-                         @RequestBody CommentDTO.PostRequest request){
+                         @RequestBody @Valid CommentDTO.PostRequest request) {
 
         commentService.register(
                 authUser.getId(),
@@ -29,16 +31,22 @@ public class CommentApiController {
         );
     }
 
-    @PutMapping("/comment")
+    @PutMapping("/{commentId}")
     public void update(@AuthenticationPrincipal AuthUserDTO authUser,
-                       @RequestBody CommentDTO.PutRequest request){
-        commentService.update(authUser.getId(), request.getCommentId(), request.getContent());
+                       @RequestParam(value = "content") String content,
+                       @PathVariable("commentId") Long commentId) {
+
+        commentService.update(
+                authUser.getId(),
+                commentId,
+                content
+        );
     }
 
-    @DeleteMapping("/comment")
+    @DeleteMapping("/{commentId}")
     public void delete(@AuthenticationPrincipal AuthUserDTO authUser,
-                       Long clubId,
-                       Long commentId){
+                       @RequestParam(value = "clubId") Long clubId,
+                       @PathVariable("commentId") Long commentId) {
 
         commentService.delete(
                 authUser.getId(),

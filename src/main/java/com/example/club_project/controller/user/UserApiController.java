@@ -26,12 +26,12 @@ public class UserApiController {
     private final PostService postService;
     private final CommentService commentService;
 
-    @GetMapping("/info")
+    @GetMapping
     public UserUpdateDTO.Response getUserInfo(@AuthenticationPrincipal AuthUserDTO authUserDTO) {
         return userService.getUserUpdateRespDTO(authUserDTO.getId());
     }
 
-    @PutMapping("/info")
+    @PutMapping
     public void updateUserInfo(@AuthenticationPrincipal AuthUserDTO authUser,
                                @RequestBody @Valid UserUpdateDTO.Request userUpdateDTO) {
         userService.updateUserInfo(
@@ -43,8 +43,9 @@ public class UserApiController {
         );
     }
 
+    // 비밀번호 변경화면에 프로필사진경로와 유저네임 보내줌
     @GetMapping("/password")
-    public PasswordDTO.Response getPasswordPageInfo(@AuthenticationPrincipal AuthUserDTO authUserDTO) {
+    public PasswordDTO.changeScreenData getPasswordPageInfo(@AuthenticationPrincipal AuthUserDTO authUserDTO) {
         return userService.getPasswordRespDTO(authUserDTO.getId());
     }
 
@@ -62,20 +63,20 @@ public class UserApiController {
 
     @GetMapping("/posts")
     public List<PostDTO.Response> getMyPosts(@AuthenticationPrincipal AuthUserDTO authUser,
-                                            @PageableDefault(
-                                   size = 20,
-                                   sort = "id",
-                                   direction = Sort.Direction.DESC) Pageable pageable) {
+                                             @PageableDefault(
+                                                     size = 20,
+                                                     sort = "id",
+                                                     direction = Sort.Direction.DESC) Pageable pageable) {
 
         return postService.getMyPosts(authUser.getId(), pageable);
     }
 
     @GetMapping("/comments")
     public List<CommentDTO.myComment> getMyComments(@AuthenticationPrincipal AuthUserDTO authUser,
-                                          @PageableDefault(
-                                      size = 20,
-                                      sort = "id",
-                                      direction = Sort.Direction.DESC) Pageable pageable) {
+                                                    @PageableDefault(
+                                                            size = 20,
+                                                            sort = "id",
+                                                            direction = Sort.Direction.DESC) Pageable pageable) {
 
         return commentService.getMyComment(authUser.getId(), pageable);
     }
