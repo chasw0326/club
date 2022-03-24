@@ -1,6 +1,6 @@
 package com.example.club_project.util;
 
-import com.example.club_project.domain.User;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintViolation;
@@ -13,6 +13,8 @@ public class ValidateUtil {
     @Autowired
     private Validator validator;
 
+    // 예외 종류는 바꿔도 되지만 RuntimeException 계열로 바꾸거면 상관없지만
+    // checked 예외로 바꾼다면 rollbackFor = "예외" 코드를 추가 할 것
     public void validate(Object entity){
         Set<ConstraintViolation<Object>> violations = validator.validate(entity);
 
