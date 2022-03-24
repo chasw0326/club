@@ -11,7 +11,7 @@ import javax.validation.constraints.Pattern;
 public class PasswordDTO {
 
     @Builder
-    public static class changeScreenData {
+    public static class ChangeScreenDTO {
         String nickname;
         String profileUrl;
     }

@@ -6,6 +6,7 @@ import com.example.club_project.repository.CommentRepository;
 import com.example.club_project.service.clubjoinstate.ClubJoinStateService;
 import com.example.club_project.service.post.PostService;
 import com.example.club_project.service.user.UserService;
+import com.example.club_project.util.ValidateUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +27,7 @@ public class CommentServiceImpl implements CommentService {
     private final PostService postService;
     private final UserService userService;
     private final ClubJoinStateService clubJoinStateService;
+    private final ValidateUtil validateUtil;
 
     @Override
     @Transactional
@@ -40,6 +42,7 @@ public class CommentServiceImpl implements CommentService {
                 .post(postService.getPost(postId))
                 .user(userService.getUser(userId))
                 .build();
+        validateUtil.validate(comment);
         commentRepository.save(comment);
         return comment.getId();
     }
@@ -84,6 +87,7 @@ public class CommentServiceImpl implements CommentService {
             throw new AccessDeniedException("수정 권한 없음");
         }
         comment.update(content);
+        validateUtil.validate(comment);
         return comment.getId();
     }
 

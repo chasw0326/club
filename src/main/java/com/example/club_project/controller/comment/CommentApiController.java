@@ -33,7 +33,7 @@ public class CommentApiController {
 
     @PutMapping("/{commentId}")
     public void update(@AuthenticationPrincipal AuthUserDTO authUser,
-                       @RequestParam(value = "content") String content,
+                       @RequestParam("content") String content,
                        @PathVariable("commentId") Long commentId) {
 
         commentService.update(
@@ -45,7 +45,7 @@ public class CommentApiController {
 
     @DeleteMapping("/{commentId}")
     public void delete(@AuthenticationPrincipal AuthUserDTO authUser,
-                       @RequestParam(value = "clubId") Long clubId,
+                       @RequestParam("clubId") Long clubId,
                        @PathVariable("commentId") Long commentId) {
 
         commentService.delete(

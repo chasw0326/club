@@ -35,7 +35,7 @@ public class UserServiceTest {
     @BeforeEach
     @Test
     void setUp() {
-        password = "qwe123!@#";
+        password = "aaZZa44@";
         testUser = User.builder()
                 .email("test@naver.com")
                 .name("testName")

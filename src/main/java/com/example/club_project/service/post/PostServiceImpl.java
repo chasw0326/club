@@ -8,6 +8,7 @@ import com.example.club_project.repository.PostRepository;
 import com.example.club_project.service.club.ClubService;
 import com.example.club_project.service.clubjoinstate.ClubJoinStateService;
 import com.example.club_project.service.user.UserService;
+import com.example.club_project.util.ValidateUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +29,7 @@ public class PostServiceImpl implements PostService {
     private final UserService userService;
     private final ClubService clubService;
     private final ClubJoinStateService clubJoinStateService;
+    private final ValidateUtil validateUtil;
 
     @Override
     @Transactional(readOnly = true)
@@ -77,6 +79,7 @@ public class PostServiceImpl implements PostService {
                 .content(content)
                 .build();
 
+        validateUtil.validate(post);
         postRepository.save(post);
         return post.getId();
     }
@@ -112,6 +115,7 @@ public class PostServiceImpl implements PostService {
         }
 
         post.update(title, content);
+        validateUtil.validate(post);
         return post.getId();
     }
 

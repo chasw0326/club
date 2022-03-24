@@ -21,7 +21,7 @@ public class PostApiController {
 
     @PostMapping
     public void register(@AuthenticationPrincipal AuthUserDTO authUser,
-                         @RequestParam(value = "clubId") Long clubId,
+                         @RequestParam("clubId") Long clubId,
                          @RequestBody @Valid PostDTO.Request request) {
         postService.register(
                 authUser.getId(),
@@ -32,7 +32,7 @@ public class PostApiController {
 
     @GetMapping
     public List<PostDTO.Response> getClubPosts(@AuthenticationPrincipal AuthUserDTO authUser,
-                                               Long clubId,
+                                               @RequestParam("clubId") Long clubId,
                                                @PageableDefault(
                                                        size = 20,
                                                        sort = "id",
@@ -42,7 +42,7 @@ public class PostApiController {
 
     @PutMapping("/{postId}")
     public void update(@AuthenticationPrincipal AuthUserDTO authUser,
-                       @RequestParam(value = "clubId") Long clubId,
+                       @RequestParam("clubId") Long clubId,
                        @PathVariable("postId") Long postId,
                        @RequestBody PostDTO.Request request) {
 
@@ -57,7 +57,7 @@ public class PostApiController {
 
     @DeleteMapping("/{postId}")
     public void delete(@AuthenticationPrincipal AuthUserDTO authUser,
-                       @RequestParam(value = "clubId") Long clubId,
+                       @RequestParam("clubId") Long clubId,
                        @PathVariable("postId") Long postId) {
 
         postService.delete(

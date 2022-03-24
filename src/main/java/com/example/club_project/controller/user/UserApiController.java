@@ -45,7 +45,7 @@ public class UserApiController {
 
     // 비밀번호 변경화면에 프로필사진경로와 유저네임 보내줌
     @GetMapping("/password")
-    public PasswordDTO.changeScreenData getPasswordPageInfo(@AuthenticationPrincipal AuthUserDTO authUserDTO) {
+    public PasswordDTO.ChangeScreenDTO getPasswordPageInfo(@AuthenticationPrincipal AuthUserDTO authUserDTO) {
         return userService.getPasswordRespDTO(authUserDTO.getId());
     }
 
