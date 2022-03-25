@@ -121,7 +121,7 @@ public class UserServiceTest {
         String university = testUser.getUniversity();
         String intro = testUser.getIntroduction();
 
-        userService.updateUserInfo(principalId, "new" + name, "new" + nickname, "new" + university, "new" + intro);
+        userService.updateUser(principalId, "new" + name, "new" + nickname, "new" + university, "new" + intro);
         User result = userRepository.findById(principalId).
                 orElseThrow(() -> new EntityNotFoundException("테스트 실패"));
 

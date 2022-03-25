@@ -27,14 +27,14 @@ public class UserApiController {
     private final CommentService commentService;
 
     @GetMapping
-    public UserUpdateDTO.Response getUserInfo(@AuthenticationPrincipal AuthUserDTO authUserDTO) {
+    public UserDTO.UpdateResponse getUserInfo(@AuthenticationPrincipal AuthUserDTO authUserDTO) {
         return userService.getUserUpdateRespDTO(authUserDTO.getId());
     }
 
     @PutMapping
     public void updateUserInfo(@AuthenticationPrincipal AuthUserDTO authUser,
-                               @RequestBody @Valid UserUpdateDTO.Request userUpdateDTO) {
-        userService.updateUserInfo(
+                               @RequestBody @Valid UserDTO.UpdateRequest userUpdateDTO) {
+        userService.updateUser(
                 authUser.getId(),
                 userUpdateDTO.getName(),
                 userUpdateDTO.getNickname(),
@@ -45,13 +45,13 @@ public class UserApiController {
 
     // 비밀번호 변경화면에 프로필사진경로와 유저네임 보내줌
     @GetMapping("/password")
-    public PasswordDTO.ChangeScreenDTO getPasswordPageInfo(@AuthenticationPrincipal AuthUserDTO authUserDTO) {
-        return userService.getPasswordRespDTO(authUserDTO.getId());
+    public UserDTO.NicknameAndProfile getPasswordPageInfo(@AuthenticationPrincipal AuthUserDTO authUserDTO) {
+        return userService.getUsernameAndPicture(authUserDTO.getId());
     }
 
     @PutMapping("/password")
     public void updatePassword(@AuthenticationPrincipal AuthUserDTO authUserDTO,
-                               @RequestBody @Valid PasswordDTO.Request passwordDTO) {
+                               @RequestBody @Valid UserDTO.UpdatePassword passwordDTO) {
 
         userService.updatePassword(
                 authUserDTO.getId(),

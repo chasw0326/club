@@ -1,5 +1,6 @@
 package com.example.club_project.controller.user;
 
+
 import lombok.Builder;
 import lombok.Getter;
 
@@ -7,16 +8,52 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
-public class PasswordDTO {
+public class UserDTO {
+
+    @Getter
+    public static class UpdateRequest {
+
+        @NotBlank
+        private String name;
+
+        @NotBlank
+        private String nickname;
+
+        @NotBlank
+        private String introduction;
+
+        @NotBlank
+        private String university;
+    }
 
     @Builder
-    public static class ChangeScreenDTO {
+    public static class UpdateResponse {
+
+        @NotBlank
+        private String email;
+
+        @NotBlank
+        private String name;
+
+        @NotBlank
+        private String nickname;
+
+        @NotBlank
+        private String introduction;
+
+        @NotBlank
+        private String university;
+
+    }
+
+    @Builder
+    public static class NicknameAndProfile {
         String nickname;
         String profileUrl;
     }
 
     @Getter
-    public static class Request {
+    public static class UpdatePassword {
         @NotBlank(message = "이전 비밀번호 값이 없습니다.")
         String oldPw;
         @NotNull(message = "새 비밀번호 값이 없습니다.")

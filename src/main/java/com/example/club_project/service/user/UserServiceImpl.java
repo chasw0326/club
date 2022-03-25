@@ -1,7 +1,6 @@
 package com.example.club_project.service.user;
 
-import com.example.club_project.controller.user.PasswordDTO;
-import com.example.club_project.controller.user.UserUpdateDTO;
+import com.example.club_project.controller.user.UserDTO;
 import com.example.club_project.domain.User;
 import com.example.club_project.domain.UserRole;
 import com.example.club_project.repository.UserRepository;
@@ -27,20 +26,24 @@ public class UserServiceImpl implements UserService {
     //TODO: userRepositoty.findById 있는 부분들 메서드로 추출할 것
     @Override
     @Transactional(readOnly = true)
-    public UserUpdateDTO.Response getUserUpdateRespDTO(Long id) {
+    public UserDTO.UpdateResponse getUserUpdateRespDTO(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("throw notFoundException"));
-        return UserUpdateDTO.Response.builder()
+        return UserDTO.UpdateResponse.builder()
                 .email(user.getEmail())
+                .name(user.getName())
+                .introduction(user.getIntroduction())
+                .nickname(user.getNickname())
+                .university(user.getUniversity())
                 .build();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public PasswordDTO.ChangeScreenDTO getPasswordRespDTO(Long id) {
+    public UserDTO.NicknameAndProfile getUsernameAndPicture(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("throw notFoundException"));
-        return PasswordDTO.ChangeScreenDTO.builder()
+        return UserDTO.NicknameAndProfile.builder()
                 .nickname(user.getNickname())
                 .profileUrl(user.getProfileUrl())
                 .build();
@@ -67,14 +70,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public Long updateUserInfo(Long principalId, String name, String nickname, String university, String introduction) {
+    public Long updateUser(Long principalId, String name, String nickname, String university, String introduction) {
         User user = userRepository.findById(principalId)
                 .orElseThrow(() -> new EntityNotFoundException("throw notFoundException"));
         user.updateUser(name, nickname, university, introduction);
         validateUtil.validate(user);
         return user.getId();
-
-
     }
 
     @Override
