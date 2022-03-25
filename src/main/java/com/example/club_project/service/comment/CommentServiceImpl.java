@@ -6,8 +6,10 @@ import com.example.club_project.repository.CommentRepository;
 import com.example.club_project.service.clubjoinstate.ClubJoinStateService;
 import com.example.club_project.service.post.PostService;
 import com.example.club_project.service.user.UserService;
+import com.example.club_project.util.ValidateUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,11 +27,14 @@ public class CommentServiceImpl implements CommentService {
     private final PostService postService;
     private final UserService userService;
     private final ClubJoinStateService clubJoinStateService;
+    private final ValidateUtil validateUtil;
 
     @Override
     @Transactional
     public Long register(Long userId, Long postId, String content) {
-
+        if (!postService.isExists(postId)) {
+            throw new EntityNotFoundException("throw notFoundException");
+        }
         log.info("userId: {} register Comment to postId: {}", userId, postId);
 
         Comment comment = Comment.builder()
@@ -37,6 +42,7 @@ public class CommentServiceImpl implements CommentService {
                 .post(postService.getPost(postId))
                 .user(userService.getUser(userId))
                 .build();
+        validateUtil.validate(comment);
         commentRepository.save(comment);
         return comment.getId();
     }
@@ -81,13 +87,14 @@ public class CommentServiceImpl implements CommentService {
             throw new AccessDeniedException("수정 권한 없음");
         }
         comment.update(content);
+        validateUtil.validate(comment);
         return comment.getId();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<CommentDTO.myComment> getMyComment(Long userId) {
-        List<Comment> myCommentList = commentRepository.getAllByUser_IdOrderByIdDesc(userId);
+    public List<CommentDTO.myComment> getMyComment(Long userId, Pageable pageable) {
+        List<Comment> myCommentList = commentRepository.getAllByUser_IdOrderByIdDesc(userId, pageable);
         List<CommentDTO.myComment> myComments = new ArrayList<>();
         for (Comment comment : myCommentList) {
             myComments.add(CommentDTO.myComment.builder()
@@ -115,5 +122,4 @@ public class CommentServiceImpl implements CommentService {
             throw new RuntimeException("지울 수 있는 권한이 없습니다.");
         }
     }
-
 }

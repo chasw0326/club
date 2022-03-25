@@ -35,7 +35,7 @@ public class UserServiceTest {
     @BeforeEach
     @Test
     void setUp() {
-        password = "qwe123!@#";
+        password = "aaZZa44@";
         testUser = User.builder()
                 .email("test@naver.com")
                 .name("testName")
@@ -48,6 +48,7 @@ public class UserServiceTest {
         testUser = userRepository.save(testUser);
 
     }
+
 
     @DisplayName("정상적인 회원가입")
     @Test
@@ -120,7 +121,7 @@ public class UserServiceTest {
         String university = testUser.getUniversity();
         String intro = testUser.getIntroduction();
 
-        userService.updateUserInfo(principalId, "new" + name, "new" + nickname, "new" + university, "new" + intro);
+        userService.updateUser(principalId, "new" + name, "new" + nickname, "new" + university, "new" + intro);
         User result = userRepository.findById(principalId).
                 orElseThrow(() -> new EntityNotFoundException("테스트 실패"));
 

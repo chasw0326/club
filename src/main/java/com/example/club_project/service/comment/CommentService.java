@@ -2,6 +2,7 @@ package com.example.club_project.service.comment;
 
 import com.example.club_project.controller.comment.CommentDTO;
 import com.example.club_project.domain.Comment;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ public interface CommentService {
     /*
     내가 쓴 댓글 목록 with postId
      */
-    List<CommentDTO.myComment> getMyComment(Long userId);
+    List<CommentDTO.myComment> getMyComment(Long userId, Pageable pageable);
 
     Long register(Long userId, Long postId, String content);
 

@@ -6,6 +6,7 @@ import com.example.club_project.security.filter.ApiLoginFilter;
 import com.example.club_project.security.handler.LoginFailHandler;
 import com.example.club_project.security.service.ClubUserDetailsService;
 import com.example.club_project.security.util.JWTUtil;
+import com.example.club_project.util.ValidateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,7 +26,12 @@ public class WebSecurityConfigure extends WebSecurityConfigurerAdapter {
     private ClubUserDetailsService userDetailsService;
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public ValidateUtil validateUtil() {
+        return new ValidateUtil();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 

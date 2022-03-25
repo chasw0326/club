@@ -10,7 +10,7 @@ public interface PostService {
 
     PostDTO.Response getPostDto(Long postId);
 
-    List<PostDTO.Response> getPostDtos(Long userId, Long clubId, Pageable pageable);
+    List<PostDTO.Response> getClubPosts(Long userId, Long clubId, Pageable pageable);
 
     List<PostDTO.Response> getMyPosts(Long userId, Pageable pageable);
 
@@ -18,9 +18,7 @@ public interface PostService {
 
     Post getPost(Long postId);
 
-//    List<Post> getPosts(Long userId, Long clubId, Pageable pageable);
-
-    Long update(Long userId, Long postId, String title, String content);
+    Long update(Long userId, Long clubId, Long postId, String title, String content);
 
     void delete(Long userId, Long clubId, Long postId);
 

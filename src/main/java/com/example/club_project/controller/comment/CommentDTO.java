@@ -4,7 +4,7 @@ import com.example.club_project.controller.post.PostDTO;
 import lombok.Builder;
 import lombok.Getter;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -12,14 +12,25 @@ import java.util.List;
 public class CommentDTO {
 
     @Getter
-    public static class Request {
+    public static class PostRequest {
 
-        @NotEmpty(message = "postId는 필수 입니다.")
-        private String postId;
+        @NotBlank
+        private Long postId;
 
-        @NotEmpty(message = "댓글내용은 필수 입니다.")
+        @NotBlank(message = "댓글내용은 필수 입니다.")
         private String content;
     }
+
+    @Getter
+    public static class PutRequest {
+
+        @NotBlank
+        private Long commentId;
+
+        @NotBlank(message = "댓글내용은 필수 입니다.")
+        private String content;
+    }
+
 
     @Builder
     @Getter
@@ -34,15 +45,15 @@ public class CommentDTO {
     @Getter
     public static class CommentData {
 
-        @NotEmpty
+        @NotBlank
         private Long commentId;
 
         private String profileUrl;
-        @NotEmpty
+        @NotBlank
         private String nickname;
-        @NotEmpty
+        @NotBlank
         private String content;
-        @NotEmpty
+        @NotBlank
         private LocalDateTime createdAt;
     }
 
@@ -50,7 +61,7 @@ public class CommentDTO {
     @Getter
     public static class myComment {
 
-        @NotEmpty
+        @NotBlank
         private Long postId;
 
         private CommentData commentData;

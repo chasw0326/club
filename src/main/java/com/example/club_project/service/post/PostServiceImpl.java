@@ -8,6 +8,7 @@ import com.example.club_project.repository.PostRepository;
 import com.example.club_project.service.club.ClubService;
 import com.example.club_project.service.clubjoinstate.ClubJoinStateService;
 import com.example.club_project.service.user.UserService;
+import com.example.club_project.util.ValidateUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +29,7 @@ public class PostServiceImpl implements PostService {
     private final UserService userService;
     private final ClubService clubService;
     private final ClubJoinStateService clubJoinStateService;
+    private final ValidateUtil validateUtil;
 
     @Override
     @Transactional(readOnly = true)
@@ -51,7 +53,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<PostDTO.Response> getPostDtos(Long userId, Long clubId, Pageable pageable) {
+    public List<PostDTO.Response> getClubPosts(Long userId, Long clubId, Pageable pageable) {
         if (!clubJoinStateService.isJoined(userId, clubId)) {
             // TODO: 수정예정
             throw new AccessDeniedException("클럽 멤버가 아닙니다.");
@@ -77,6 +79,7 @@ public class PostServiceImpl implements PostService {
                 .content(content)
                 .build();
 
+        validateUtil.validate(post);
         postRepository.save(post);
         return post.getId();
     }
@@ -88,17 +91,6 @@ public class PostServiceImpl implements PostService {
                 orElseThrow(() -> new EntityNotFoundException("throw notFoundException"));
     }
 
-    //TODO: 삭제 예정
-//    @Override
-//    @Transactional(readOnly = true)
-//    public List<Post> getPosts(Long userId, Long clubId, Pageable pageable) {
-//        if (!clubJoinStateService.isJoined(userId, clubId)) {
-//            // TODO: 예외 뭘로 할지 수정예정
-//            throw new AccessDeniedException("클럽에 가입한 사람만 볼수 있습니다.");
-//        }
-//        return postRepository.findAllByClub_IdOrderByIdDesc(clubId, pageable);
-//    }
-
     @Override
     @Transactional(readOnly = true)
     public List<PostDTO.Response> getMyPosts(Long userId, Pageable pageable) {
@@ -108,7 +100,12 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public Long update(Long userId, Long postId, String title, String content) {
+    public Long update(Long userId, Long clubId, Long postId, String title, String content) {
+
+        if (!clubJoinStateService.isJoined(userId, clubId)) {
+            // TODO: 수정예정
+            throw new AccessDeniedException("클럽 멤버가 아닙니다.");
+        }
 
         Post post = postRepository.findById(postId).
                 orElseThrow(() -> new EntityNotFoundException("throw notFoundException"));
@@ -118,6 +115,7 @@ public class PostServiceImpl implements PostService {
         }
 
         post.update(title, content);
+        validateUtil.validate(post);
         return post.getId();
     }
 
