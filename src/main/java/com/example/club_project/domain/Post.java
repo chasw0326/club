@@ -7,8 +7,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -31,9 +34,13 @@ public class Post extends AuditingCreateUpdateEntity {
     private Club club;
 
     @Column(nullable = false, length = 100)
+    @Length(max = 100, message = "사이즈를 확인하세요.")
+    @NotBlank(message = "제목은 필수 값 입니다.")
     private String title;
 
     @Column(nullable = false, length = 500)
+    @Length(min = 1, max = 500, message = "사이즈를 확인하세요.")
+    @NotNull(message = "내용을 입력하세요")
     private String content;
 
     @Builder
