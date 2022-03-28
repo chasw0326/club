@@ -1,0 +1,58 @@
+@import '../../stylesheets//palette.scss';
+
+.MyPage {
+  &-profile {
+    display: flex;
+    flex-direction: row;
+  }
+
+  &-thumbnail {
+    width: 200px;
+    height: 200px;
+  }
+  &-introFrame {
+    display: flex;
+    flex-direction: column;
+    height: 200px;
+    width: 100px;
+    background-color: orange;
+  }
+  &-setting {
+    width: 30px;
+    height: 30px;
+  }
+
+  &-category {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    height: 50px;
+    width: 100vw;
+    background-color: orange;
+
+    &-club,
+    &-post,
+    &-comment {
+      width: 100px;
+      height: 40px;
+      background-color: aquamarine;
+      margin-right: 5px;
+      cursor: pointer;
+    }
+  }
+
+  &-setting {
+    cursor: pointer;
+  }
+
+  &__modal--setting {
+    position: absolute;
+    display: flex;
+    width: 500px;
+    height: 500px;
+    left: 50%;
+    top: 50%;
+    border: 1px solid black;
+    transform: translate(-50%, -50%);
+  }
+}

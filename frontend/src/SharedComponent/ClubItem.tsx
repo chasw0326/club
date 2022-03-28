@@ -10,7 +10,7 @@ const ClubItem = ({ item }: { item: clubItem }) => {
     <div
       className="MainBody-itemFrame-clubItem"
       onClick={() => {
-        navigate('/club');
+        navigate(`/club/${item?.title}`);
       }}
     >
       <div className="MainBody-itemFrame-clubItem-title">{item?.title}</div>

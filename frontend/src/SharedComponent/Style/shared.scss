@@ -58,6 +58,8 @@
 }
 
 .ClubPage {
+  font-family: 'Jua', Arial, Helvetica, sans-serif;
+
   &-navigateBar {
     display: flex;
     flex-direction: row;
@@ -123,5 +125,15 @@
 
   &-signIn:hover {
     background-color: blue;
+  }
+
+  &-boardStuff {
+    cursor: pointer;
+    position: relative;
+    width: 50vw;
+    height: 20px;
+    border: 1px solid bisque;
+    left: 50%;
+    transform: translateX(-50%);
   }
 }
