@@ -48,11 +48,46 @@
   &__modal--setting {
     position: absolute;
     display: flex;
+    flex-direction: row;
     width: 500px;
     height: 500px;
     left: 50%;
     top: 50%;
-    border: 1px solid black;
+    z-index: 1;
+    border-radius: 0.5em;
+    background-color: white;
     transform: translate(-50%, -50%);
+    justify-content: space-evenly;
+    align-items: center;
+  }
+
+  &__button {
+    &--password,
+    &--modify {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 200px;
+      height: 100px;
+      border: 1px solid lightgray;
+      box-shadow: 2px 2px 5px 1.5px rgba(0, 0, 0, 0.2);
+      border-radius: 0.5em;
+      cursor: pointer;
+      transition: background-color 0.5s;
+    }
+
+    &--modify:hover,
+    &--password:hover {
+      background-color: lightgray;
+    }
+
+    &--cancel {
+      position: absolute;
+      left: 93%;
+      top: 1%;
+      width: 30px;
+      height: 30px;
+      cursor: pointer;
+    }
   }
 }

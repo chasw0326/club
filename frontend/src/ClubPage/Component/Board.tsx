@@ -2,12 +2,25 @@ import React, { useEffect } from 'react';
 import { useState } from 'react';
 import thumbnail from '../../image/thumbnail.svg';
 import '../Style/clubPage.scss';
+import { postAPI } from '../../hooks/useFetch';
 
 const Information = () => {
   const [clubInformation, setClubInformation] = useState({
     thumbnail: '',
     description: '',
   });
+
+  const [isSigned, setisSigned] = useState(false);
+
+  const signCheck = async () => {
+    const data = { username: '팀버너스리' };
+
+    const fData = await postAPI(data, 'json', '/api/signCheck');
+
+    console.log(fData);
+
+    setisSigned(fData.signed);
+  };
 
   const setInfo = async () => {
     const fData = await fetch(
@@ -31,6 +44,16 @@ const Information = () => {
           {clubInformation.description}
         </div>
       </div>
+      <hr></hr>
+      <div className="ClubPage-signIn">
+        {isSigned ? '가입완료' : '가입하기'}
+      </div>
+      <span>
+        가입하기는 로그인 한 학생의 정보를 담아 post로 요청할 것 같습니다.{' '}
+        <br></br>
+        그리고 만약 이미 가입한 동아리라면 가입완료라고 출력할 예정입니다.
+        가입했는지 아닌지에 대한 정보도 필요할 것 같습니다.
+      </span>
     </>
   );
 };

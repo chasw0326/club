@@ -35,6 +35,9 @@ const MainHeader = () => {
           src={person}
           width="50px"
           height="50px"
+          onClick={() => {
+            navigate('/mypage');
+          }}
         ></img>
       </div>
     </>

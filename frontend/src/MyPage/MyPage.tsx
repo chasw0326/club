@@ -2,21 +2,10 @@ import React, { useEffect } from 'react';
 import { useState, useRef } from 'react';
 import './Style/MyPage.scss';
 import person from '../image/person.svg';
+import SettingModal from './Component/SettingModal';
 import setting from '../image/setting.svg';
 import MainHeader from '../SharedComponent/Header';
 import MyPageNav from './Component/MyPageNav';
-
-const SettingModal = ({ modalState }: { modalState: boolean }) => {
-  if (modalState) {
-    return (
-      <>
-        <div className="MyPage__modal--setting">세팅모달 등장</div>
-      </>
-    );
-  } else {
-    return null;
-  }
-};
 
 const MyPage = () => {
   const [viewState, setViewState] = useState('');
@@ -64,7 +53,10 @@ const MyPage = () => {
       </div>
       <hr></hr>
       <MyPageNav viewState={viewState}></MyPageNav>
-      <SettingModal modalState={modalState}></SettingModal>
+      <SettingModal
+        modalState={modalState}
+        setModal={changeModalState}
+      ></SettingModal>
     </>
   );
 };
