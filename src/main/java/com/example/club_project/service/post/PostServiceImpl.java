@@ -42,6 +42,7 @@ public class PostServiceImpl implements PostService {
         Long commentCount = (Long) postData[2];
 
         return PostDTO.Response.builder()
+                .postId(post.getId())
                 .profileUrl(user.getProfileUrl())
                 .nickname(user.getNickname())
                 .title(post.getTitle())
@@ -137,7 +138,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public void deleteWhenLeaveClub(Long userId, Long clubId){
+    public void deleteWhenLeaveClub(Long userId, Long clubId) {
         List<Post> posts = postRepository.findAllByUser_IdAndClub_Id(userId, clubId);
         postRepository.deleteAll(posts);
     }
@@ -156,6 +157,7 @@ public class PostServiceImpl implements PostService {
             User user = (User) postData[1];
             Long commentCnt = (Long) postData[2];
             postDtos.add(PostDTO.Response.builder()
+                    .postId(post.getId())
                     .nickname(user.getNickname())
                     .profileUrl(user.getProfileUrl())
                     .title(post.getTitle())

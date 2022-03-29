@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -14,7 +15,7 @@ public class CommentDTO {
     @Getter
     public static class PostRequest {
 
-        @NotBlank
+        @NotNull
         private Long postId;
 
         @NotBlank(message = "댓글내용은 필수 입니다.")

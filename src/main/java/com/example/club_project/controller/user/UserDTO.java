@@ -27,6 +27,7 @@ public class UserDTO {
     }
 
     @Builder
+    @Getter
     public static class UpdateResponse {
 
         @NotBlank
@@ -47,6 +48,7 @@ public class UserDTO {
     }
 
     @Builder
+    @Getter
     public static class NicknameAndProfile {
         String nickname;
         String profileUrl;
