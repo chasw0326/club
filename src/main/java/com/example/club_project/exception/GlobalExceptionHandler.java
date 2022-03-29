@@ -1,7 +1,7 @@
 package com.example.club_project.exception;
 
+import com.example.club_project.exception.custom.AlreadyExistsException;
 import com.example.club_project.exception.custom.ClubRuntimeException;
-import com.example.club_project.exception.custom.DuplicateElementException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,18 +28,15 @@ public class GlobalExceptionHandler {
     }
 
     // return CONFLICT
-    @ExceptionHandler({DuplicateElementException.class})
-    public ResponseEntity<String> duplicateElementHandler(DuplicateElementException ex){
+    @ExceptionHandler({AlreadyExistsException.class})
+    public ResponseEntity<String> alreadyExistsHandler(AlreadyExistsException ex){
         String message = ex.getMessage();
-        ex.printStackTrace();
-        log.warn("DuplicateElementException: {}", message);
         return new ResponseEntity<>(message, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler({ClubRuntimeException.class})
     public ResponseEntity<String> clubRuntimeHandler(ClubRuntimeException ex){
         String message = ex.getMessage();
-        ex.printStackTrace();
         log.warn("ClubRuntimeException: {}", message);
         return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }
