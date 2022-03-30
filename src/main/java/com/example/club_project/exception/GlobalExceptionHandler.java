@@ -1,7 +1,8 @@
 package com.example.club_project.exception;
 
+import com.example.club_project.exception.custom.AlreadyExistsException;
 import com.example.club_project.exception.custom.ClubRuntimeException;
-import com.example.club_project.exception.custom.DuplicateElementException;
+import com.example.club_project.exception.custom.ForbiddenException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentConversionNotSupportedException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
+import javax.validation.ConstraintViolationException;
 
 @Slf4j
 @RestControllerAdvice
@@ -28,19 +31,30 @@ public class GlobalExceptionHandler {
     }
 
     // return CONFLICT
-    @ExceptionHandler({DuplicateElementException.class})
-    public ResponseEntity<String> duplicateElementHandler(DuplicateElementException ex){
+    @ExceptionHandler({AlreadyExistsException.class})
+    public ResponseEntity<String> alreadyExistsHandler(AlreadyExistsException ex){
         String message = ex.getMessage();
-        ex.printStackTrace();
-        log.warn("DuplicateElementException: {}", message);
         return new ResponseEntity<>(message, HttpStatus.CONFLICT);
+    }
+
+    // return FORBIDDEN
+    @ExceptionHandler({ForbiddenException.class})
+    public ResponseEntity<String> forbiddenHandler(ForbiddenException ex){
+        String message = ex.getMessage();
+        return new ResponseEntity<>(message, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler({ClubRuntimeException.class})
     public ResponseEntity<String> clubRuntimeHandler(ClubRuntimeException ex){
         String message = ex.getMessage();
-        ex.printStackTrace();
         log.warn("ClubRuntimeException: {}", message);
+        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+    }
+
+    // for ValidateUtil
+    @ExceptionHandler({ConstraintViolationException.class})
+    public ResponseEntity<String> validateUtilHandler(ConstraintViolationException ex){
+        String message = ex.getMessage();
         return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }
 

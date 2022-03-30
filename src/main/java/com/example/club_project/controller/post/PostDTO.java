@@ -27,6 +27,8 @@ public class PostDTO {
     @Builder
     public static class Response {
 
+        private Long postId;
+
         private String profileUrl;
 
         @NotBlank

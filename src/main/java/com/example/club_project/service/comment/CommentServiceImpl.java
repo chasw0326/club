@@ -1,8 +1,14 @@
 package com.example.club_project.service.comment;
 
 import com.example.club_project.controller.comment.CommentDTO;
+import com.example.club_project.domain.Club;
 import com.example.club_project.domain.Comment;
+import com.example.club_project.domain.Post;
+import com.example.club_project.domain.User;
+import com.example.club_project.exception.custom.ForbiddenException;
+import com.example.club_project.exception.custom.NotFoundException;
 import com.example.club_project.repository.CommentRepository;
+import com.example.club_project.service.club.ClubService;
 import com.example.club_project.service.clubjoinstate.ClubJoinStateService;
 import com.example.club_project.service.post.PostService;
 import com.example.club_project.service.user.UserService;
@@ -10,11 +16,9 @@ import com.example.club_project.util.ValidateUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,20 +32,20 @@ public class CommentServiceImpl implements CommentService {
     private final UserService userService;
     private final ClubJoinStateService clubJoinStateService;
     private final ValidateUtil validateUtil;
+    private final ClubService clubService;
 
     @Override
     @Transactional
     public Long register(Long userId, Long postId, String content) {
-        if (!postService.isExists(postId)) {
-            throw new EntityNotFoundException("throw notFoundException");
-        }
-        log.info("userId: {} register Comment to postId: {}", userId, postId);
+        Post post = postService.getPost(postId);
+        User user = userService.getUser(userId);
 
         Comment comment = Comment.builder()
                 .content(content)
-                .post(postService.getPost(postId))
-                .user(userService.getUser(userId))
+                .post(post)
+                .user(user)
                 .build();
+
         validateUtil.validate(comment);
         commentRepository.save(comment);
         return comment.getId();
@@ -51,14 +55,14 @@ public class CommentServiceImpl implements CommentService {
     @Transactional(readOnly = true)
     public Comment getComment(Long commentId){
         return commentRepository.findById(commentId).
-                orElseThrow(() -> new EntityNotFoundException("throw notFoundException"));
+                orElseThrow(() -> new NotFoundException("Can not find comment by commentId: " + commentId));
     }
 
     @Override
     @Transactional(readOnly = true)
     public CommentDTO.Response getCommentDtos(Long postId) {
         if (!postService.isExists(postId)) {
-            throw new EntityNotFoundException("throw notFoundException");
+            throw new NotFoundException("Can not find post by postId: " + postId);
         }
         List<CommentDTO.CommentData> commentData = new ArrayList<>();
         List<Comment> commentList = commentRepository.getAllByPost_IdOrderByIdAsc(postId);
@@ -81,10 +85,9 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public Long update(Long userId, Long commentId, String content) {
-        Comment comment = commentRepository.findById(commentId).
-                orElseThrow(() -> new EntityNotFoundException("throw notFoundException"));
+        Comment comment = this.getComment(commentId);
         if (!comment.getUser().getId().equals(userId)) {
-            throw new AccessDeniedException("수정 권한 없음");
+            throw new ForbiddenException("No Authority to update");
         }
         comment.update(content);
         validateUtil.validate(comment);
@@ -114,12 +117,12 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public void delete(Long userId, Long clubId, Long commentId) {
-        Comment comment = commentRepository.findById(commentId).
-                orElseThrow(() -> new EntityNotFoundException("throw notFoundException"));
+        Club club = clubService.getClub(clubId);
+        Comment comment = this.getComment(commentId);
         if (comment.getUser().getId().equals(userId) || clubJoinStateService.hasManagerRole(userId, clubId)) {
             commentRepository.deleteById(commentId);
-        } else { // TODO: 예외 다른걸로 수정 해야한다.
-            throw new RuntimeException("지울 수 있는 권한이 없습니다.");
+        } else {
+            throw new ForbiddenException("No Authority to delete");
         }
     }
 }

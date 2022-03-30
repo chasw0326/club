@@ -23,6 +23,7 @@ public class SignupDTO {
             message = "비밀번호는 영문 대,소문자와 숫자, 특수기호가 적어도 1개 이상씩 포함된 8자 ~ 20자의 비밀번호여야 합니다.")
     private String password;
 
+    @NotBlank
     private String name;
 
     // 현재는 가정일뿐, 수정가능
@@ -31,8 +32,10 @@ public class SignupDTO {
             message = "사용자이름은 영어랑 숫자만 가능합니다.")
     private String nickname;
 
+    @NotBlank
     private String university;
 
+    @NotBlank
     private String introduction;
 
     public User toEntity(SignupDTO signupDTO) {
