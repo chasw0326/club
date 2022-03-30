@@ -5,7 +5,6 @@ import com.example.club_project.domain.Club;
 import com.example.club_project.domain.Post;
 import com.example.club_project.domain.User;
 import com.example.club_project.exception.custom.ForbiddenException;
-import com.example.club_project.exception.custom.InvalidAccessException;
 import com.example.club_project.exception.custom.NotFoundException;
 import com.example.club_project.repository.PostRepository;
 import com.example.club_project.service.club.ClubService;
@@ -59,7 +58,7 @@ public class PostServiceImpl implements PostService {
         Club club = clubService.getClub(clubId);
 
         if (!clubJoinStateService.isJoined(userId, clubId)) {
-            throw new InvalidAccessException("not a member of the club");
+            throw new ForbiddenException("not a member of the club");
         }
         List<Object[]> posts = postRepository.getPostWithCommentCountByClubId(clubId, pageable);
         return getResponses(posts);
@@ -72,7 +71,7 @@ public class PostServiceImpl implements PostService {
         Club club = clubService.getClub(clubId);
 
         if (!clubJoinStateService.isJoined(userId, clubId)) {
-            throw new InvalidAccessException("not a member of the club");
+            throw new ForbiddenException("not a member of the club");
         }
 
         Post post = Post.builder()
@@ -107,7 +106,7 @@ public class PostServiceImpl implements PostService {
         Club club = clubService.getClub(clubId);
 
         if (!clubJoinStateService.isJoined(userId, clubId)) {
-            throw new InvalidAccessException("not a member of the club");
+            throw new ForbiddenException("not a member of the club");
         }
 
         Post post = this.getPost(postId);
