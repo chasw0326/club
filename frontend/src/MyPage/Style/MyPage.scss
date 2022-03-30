@@ -89,5 +89,72 @@
       height: 30px;
       cursor: pointer;
     }
+
+    &--backward {
+      position: absolute;
+      top: -60px;
+      left: 10px;
+      width: 30px;
+      height: 30px;
+      cursor: pointer;
+    }
+  }
+
+  &__div--modify {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    width: 100%;
+    height: 400px;
+    margin-top: 50px;
+  }
+
+  &__div--modify-submit {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    font-size: 20px;
+    color: white;
+    font-weight: bold;
+    margin-top: 50px;
+    width: 160px;
+    height: 35px;
+    text-align: center;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: lightgray;
+
+    cursor: pointer;
+  }
+
+  &__input {
+    &--box {
+      position: relative;
+      width: 150px;
+      height: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+
+  &__text {
+    &--current-password,
+    &--new-password,
+    &--new-password-check {
+      position: relative;
+      left: 34%;
+      margin-top: 15px;
+    }
+
+    &--title {
+      position: relative;
+      font-size: 30px;
+      width: 200px;
+      height: fit-content;
+      top: -60px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
   }
 }
