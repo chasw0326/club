@@ -3,6 +3,7 @@ import { useState } from 'react';
 import thumbnail from '../../image/thumbnail.svg';
 import '../Style/clubPage.scss';
 import { postAPI } from '../../hooks/useFetch';
+import NoticeBoard from './NoticeBoard';
 
 const Information = () => {
   const [clubInformation, setClubInformation] = useState({
@@ -56,51 +57,6 @@ const Information = () => {
       </span>
     </>
   );
-};
-
-const NoticeBoard = () => {
-  const [isStuffOpen, setStuffOpen] = useState(false);
-  const [post, setPost] = useState('');
-  const data = [
-    { title: 'no1' },
-    { title: 'no2' },
-    { title: 'no3' },
-    { title: 'no4' },
-  ];
-
-  const onOff = async () => {
-    if (isStuffOpen) {
-      setStuffOpen(false);
-    } else {
-      const fData = await fetch(`${process.env.REACT_APP_TEST_API}/api/post`);
-
-      const res = await fData.json();
-
-      console.log(res);
-
-      setPost(res.des);
-
-      setStuffOpen(true);
-    }
-  };
-
-  if (isStuffOpen) {
-    return <div className="ClubPage-postBox">{post}</div>;
-  } else {
-    return (
-      <>
-        <div>
-          {data.map((val, idx) => {
-            return (
-              <div className="ClubPage-boardStuff" key={idx} onClick={onOff}>
-                {val.title}
-              </div>
-            );
-          })}
-        </div>
-      </>
-    );
-  }
 };
 
 const PhotoBoard = () => {
