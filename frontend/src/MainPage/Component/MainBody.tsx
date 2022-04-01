@@ -1,7 +1,7 @@
 import React from 'react';
 import { clubItem } from '../../type/type';
-import Category from './category';
-import ClubItem from './clubItem';
+import Category from './Category';
+import ClubItem from '../../SharedComponent/ClubItem';
 import '../Style/body.scss';
 
 const MainBody = ({ clubItem }: { clubItem: clubItem[] }) => {

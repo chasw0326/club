@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useAsync } from '../hooks/useFetch';
-import MainBody from './Component/Body';
+import MainBody from './Component/MainBody';
 import MainHeader from '../SharedComponent/Header';
 import { fetchState } from '../type/type';
 import { useLocation } from 'react-router-dom';
@@ -23,7 +23,7 @@ const MainPage = () => {
 
   return (
     <>
-      <MainHeader fetchData={fetchData}></MainHeader>
+      <MainHeader></MainHeader>
       <MainBody clubItem={res?.clubInfo}></MainBody>
     </>
   );

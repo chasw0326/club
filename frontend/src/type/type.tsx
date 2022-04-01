@@ -21,4 +21,43 @@ type clubItem = {
   location: string;
 };
 
-export type { fetchState, SignUp, clubItem };
+type myClub = {
+  club: string;
+  address: string;
+  universitiy: string;
+  description: string;
+};
+
+type myPost = {
+  nickname: string;
+  title: string;
+  content: string;
+  createdAt: string;
+};
+
+type myComment = {
+  title: string;
+  nickname: string;
+  content: string;
+  createdAt: string;
+};
+const init = [
+  {
+    club: '',
+    address: '',
+    universitiy: '',
+    description: '',
+
+    nickname: '',
+    title: '',
+    content: '',
+
+    commentTitle: '',
+    commentNickname: '',
+    commentContent: '',
+  },
+];
+
+export type { fetchState, SignUp, clubItem, myClub, myPost, myComment };
+
+export { init };
