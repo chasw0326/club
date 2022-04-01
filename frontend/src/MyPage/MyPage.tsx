@@ -27,7 +27,7 @@ const MyPage = () => {
       <div className="MyPage-profile">
         <img className="MyPage-thumbnail" src={person}></img>
         <div className="MyPage-introFrame">
-          <div className="MyPage-userName">
+          <div className="MyPage__text--userName">
             username
             <img
               className="MyPage-setting"
@@ -35,8 +35,8 @@ const MyPage = () => {
               onClick={changeModalState}
             ></img>
           </div>
-          <div className="MyPage-userName">모임초대</div>
-          <div className="MyPage-userName">introduction</div>
+          <div className="MyPage__text--invite">모임초대</div>
+          <div className="MyPage-__text--introduction">introduction</div>
         </div>
       </div>
       <hr></hr>

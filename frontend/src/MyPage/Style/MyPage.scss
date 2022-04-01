@@ -4,6 +4,7 @@
   &-profile {
     display: flex;
     flex-direction: row;
+    justify-content: center;
   }
 
   &-thumbnail {
@@ -11,11 +12,14 @@
     height: 200px;
   }
   &-introFrame {
+    position: relative;
+    margin-left: 50px;
     display: flex;
     flex-direction: column;
+
+    justify-content: center;
     height: 200px;
     width: 100px;
-    background-color: orange;
   }
   &-setting {
     width: 30px;
@@ -26,16 +30,23 @@
     position: relative;
     display: flex;
     flex-direction: row;
+    justify-content: center;
+    align-items: center;
     height: 50px;
     width: 100vw;
-    background-color: orange;
 
     &-club,
     &-post,
     &-comment {
+      display: flex;
+      align-items: center;
+      color: whitesmoke;
+      font-weight: bold;
+      justify-content: center;
       width: 100px;
       height: 40px;
-      background-color: aquamarine;
+      background-color: gray;
+      border-radius: 0.25rem;
       margin-right: 5px;
       cursor: pointer;
     }
@@ -128,6 +139,43 @@
     cursor: pointer;
   }
 
+  &__div {
+    &--belong-club {
+      position: relative;
+      height: 100px;
+      width: 300px;
+      display: flex;
+      flex-direction: row;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 1px solid black;
+      border-radius: 0.25rem;
+    }
+
+    &--club-info {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      top: 10px;
+      left: 10px;
+    }
+
+    &--myPost {
+      position: relative;
+      margin-bottom: 5px;
+      height: 50px;
+      width: 600px;
+      display: flex;
+      flex-direction: row;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 1px solid black;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 0.25rem;
+    }
+  }
+
   &__input {
     &--box {
       position: relative;
@@ -155,6 +203,23 @@
       top: -60px;
       left: 50%;
       transform: translateX(-50%);
+    }
+
+    &--userName {
+      font-size: 20px;
+      width: 150px;
+    }
+    &--invite {
+      font-size: 20px;
+    }
+
+    &--club-address {
+      position: absolute;
+      width: fit-content;
+      height: fit-content;
+      font-size: 13px;
+      left: 115px;
+      top: 70px;
     }
   }
 }
