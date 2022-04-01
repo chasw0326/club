@@ -10,7 +10,8 @@ spring:
         show_sql: true
         format_sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: create-drop
+    defer-datasource-initialization: true
   h2:
     console:
       enabled: true

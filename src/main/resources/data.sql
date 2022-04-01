@@ -1,10 +1,10 @@
-INSERT INTO users(id,email,password,name,nickname,university,introduction,created_at) VALUES (null,'test@gmail.com','1q2w3e','테스트','테스트닉네임','서울사이버대학교','안녕하세요',CURRENT_TIMESTAMP());
-INSERT INTO users(id,email,password,name,nickname,university,introduction,created_at) VALUES (null,'test1@gmail.com','1q2w3e','테스트1','테스트닉네임','서울사이버대학교','안녕하세요',CURRENT_TIMESTAMP());
-INSERT INTO users(id,email,password,name,nickname,university,introduction,created_at) VALUES (null,'test2@gmail.com','1q2w3e','테스트2','테스트닉네임','서울사이버대학교','안녕하세요',CURRENT_TIMESTAMP());
-INSERT INTO users(id,email,password,name,nickname,university,introduction,created_at) VALUES (null,'test3@gmail.com','1q2w3e','테스트3','테스트닉네임','서울사이버대학교','안녕하세요',CURRENT_TIMESTAMP());
-INSERT INTO users(id,email,password,name,nickname,university,introduction,created_at) VALUES (null,'test4@gmail.com','1q2w3e','테스트4','테스트닉네임','서울사이버대학교','안녕하세요',CURRENT_TIMESTAMP());
-INSERT INTO users(id,email,password,name,nickname,university,introduction,created_at) VALUES (null,'test5@gmail.com','1q2w3e','테스트5','테스트닉네임','서울사이버대학교','안녕하세요',CURRENT_TIMESTAMP());
-INSERT INTO users(id,email,password,name,nickname,university,introduction,created_at) VALUES (null,'test6@gmail.com','1q2w3e','테스트6','테스트닉네임','서울사이버대학교','안녕하세요',CURRENT_TIMESTAMP());
+INSERT INTO users(id,email,password,name,nickname,university,introduction,created_at) VALUES (null,'test@gmail.com','1q2w3eQWE!@#','테스트','테스트닉네임','서울사이버대학교','안녕하세요',CURRENT_TIMESTAMP());
+INSERT INTO users(id,email,password,name,nickname,university,introduction,created_at) VALUES (null,'test1@gmail.com','1q2w3eQWE!@#','테스트1','테스트닉네임','서울사이버대학교','안녕하세요',CURRENT_TIMESTAMP());
+INSERT INTO users(id,email,password,name,nickname,university,introduction,created_at) VALUES (null,'test2@gmail.com','1q2w3eQWE!@#','테스트2','테스트닉네임','서울사이버대학교','안녕하세요',CURRENT_TIMESTAMP());
+INSERT INTO users(id,email,password,name,nickname,university,introduction,created_at) VALUES (null,'test3@gmail.com','1q2w3eQWE!@#','테스트3','테스트닉네임','서울사이버대학교','안녕하세요',CURRENT_TIMESTAMP());
+INSERT INTO users(id,email,password,name,nickname,university,introduction,created_at) VALUES (null,'test4@gmail.com','1q2w3eQWE!@#','테스트4','테스트닉네임','서울사이버대학교','안녕하세요',CURRENT_TIMESTAMP());
+INSERT INTO users(id,email,password,name,nickname,university,introduction,created_at) VALUES (null,'test5@gmail.com','1q2w3eQWE!@#','테스트5','테스트닉네임','서울사이버대학교','안녕하세요',CURRENT_TIMESTAMP());
+INSERT INTO users(id,email,password,name,nickname,university,introduction,created_at) VALUES (null,'test6@gmail.com','1q2w3eQWE!@#','테스트6','테스트닉네임','서울사이버대학교','안녕하세요',CURRENT_TIMESTAMP());
 
 INSERT INTO categories(id, name, description, created_at) VALUES (null, '문화/예술/공연', '문화/예술/공연 관련 동아리입니다.',CURRENT_TIMESTAMP());
 INSERT INTO categories(id, name, description, created_at) VALUES (null, '봉사/사회활동', '봉사/사회활동 관련 동아리입니다.',CURRENT_TIMESTAMP());
@@ -53,3 +53,18 @@ INSERT INTO club_join_states(id, join_state, is_used, user_id, club_id, created_
 INSERT INTO club_join_states(id, join_state, is_used, user_id, club_id, created_at) VALUES(null, 4, true, 2, 1, CURRENT_TIMESTAMP());
 INSERT INTO club_join_states(id, join_state, is_used, user_id, club_id, created_at) VALUES(null, 4, true, 3, 1, CURRENT_TIMESTAMP());
 INSERT INTO club_join_states(id, join_state, is_used, user_id, club_id, created_at) VALUES(null, 4, true, 4, 1, CURRENT_TIMESTAMP());
+
+INSERT INTO posts(id, user_id, club_id, title, content, created_at) VALUES (null, 2, 6, '클럽6유저2제목1', '클럽6유저1내용1', CURRENT_TIMESTAMP());
+INSERT INTO posts(id, user_id, club_id, title, content, created_at) VALUES (null, 2, 6, '클럽6유저2제목2', '클럽6유저1내용2', CURRENT_TIMESTAMP());
+INSERT INTO posts(id, user_id, club_id, title, content, created_at) VALUES (null, 3, 6, '클럽6유저3제목1', '클럽6유저1내용1', CURRENT_TIMESTAMP());
+INSERT INTO posts(id, user_id, club_id, title, content, created_at) VALUES (null, 3, 6, '클럽6유저3제목2', '클럽6유저1내용2', CURRENT_TIMESTAMP());
+INSERT INTO posts(id, user_id, club_id, title, content, created_at) VALUES (null, 3, 6, '클럽6유저3제목3', '클럽6유저1내용3', CURRENT_TIMESTAMP());
+
+INSERT INTO comments(id, content, post_id, user_id, created_at) VALUES (null, '글1유저4댓글1', 1, 4, CURRENT_TIMESTAMP());
+INSERT INTO comments(id, content, post_id, user_id, created_at) VALUES (null, '글1유저4댓글2', 1, 4, CURRENT_TIMESTAMP());
+INSERT INTO comments(id, content, post_id, user_id, created_at) VALUES (null, '글3유저4댓글1', 3, 4, CURRENT_TIMESTAMP());
+INSERT INTO comments(id, content, post_id, user_id, created_at) VALUES (null, '글4유저4댓글1', 4, 4, CURRENT_TIMESTAMP());
+INSERT INTO comments(id, content, post_id, user_id, created_at) VALUES (null, '글5유저4댓글1', 5, 4, CURRENT_TIMESTAMP());
+INSERT INTO comments(id, content, post_id, user_id, created_at) VALUES (null, '글5유저4댓글2', 5, 4, CURRENT_TIMESTAMP());
+INSERT INTO comments(id, content, post_id, user_id, created_at) VALUES (null, '글5유저4댓글3', 5, 4, CURRENT_TIMESTAMP());
+INSERT INTO comments(id, content, post_id, user_id, created_at) VALUES (null, '글5유저4댓글4', 5, 4, CURRENT_TIMESTAMP());
