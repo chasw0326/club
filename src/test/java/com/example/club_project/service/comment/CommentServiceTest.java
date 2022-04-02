@@ -208,7 +208,7 @@ public class CommentServiceTest {
             commentService.register(3L, 1L, "content " + i);
         }
         Pageable pageable = PageRequest.of(0, 5, Sort.by("id").descending());
-        List<CommentDTO.myComment> myComments = commentService.getMyComment(3L, pageable);
+        List<CommentDTO.myComment> myComments = commentService.getMyComments(3L, pageable);
         Long commentId = 31L;
         for (CommentDTO.myComment myComment : myComments) {
             CommentDTO.CommentData commentData = myComment.getCommentData();
