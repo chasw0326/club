@@ -77,13 +77,3 @@
     z-index: 3;
   }
 }
-
-.blur {
-  position: absolute;
-  background-color: black;
-  opacity: 0.55;
-  height: 100vh;
-  width: 100vw;
-  top: 0px;
-  filter: blur(5px);
-}

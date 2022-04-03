@@ -15,10 +15,14 @@ type SignUp = {
 };
 
 type clubItem = {
-  title: string;
+  id: number | null;
+  name: string;
+  address: string;
+  university: string;
   description: string;
-  personnel: number;
-  location: string;
+  image_url: string;
+  category: string;
+  club_members: number | null;
 };
 
 type myClub = {

@@ -1,11 +1,27 @@
 @import 'https://fonts.googleapis.com/css2?family=Jua&display=swap';
 
-$white: #fff;
+/** white */
+$white: #ffffff;
 $semi-white: #f9f9f9;
-$pink: #f7dbf0;
-$purple: #beaee2;
-$lightgreen: #cdf0ea;
-$black: #000;
+$whitegray: #f9f7f7;
+
+/** black */
+$black: #000000;
 $semi-black: #1e2222;
+
+/** blue */
+$navyblue: #3f72af;
+$grayblue: #dbe2ef;
+$navy: #112d4e;
+
+/** pink */
+$pink: #f7dbf0;
+
+/** purple */
+$purple: #beaee2;
+
+/** green */
+$lightgreen: #cdf0ea;
+
 $background: linear-gradient(#4b6cb7, #182848);
 $color-chatbox: #9bbbd4;
