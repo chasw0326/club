@@ -27,22 +27,23 @@ const MainBody = () => {
   const [categoryState, fetchCategory] = useAsync(categoryAPI, []);
 
   const { data: category } = categoryState as fetchState;
-
+  const [curCategory, setCurCategory] = useState(0);
   const [clubList, setClubList] = useState<clubItem[]>([]);
 
   const categorizing = (e: any) => {
-    const newList = clubList.filter(
-      (val) => val.category === categoryList[e.target.innerHTML]
-    );
-    setClubList(newList);
+    setCurCategory(categoryList[e.target.innerHTML]);
+    // const newList = clubList.filter(
+    //   (val) => val.category === categoryList[e.target.innerHTML]
+    // );
+    setClubList([]);
   };
 
   const abc = async () => {
-    const rData = await fetch('http://localhost:3001/api/club');
+    const rData = await fetch(
+      `http://localhost:3001/api/clubs?category=${curCategory}`
+    );
 
     const data = await rData.json();
-
-    // await new Promise((resolve) => setTimeout(resolve, 1500));
 
     return data;
   };
@@ -65,6 +66,8 @@ const MainBody = () => {
   useEffect(() => {
     let observer: any;
 
+    console.log('두번 실행');
+
     if (target) {
       observer = new IntersectionObserver(callback, { threshold: 1.0 });
 
@@ -72,7 +75,7 @@ const MainBody = () => {
     }
 
     return () => observer && observer.disconnect();
-  }, [target]);
+  }, [target, curCategory]);
 
   return (
     <>
