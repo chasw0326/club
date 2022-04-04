@@ -78,6 +78,6 @@ public class UserApiController {
                                                             sort = "id",
                                                             direction = Sort.Direction.DESC) Pageable pageable) {
 
-        return commentService.getMyComment(authUser.getId(), pageable);
+        return commentService.getMyComments(authUser.getId(), pageable);
     }
 }
