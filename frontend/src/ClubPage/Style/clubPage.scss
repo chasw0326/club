@@ -188,3 +188,36 @@
     height: 20px;
   }
 }
+
+.ManagementBoard {
+  &__div {
+    &--wrap {
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      width: 500px;
+      height: 500px;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 1px solid black;
+    }
+
+    &--category-wrap {
+      height: fit-content;
+      width: 150px;
+      display: flex;
+      flex-direction: column;
+    }
+  }
+}
+
+.ClubSetting {
+  &__div {
+    &--wrap {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+  }
+}

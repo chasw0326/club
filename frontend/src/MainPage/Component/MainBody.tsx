@@ -17,7 +17,11 @@ const categoryList: any = Object.freeze({
 
 const MainBody = () => {
   const categoryAPI = async () => {
-    const rData = await fetch('http://localhost:3001/api/category');
+    const rData = await fetch('http://localhost:3001/api/category', {
+      headers: {
+        Authorization: 'bearer ' + 'asdfasfdasfjadsofajasdfAds213',
+      },
+    });
 
     const data = await rData.json();
 
