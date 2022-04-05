@@ -53,7 +53,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional(readOnly = true)
-    public Comment getComment(Long commentId){
+    public Comment getComment(Long commentId) {
         return commentRepository.findById(commentId).
                 orElseThrow(() -> new NotFoundException("Can not find comment by commentId: " + commentId));
     }
@@ -96,12 +96,14 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<CommentDTO.myComment> getMyComment(Long userId, Pageable pageable) {
+    public List<CommentDTO.myComment> getMyComments(Long userId, Pageable pageable) {
         List<Comment> myCommentList = commentRepository.getAllByUser_IdOrderByIdDesc(userId, pageable);
         List<CommentDTO.myComment> myComments = new ArrayList<>();
         for (Comment comment : myCommentList) {
             myComments.add(CommentDTO.myComment.builder()
                     .postId(comment.getPost().getId())
+                    .postTitle(comment.getPost().getTitle())
+                    .postContent(comment.getPost().getContent())
                     .commentData(CommentDTO.CommentData.builder()
                             .commentId(comment.getId())
                             .content(comment.getContent())

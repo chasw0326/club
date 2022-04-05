@@ -65,6 +65,10 @@ public class CommentDTO {
         @NotBlank
         private Long postId;
 
+        private String postTitle;
+
+        private String postContent;
+
         private CommentData commentData;
     }
 }
