@@ -1,7 +1,5 @@
 package com.example.club_project.controller.club;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -12,7 +10,6 @@ public class ClubJoinStateDTO {
      * POST
      */
     @Getter
-    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class RegisterRequest {
         private String name;
         private String address;
@@ -29,7 +26,6 @@ public class ClubJoinStateDTO {
      */
     @Builder
     @Getter
-    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class Response {
         private Long userId;
         private String email;

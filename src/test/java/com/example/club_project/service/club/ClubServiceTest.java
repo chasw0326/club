@@ -3,6 +3,8 @@ package com.example.club_project.service.club;
 import com.example.club_project.controller.club.ClubDTO;
 import com.example.club_project.domain.Category;
 import com.example.club_project.domain.Club;
+import com.example.club_project.exception.custom.AlreadyExistsException;
+import com.example.club_project.exception.custom.NotFoundException;
 import com.example.club_project.service.category.CategoryService;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,8 +14,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityExistsException;
-import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -125,7 +125,7 @@ class ClubServiceTest {
 
         //when
         //then
-        assertThrows(EntityExistsException.class, () -> clubService.register(testName, testAddress, testUniversity, testDescription, testCategoryId, null));
+        assertThrows(AlreadyExistsException.class, () -> clubService.register(testName, testAddress, testUniversity, testDescription, testCategoryId, null));
     }
 
     @Test
@@ -185,9 +185,9 @@ class ClubServiceTest {
         String invalidUniverity = "존재하지 않는 대학교";
 
         //then
-        assertThrows(EntityNotFoundException.class, () -> clubService.getClub(invalidClubName, testUniversity));
-        assertThrows(EntityNotFoundException.class, () -> clubService.getClub(testUniversity, invalidUniverity));
-        assertThrows(EntityNotFoundException.class, () -> clubService.getClub(invalidClubName, invalidUniverity));
+        assertThrows(NotFoundException.class, () -> clubService.getClub(invalidClubName, testUniversity));
+        assertThrows(NotFoundException.class, () -> clubService.getClub(testUniversity, invalidUniverity));
+        assertThrows(NotFoundException.class, () -> clubService.getClub(invalidClubName, invalidUniverity));
     }
 
     @Test
@@ -333,6 +333,6 @@ class ClubServiceTest {
         clubService.delete(club.getId());
 
         //then
-        assertThrows(EntityNotFoundException.class, () -> clubService.getClub(testName, testUniversity));
+        assertThrows(NotFoundException.class, () -> clubService.getClub(testName, testUniversity));
     }
 }

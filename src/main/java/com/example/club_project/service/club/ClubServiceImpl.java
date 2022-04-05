@@ -3,6 +3,8 @@ package com.example.club_project.service.club;
 import com.example.club_project.controller.club.ClubDTO;
 import com.example.club_project.domain.Category;
 import com.example.club_project.domain.Club;
+import com.example.club_project.exception.custom.AlreadyExistsException;
+import com.example.club_project.exception.custom.NotFoundException;
 import com.example.club_project.repository.ClubRepository;
 import com.example.club_project.service.category.CategoryService;
 import lombok.RequiredArgsConstructor;
@@ -12,8 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityExistsException;
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Objects;
 
@@ -60,7 +60,7 @@ public class ClubServiceImpl implements ClubService {
         Objects.requireNonNull(categoryId, "categoryId 입력값은 필수입니다.");
 
         if (existed(name, university)) {
-            throw new EntityExistsException("이미 존재하는 클럽입니다");
+            throw new AlreadyExistsException("이미 존재하는 클럽입니다");
         }
 
         Category category = categoryService.getCategory(categoryId);
@@ -83,7 +83,7 @@ public class ClubServiceImpl implements ClubService {
         Objects.requireNonNull(id, "id 입력값은 필수입니다.");
 
         return clubRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 클럽입니다."));
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 클럽입니다."));
     }
 
     @Override
@@ -93,7 +93,7 @@ public class ClubServiceImpl implements ClubService {
         Objects.requireNonNull(university, "university 입력값은 필수입니다.");
 
         return clubRepository.findByNameAndUniversity(name, university)
-                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 클럽입니다."));
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 클럽입니다."));
     }
 
     @Override
@@ -143,14 +143,14 @@ public class ClubServiceImpl implements ClubService {
         Objects.requireNonNull(university, "university 입력값은 필수입니다.");
 
         Club updatedClub = clubRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 클럽입니다."));
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 클럽입니다."));
 
         final String updatedClubName = StringUtils.isNotEmpty(name) ? name : updatedClub.getName();
 
         if (!updatedClubName.equals(updatedClub.getName())) {
             clubRepository.findByNameAndUniversity(updatedClubName, university).filter(club -> {
                 if (!club.getId().equals(updatedClub.getId())) {
-                    throw new RuntimeException("이미 대학교에 존재하는 동아리명으로는 바꿀 수 없습니다");
+                    throw new AlreadyExistsException("이미 대학교에 존재하는 동아리명으로는 바꿀 수 없습니다");
                 }
                 return false;
             });
@@ -172,7 +172,7 @@ public class ClubServiceImpl implements ClubService {
         Objects.requireNonNull(id, "id 입력값은 필수입니다.");
 
         Club deleteClub = clubRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("삭제하려는 id값이 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundException("삭제하려는 id값이 존재하지 않습니다."));
 
         clubRepository.delete(deleteClub);
     }

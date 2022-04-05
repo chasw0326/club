@@ -2,6 +2,7 @@ package com.example.club_project.service.category;
 
 import com.example.club_project.controller.category.CategoryDTO;
 import com.example.club_project.domain.Category;
+import com.example.club_project.exception.custom.NotFoundException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,7 +88,7 @@ class CategoryServiceTest {
         Long invalidId = 999L;
 
         //then
-        assertThrows(EntityNotFoundException.class, () -> categoryService.getCategory(invalidId));
+        assertThrows(NotFoundException.class, () -> categoryService.getCategory(invalidId));
     }
 
     @Test
@@ -116,7 +116,7 @@ class CategoryServiceTest {
         String nonExistCategoryName = "존재하지 않는 카테고리명";
 
         //then
-        assertThrows(EntityNotFoundException.class, () -> categoryService.getCategory(nonExistCategoryName));
+        assertThrows(NotFoundException.class, () -> categoryService.getCategory(nonExistCategoryName));
     }
 
     @Test
@@ -250,6 +250,6 @@ class CategoryServiceTest {
         categoryService.delete(registeredCategory.getId());
 
         //then
-        assertThrows(EntityNotFoundException.class, () -> categoryService.getCategory(registeredCategory.getId()));
+        assertThrows(NotFoundException.class, () -> categoryService.getCategory(registeredCategory.getId()));
     }
 }

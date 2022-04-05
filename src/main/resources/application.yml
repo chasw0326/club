@@ -29,3 +29,11 @@ club:
     offset-size: 0
     limit-name: "size"
     limit-size: 10
+
+# 쓰레드풀 설정
+async:
+  thread:
+    thread-name-prefix: async-thread-
+    core-pool-size: 10  # 동시에 실행시킬 쓰레드의 갯수
+    max-pool-size: 50   # 쓰레드 풀의 최대 사이즈
+    queue-capacity: 100 # 쓰레드 풀 큐의 사이즈. corePoolSize 갯수를 넘어서는 task가 들어왔을 때 queue에 해당 task들이 쌓이게 됩니다. 최대로 maxPoolSize 갯수만큼 쌓일 수 있습니다.
