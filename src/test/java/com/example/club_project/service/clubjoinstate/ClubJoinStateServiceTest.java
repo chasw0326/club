@@ -2,6 +2,7 @@ package com.example.club_project.service.clubjoinstate;
 
 import com.example.club_project.controller.club.ClubDTO;
 import com.example.club_project.domain.*;
+import com.example.club_project.exception.custom.NotFoundException;
 import com.example.club_project.service.category.CategoryService;
 import com.example.club_project.service.club.ClubService;
 import com.example.club_project.service.user.UserService;
@@ -14,7 +15,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 
-import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -365,7 +365,7 @@ class ClubJoinStateServiceTest {
         Long invalidId = 9999L;
 
         //then
-        assertThrows(EntityNotFoundException.class, () -> clubJoinStateService.getClubJoinState(invalidId));
+        assertThrows(NotFoundException.class, () -> clubJoinStateService.getClubJoinState(invalidId));
     }
 
     @Test
@@ -393,8 +393,8 @@ class ClubJoinStateServiceTest {
         Club invalidClub = mockClub2;
 
         //then
-        assertThrows(EntityNotFoundException.class, () -> clubJoinStateService.getClubJoinState(invalidUser.getId(), mockClub1.getId()));
-        assertThrows(EntityNotFoundException.class, () -> clubJoinStateService.getClubJoinState(mockUser1.getId(), invalidClub.getId()));
+        assertThrows(NotFoundException.class, () -> clubJoinStateService.getClubJoinState(invalidUser.getId(), mockClub1.getId()));
+        assertThrows(NotFoundException.class, () -> clubJoinStateService.getClubJoinState(mockUser1.getId(), invalidClub.getId()));
     }
     // ========== getClubJoinState ==========
 

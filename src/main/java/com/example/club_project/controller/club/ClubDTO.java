@@ -2,8 +2,6 @@ package com.example.club_project.controller.club;
 
 import com.example.club_project.domain.Club;
 import com.example.club_project.domain.ClubJoinState;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,7 +16,6 @@ import static java.util.stream.Collectors.*;
 
 @AllArgsConstructor
 @Getter
-@JsonNaming(SnakeCaseStrategy.class)
 public class ClubDTO {
 
     private Long id;
@@ -70,7 +67,6 @@ public class ClubDTO {
      * POST
      */
     @Getter
-    @JsonNaming(SnakeCaseStrategy.class)
     public static class RegisterRequest {
         @NotBlank(message = "name 필드에는 빈 값이 허용되지 않습니다.")
         private String name;
@@ -87,7 +83,6 @@ public class ClubDTO {
      * PUT
      */
     @Getter
-    @JsonNaming(SnakeCaseStrategy.class)
     public static class UpdateRequest {
         private String name;
         private String address;
@@ -101,7 +96,6 @@ public class ClubDTO {
      */
     @Builder
     @Getter
-    @JsonNaming(SnakeCaseStrategy.class)
     public static class Response {
         private Long id;
         private String name;
@@ -126,7 +120,6 @@ public class ClubDTO {
 
     @Builder
     @Getter
-    @JsonNaming(SnakeCaseStrategy.class)
     public static class MemberResponse {
         private String joinState;
         private String name;
@@ -141,7 +134,6 @@ public class ClubDTO {
 
     @Builder
     @Getter
-    @JsonNaming(SnakeCaseStrategy.class)
     public static class DetailResponse {
         private Long id;
         private String name;

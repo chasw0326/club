@@ -2,9 +2,13 @@ package com.example.club_project.controller.category;
 
 import com.example.club_project.service.category.CategoryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
+import static java.util.concurrent.CompletableFuture.completedFuture;
 
 @RequestMapping("/api/category")
 @RestController
@@ -18,9 +22,10 @@ public class CategoryApiController {
      *
      * GET /api/category/:id
      */
+    @Async
     @GetMapping("/{id}")
-    public CategoryDTO.Response getCategories(@PathVariable Long id) {
-        return categoryService.getCategoryDto(id);
+    public CompletableFuture<CategoryDTO.Response> getCategories(@PathVariable Long id) {
+        return completedFuture(categoryService.getCategoryDto(id));
     }
 
     /**
@@ -28,9 +33,10 @@ public class CategoryApiController {
      *
      * GET /api/category
      */
+    @Async
     @GetMapping
-    public List<CategoryDTO.Response> getCategories() {
-        return categoryService.getCategoryDtos();
+    public CompletableFuture<List<CategoryDTO.Response>> getCategories() {
+        return completedFuture(categoryService.getCategoryDtos());
     }
 
     /**
@@ -38,9 +44,10 @@ public class CategoryApiController {
      *
      * POST /api/category
      */
+    @Async
     @PostMapping
-    public CategoryDTO.Response registerCategory(@RequestBody CategoryDTO.RegisterRequest request) {
-        return categoryService.registerCategory(request.getName(), request.getDescription());
+    public CompletableFuture<CategoryDTO.Response> registerCategory(@RequestBody CategoryDTO.RegisterRequest request) {
+        return completedFuture(categoryService.registerCategory(request.getName(), request.getDescription()));
     }
 
     /**
@@ -48,9 +55,12 @@ public class CategoryApiController {
      *
      * PUT /api/category/:id
      */
+    @Async
     @PutMapping("/{id}")
-    public CategoryDTO.Response updateCategory(@PathVariable Long id, @RequestBody CategoryDTO.UpdateRequest request) {
-        return categoryService.updateCategory(id, request.getName(), request.getDescription());
+    public CompletableFuture<CategoryDTO.Response> updateCategory(@PathVariable Long id,
+                                                                  @RequestBody CategoryDTO.UpdateRequest request) {
+
+        return completedFuture(categoryService.updateCategory(id, request.getName(), request.getDescription()));
     }
 
     /**
@@ -58,6 +68,7 @@ public class CategoryApiController {
      *
      * DELETE /api/category/:id
      */
+    @Async
     @DeleteMapping("/{id}")
     public void deleteCategory(@PathVariable Long id) {
         categoryService.delete(id);
