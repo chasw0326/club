@@ -1,8 +1,6 @@
 package com.example.club_project.controller.category;
 
 import com.example.club_project.domain.Category;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -12,7 +10,6 @@ public class CategoryDTO {
      * POST
      */
     @Getter
-    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class RegisterRequest {
         private String name;
         private String description;
@@ -22,7 +19,6 @@ public class CategoryDTO {
      * PUT
      */
     @Getter
-    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class UpdateRequest {
         private String name;
         private String description;
@@ -30,7 +26,6 @@ public class CategoryDTO {
 
     @Builder
     @Getter
-    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class Response {
         private Long id;
         private String name;

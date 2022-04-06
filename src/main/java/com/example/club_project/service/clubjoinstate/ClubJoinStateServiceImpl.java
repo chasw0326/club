@@ -6,6 +6,8 @@ import com.example.club_project.domain.Club;
 import com.example.club_project.domain.ClubJoinState;
 import com.example.club_project.domain.JoinState;
 import com.example.club_project.domain.User;
+import com.example.club_project.exception.custom.AlreadyExistsException;
+import com.example.club_project.exception.custom.NotFoundException;
 import com.example.club_project.repository.ClubJoinStateRepository;
 import com.example.club_project.service.club.ClubService;
 import com.example.club_project.service.user.UserService;
@@ -17,7 +19,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Objects;
 
@@ -200,7 +201,7 @@ public class ClubJoinStateServiceImpl implements ClubJoinStateService {
             return findJoinState;
         }
 
-        throw new RuntimeException("이미 존재하는 ClubJoinState 정보입니다.");
+        throw new AlreadyExistsException("이미 존재하는 ClubJoinState 정보입니다.");
     }
 
     private ClubJoinState createClubJoinState(Long userId, Long clubId, int joinStateCode) {
@@ -221,7 +222,7 @@ public class ClubJoinStateServiceImpl implements ClubJoinStateService {
         Objects.requireNonNull(clubJoinStateId, "clubJoinStateId 입력값은 필수입니다.");
 
         return clubJoinStateRepository.findById(clubJoinStateId)
-                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 가입상태입니다."));
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 가입상태입니다."));
     }
 
     @Override
@@ -231,7 +232,7 @@ public class ClubJoinStateServiceImpl implements ClubJoinStateService {
         Objects.requireNonNull(clubId, "clubId 입력값은 필수입니다.");
 
         return clubJoinStateRepository.find(userId, clubId)
-                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 가입상태입니다."));
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 가입상태입니다."));
     }
 
     @Override

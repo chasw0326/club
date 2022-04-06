@@ -2,12 +2,12 @@ package com.example.club_project.service.category;
 
 import com.example.club_project.controller.category.CategoryDTO;
 import com.example.club_project.domain.Category;
+import com.example.club_project.exception.custom.NotFoundException;
 import com.example.club_project.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -79,9 +79,8 @@ public class CategoryServiceImpl implements CategoryService {
     public Category getCategory(Long id) {
         Objects.requireNonNull(id, "id 입력값은 필수입니다.");
 
-        //TODO: 사용자 정의 Exception으로 수정
         return categoryRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 id 입니다."));
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 id 입니다."));
     }
 
     @Override
@@ -89,9 +88,8 @@ public class CategoryServiceImpl implements CategoryService {
     public Category getCategory(String name) {
         Objects.requireNonNull(name, "name 입력값은 필수입니다.");
 
-        //TODO: 사용자 정의 Exception으로 수정
         return categoryRepository.findByName(name)
-                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 카테고리이름입니다."));
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 카테고리이름입니다."));
     }
 
     @Override
@@ -120,7 +118,7 @@ public class CategoryServiceImpl implements CategoryService {
         Objects.requireNonNull(id, "id 입력값은 필수입니다.");
 
         Category updatedCategory = categoryRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("수정하려는 id값이 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundException("수정하려는 id값이 존재하지 않습니다."));
 
         updatedCategory.update(name, description);
 
@@ -132,7 +130,7 @@ public class CategoryServiceImpl implements CategoryService {
     public void delete(Long id) {
         Objects.requireNonNull(id, "id 입력값은 필수입니다.");
         Category deleteCategory = categoryRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("삭제하려는 id값이 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundException("삭제하려는 id값이 존재하지 않습니다."));
 
         categoryRepository.delete(deleteCategory);
     }
