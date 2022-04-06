@@ -4,6 +4,7 @@ import comment from '../../image/comment.svg';
 
 const NoticeBoard = () => {
   const [isStuffOpen, setStuffOpen] = useState(false);
+  const [writeMode, setWriteMode] = useState(false);
   const [postList, setPostList] = useState({
     postData: [
       { postID: 543212, postTitle: '공지사항', postSubmitter: '운영자' },
@@ -23,6 +24,11 @@ const NoticeBoard = () => {
       { nickname: '익명의 바다사자', content: '나는 익명의 바다사자야!' },
     ],
   });
+
+  const writeOnOff = () => {
+    if (writeMode) setWriteMode(false);
+    else setWriteMode(true);
+  };
 
   const onOff = async (e: any) => {
     if (isStuffOpen) {
@@ -69,6 +75,19 @@ const NoticeBoard = () => {
         </div>
       </div>
     );
+  } else if (writeMode) {
+    return (
+      <>
+        <div className="ClubPage__div--write-wrap">
+          <div>
+            제목 :{' '}
+            <input className="ClubPage__input--write-title" type="text"></input>
+          </div>
+          <textarea className="ClubPage__textarea--write-area"></textarea>
+          <div className="ClubPage__button--submit-post">작성완료</div>
+        </div>
+      </>
+    );
   } else {
     return (
       <>
@@ -97,6 +116,9 @@ const NoticeBoard = () => {
               </>
             );
           })}
+        </div>
+        <div className="ClubPage__button--post-button" onClick={writeOnOff}>
+          글쓰기
         </div>
       </>
     );

@@ -29,7 +29,7 @@ const ClubPage = () => {
             사진
           </div>
           <div className="ClubPage-navigateBar-chat" onClick={selectCategory}>
-            채팅
+            관리
           </div>
         </div>
         <hr className="horizon"></hr>

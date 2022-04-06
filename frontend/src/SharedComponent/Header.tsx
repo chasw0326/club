@@ -3,67 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import './Style/shared.scss';
 import person from '../image/person.svg';
-import cancel from '../image/cancel.svg';
-
-const ClubCreateModal = ({
-  modalState,
-  setModal,
-}: {
-  modalState: boolean;
-  setModal: any;
-}) => {
-  if (modalState) {
-    return (
-      <>
-        <div className="MainHeader__div--club-create-modal">
-          <img
-            src={cancel}
-            className="MyPage__button--cancel"
-            onClick={setModal}
-          ></img>
-          <div className="MainHeader__div--modify">
-            <div className="MyPage__text--title">동아리 생성</div>
-            <div className="MyPage__text--current-password">동아리명</div>
-            <input
-              id="name"
-              className="MyPage__input--box"
-              type="password"
-            ></input>
-            <div className="MyPage__text--new-password">동아리 위치</div>
-            <input
-              id="nickname"
-              className="MyPage__input--box"
-              type="password"
-            ></input>
-            <div className="MyPage__text--new-password-check">동아리 소개</div>
-            <input
-              id="university"
-              className="MyPage__input--box"
-              type="password"
-            ></input>
-            <div className="MyPage__text--new-password-check">카테고리</div>
-            <input
-              id="introduction"
-              className="MyPage__input--box"
-              type="password"
-            ></input>
-            <div className="MyPage__text--new-password-check">
-              동아리 대표 이미지
-            </div>
-            <input
-              id="introduction"
-              className="MyPage__input--file"
-              type="file"
-            ></input>
-            <div className="MyPage__div--modify-submit">확인</div>
-          </div>
-        </div>
-
-        <div className="blur"></div>
-      </>
-    );
-  } else return null;
-};
+import ClubCreateModal from './ClubCreateModal';
 
 const MainHeader = () => {
   const [inputState, setInputState] = useState('');
@@ -89,7 +29,14 @@ const MainHeader = () => {
   return (
     <>
       <div className="MainHeader">
-        <div className="MainHeader-university">대학교명(API)</div>
+        <div
+          className="MainHeader-university"
+          onClick={() => {
+            navigate('/home');
+          }}
+        >
+          대학교명(API)
+        </div>
         <input
           className="MainHeader-searchBar"
           type="search"

@@ -1,5 +1,9 @@
 @import '../../stylesheets/palette.scss';
 
+body {
+  background-color: $whitegray;
+}
+
 .MainHeader {
   display: flex;
   flex-direction: row;
@@ -7,6 +11,7 @@
   &-university {
     font-family: 'Jua', Arial, Helvetica, sans-serif;
     font-size: 50px;
+    cursor: pointer;
   }
 
   &-searchBar {
@@ -39,7 +44,7 @@
     height: 600px;
     left: 50%;
     top: 50%;
-    z-index: 1;
+    z-index: 2;
     border-radius: 0.5em;
     background-color: white;
     transform: translate(-50%, -50%);
@@ -54,6 +59,72 @@
     width: 100%;
     height: 500px;
     margin-top: 50px;
+
+    &-submit {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      font-size: 20px;
+      color: white;
+      font-weight: bold;
+      margin-top: 50px;
+      width: 160px;
+      height: 35px;
+      text-align: center;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: lightgray;
+
+      cursor: pointer;
+    }
+  }
+
+  &__text {
+    &--current-password,
+    &--new-password,
+    &--new-password-check {
+      position: relative;
+      left: 20%;
+      margin-top: 15px;
+    }
+
+    &--introduction {
+      position: relative;
+      margin-top: 15px;
+      left: 19%;
+    }
+
+    &--title {
+      position: absolute;
+
+      left: 50%;
+      font-size: 35px;
+      transform: translateX(-50%);
+      top: -50px;
+    }
+  }
+
+  &__input {
+    &--box {
+      position: relative;
+      width: 150px;
+      height: 30px;
+      left: 36%;
+      transform: translateX(-50%);
+    }
+
+    &--introduction {
+      position: relative;
+      width: 300px;
+      height: 300px;
+      left: 20%;
+      resize: none;
+    }
+
+    &--file {
+      visibility: hidden;
+    }
   }
 
   &__button {
@@ -64,31 +135,101 @@
       cursor: pointer;
     }
   }
+
+  &__label {
+    &--file {
+      position: relative;
+      bottom: 10px;
+      margin-left: -23px;
+      display: flex;
+      border-radius: 0.25rem;
+      justify-content: center;
+      align-items: center;
+      color: $semi-white;
+      font-weight: bold;
+      width: 110px;
+      height: 60px;
+      background-color: $navyblue;
+      left: 25%;
+
+      cursor: pointer;
+    }
+  }
 }
 
 .MainBody {
   font-family: 'Jua', Arial, Helvetica, sans-serif;
 
-  &-CategoryFrame {
-    width: 100vw;
-    height: 50px;
-    background-color: green;
+  &-itemFrame {
+    position: relative;
+    height: 800px;
+    width: 80vw;
+    border: 4px solid $grayblue;
+    border-radius: 0.5rem;
+    overflow: scroll;
+    justify-content: center;
+    align-items: center;
+    left: 50%;
+    transform: translateX(-50%);
+
+    &-clubItem {
+      position: relative;
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+      width: 600px;
+      left: 50%;
+      transform: translateX(-50%);
+      margin-top: 10px;
+      height: 200px;
+      border: 1px solid black;
+      background-color: $semi-white;
+      cursor: pointer;
+      border-radius: 0.5rem;
+
+      &-right {
+        position: relative;
+      }
+
+      &-title {
+        position: absolute;
+        top: 20px;
+        font-size: 30px;
+      }
+
+      &-description {
+        position: relative;
+        left: 2px;
+        width: 300px;
+      }
+
+      &-member {
+        position: relative;
+        left: 2px;
+        top: 20px;
+        width: 300px;
+      }
+
+      &-address {
+        position: absolute;
+        bottom: 10px;
+        left: 520px;
+        width: 300px;
+      }
+    }
   }
 
-  &-itemFrame {
-    display: flex;
-    flex-direction: row;
-    height: 500px;
-    width: 100vw;
-    background-color: aquamarine;
-    flex-wrap: wrap;
-    &-clubItem {
-      width: 200px;
-      height: 100px;
-      background-color: white;
-      margin-right: 10px;
-      cursor: pointer;
-    }
+  &-itemFrame::-webkit-scrollbar {
+    width: 8px;
+    height: 0px;
+  }
+  &-itemFrame::-webkit-scrollbar-thumb {
+    background-color: #dfdfdf;
+    border-radius: 10px;
+  }
+  &-itemFrame::-webkit-scrollbar-track {
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 10px;
   }
 }
 
@@ -161,4 +302,15 @@
   &-signIn:hover {
     background-color: blue;
   }
+}
+
+.blur {
+  position: absolute;
+  background-color: black;
+  opacity: 0.55;
+  height: 100vh;
+  width: 100vw;
+  top: 0px;
+  z-index: 1;
+  filter: blur(5px);
 }
