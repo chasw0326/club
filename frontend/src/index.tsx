@@ -6,11 +6,14 @@ import { Route, BrowserRouter, Routes } from 'react-router-dom';
 import MainPage from './MainPage/MainPage';
 import LoginPage from './LoginPage/LoginPage';
 import reportWebVitals from './reportWebVitals';
+import { StoreProvider } from './hooks/store';
 
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
-      <App></App>
+      <StoreProvider>
+        <App></App>
+      </StoreProvider>
     </BrowserRouter>
   </React.StrictMode>,
   document.getElementById('root')

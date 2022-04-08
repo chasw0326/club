@@ -40,36 +40,35 @@ const ModalContent = () => {
             src={back}
             onClick={setModifyState}
           ></img>
-          <div className="MyPage__text--title">개인정보 수정</div>
-          <div className="MyPage__text--current-password">이름</div>
+          <div className="SettingModal__text--title">개인정보 수정</div>
+          <div className="SettingModal__text--current-password">이름</div>
           <input
             id="name"
-            className="MyPage__input--box"
-            type="password"
+            className="SettingModal__input--box"
+            type="text"
             onChange={setInputValue}
           ></input>
-          <div className="MyPage__text--new-password">닉네임</div>
+          <div className="SettingModal__text--new-password">닉네임</div>
           <input
             id="nickname"
-            className="MyPage__input--box"
-            type="password"
+            className="SettingModal__input--box"
+            type="text"
             onChange={setInputValue}
           ></input>
-          <div className="MyPage__text--new-password-check">대학교</div>
+          <div className="SettingModal__text--new-password-check">대학교</div>
           <input
             id="university"
-            className="MyPage__input--box"
-            type="password"
+            className="SettingModal__input--box"
+            type="text"
             onChange={setInputValue}
           ></input>
-          <div className="MyPage__text--new-password-check">자기소개</div>
-          <input
+          <div className="SettingModal__text--new-password-check">자기소개</div>
+          <textarea
             id="introduction"
-            className="MyPage__input--box"
-            type="password"
+            className="SettingModal__textarea--introduction"
             onChange={setInputValue}
-          ></input>
-          <div className="MyPage__div--modify-submit">확인</div>
+          ></textarea>
+          <div className="SettingModal__div--modify-submit">확인</div>
         </div>
       </>
     );

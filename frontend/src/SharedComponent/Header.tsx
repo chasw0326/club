@@ -1,15 +1,15 @@
-import React, { EventHandler, KeyboardEventHandler } from 'react';
+import React, { EventHandler, KeyboardEventHandler, useContext } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import './Style/shared.scss';
 import person from '../image/person.svg';
 import ClubCreateModal from './ClubCreateModal';
+import { store } from '../hooks/store';
 
 const MainHeader = () => {
   const [inputState, setInputState] = useState('');
   const [modalState, setModalState] = useState(false);
   const navigate = useNavigate();
-  const locations = useLocation();
 
   const setInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputState(event.target.value);

@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { store } from '../hooks/store';
 import cancel from '../image/cancel.svg';
 
 const ClubCreateModal = ({
@@ -8,6 +9,8 @@ const ClubCreateModal = ({
   modalState: boolean;
   setModal: any;
 }) => {
+  const [globalCategory, setGlobalCategory] = useContext(store);
+
   if (modalState) {
     return (
       <>
@@ -37,11 +40,17 @@ const ClubCreateModal = ({
               className="MainHeader__input--introduction"
             ></textarea>
             <div className="MainHeader__text--new-password-check">카테고리</div>
-            <input
-              id="introduction"
+
+            <select
               className="MainHeader__input--box"
-              type="text"
-            ></input>
+              name="pets"
+              id="pet-select"
+            >
+              <option value="">카테고리 선택</option>
+              {globalCategory.categories?.map((val: any, idx: number) => {
+                return <option value={val.name}>{val.name}</option>;
+              })}
+            </select>
             <div className="MainHeader__text--new-password-check">
               동아리 대표 이미지
             </div>

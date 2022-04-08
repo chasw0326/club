@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { clubItem } from '../../type/type';
 import { useAsync } from '../../hooks/useFetch';
 import { fetchState } from '../../type/type';
 import ClubItem from '../../SharedComponent/ClubItem';
 import '../Style/body.scss';
+import { store } from '../../hooks/store';
 
 const categoryList: any = Object.freeze({
   '문화/예술/공연': 1,
@@ -16,6 +17,8 @@ const categoryList: any = Object.freeze({
 });
 
 const MainBody = () => {
+  const [globalCategory, setGlobalCategory] = useContext(store);
+
   const categoryAPI = async () => {
     const rData = await fetch('http://localhost:3001/api/category', {
       headers: {
@@ -66,6 +69,10 @@ const MainBody = () => {
       observer.observe(entry.target);
     }
   };
+
+  useEffect(() => {
+    setGlobalCategory({ ...globalCategory, categories: category });
+  }, [category]);
 
   useEffect(() => {
     let observer: any;
