@@ -33,6 +33,7 @@ public class GlobalExceptionHandler {
     // return CONFLICT
     @ExceptionHandler({AlreadyExistsException.class})
     public ResponseEntity<String> alreadyExistsHandler(AlreadyExistsException ex){
+        log.warn("alreadyExist Error: {}", ex.getMessage());
         String message = ex.getMessage();
         return new ResponseEntity<>(message, HttpStatus.CONFLICT);
     }
@@ -40,6 +41,7 @@ public class GlobalExceptionHandler {
     // return FORBIDDEN
     @ExceptionHandler({ForbiddenException.class})
     public ResponseEntity<String> forbiddenHandler(ForbiddenException ex){
+        log.warn("forbidden Error: {}", ex.getMessage());
         String message = ex.getMessage();
         return new ResponseEntity<>(message, HttpStatus.FORBIDDEN);
     }
@@ -54,6 +56,7 @@ public class GlobalExceptionHandler {
     // for ValidateUtil
     @ExceptionHandler({ConstraintViolationException.class})
     public ResponseEntity<String> validateUtilHandler(ConstraintViolationException ex){
+        log.warn("validate Error: {}", ex.getMessage());
         String message = ex.getMessage();
         return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }

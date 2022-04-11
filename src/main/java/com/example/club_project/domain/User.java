@@ -80,6 +80,10 @@ public class User extends AuditingCreateUpdateEntity {
         this.password = password;
     }
 
+    public void updateProfileImage(String profileUrl) {
+        this.profileUrl = profileUrl;
+    }
+
     @Builder
     private User(String email, String name, String profileUrl, String password, String nickname, String university, String introduction){
         this.email = email;
