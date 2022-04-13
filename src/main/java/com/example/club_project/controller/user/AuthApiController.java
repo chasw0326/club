@@ -6,6 +6,7 @@ import com.example.club_project.util.upload.UploadUtil;
 import com.example.club_project.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,6 +23,7 @@ public class AuthApiController {
 
     private final UserService userService;
     private final UploadUtil uploadUtil;
+    private final TaskExecutor taskExecutor;
 
     /**
      * email
@@ -40,7 +42,7 @@ public class AuthApiController {
         User user = signupDTO.toEntity(signupDTO);
         Long userId = userService.signup(user);
 
-        supplyAsync(() -> uploadUtil.upload(profileImage, "profile"))
+        supplyAsync(() -> uploadUtil.upload(profileImage, "profile"), taskExecutor)
             .thenAccept(profileImageUrl -> {
                 log.info("supplyAsync::thenAccept part");
                 userService.updateProfileImage(userId, profileImageUrl);
