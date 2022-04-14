@@ -17,4 +17,5 @@ public interface UserService {
 
     void updatePassword(Long principalId, String oldPw, String newPw, String checkPw);
 
+    void updateProfileImage(Long userId, String profileImageUrl);
 }

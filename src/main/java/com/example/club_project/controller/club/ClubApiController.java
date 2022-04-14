@@ -7,15 +7,12 @@ import com.example.club_project.service.clubjoinstate.ClubJoinStateService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
-import static java.util.concurrent.CompletableFuture.completedFuture;
 
 /**
  * Club 자체에 대한 CRUD만 담당하는 API Controller
@@ -38,27 +35,27 @@ public class ClubApiController {
      * 검색조건3: 동아리 이름
      * 검색조건4: 카테고리 + 동아리 이름
      */
-    @Async
     @GetMapping
-    public CompletableFuture<List<ClubDTO>> searchClubs(@AuthenticationPrincipal AuthUserDTO authUser,
-                                                       ClubDTO.SearchOption searchOption,
-                                                       Pageable pageable) {
+    public List<ClubDTO> searchClubs(@AuthenticationPrincipal AuthUserDTO authUser,
+                                                                ClubDTO.SearchOption searchOption,
+                                                                Pageable pageable) {
 
         if (ObjectUtils.isEmpty(searchOption.getName()) && ObjectUtils.isEmpty(searchOption.getCategories())) {
-            return completedFuture(clubJoinStateService.getClubDtos(authUser.getUniversity(), pageable));
+            return clubJoinStateService.getClubDtos(authUser.getUniversity(), pageable);
         } else if (ObjectUtils.isEmpty(searchOption.getCategories())) {
-            return completedFuture(clubJoinStateService.getClubDtos(searchOption.getName(),
-                                                                    authUser.getUniversity(),
-                                                                    pageable));
+            return clubJoinStateService.getClubDtos(searchOption.getName(),
+                                                    authUser.getUniversity(),
+                                                    pageable);
+
         } else if (ObjectUtils.isEmpty(searchOption.getName())) {
-            return completedFuture(clubJoinStateService.getClubDtos(searchOption.getCategories(),
-                                                                    authUser.getUniversity(),
-                                                                    pageable));
+            return clubJoinStateService.getClubDtos(searchOption.getCategories(),
+                                                    authUser.getUniversity(),
+                                                    pageable);
         } else {
-            return completedFuture(clubJoinStateService.getClubDtos(searchOption.getCategories(),
-                                                                    authUser.getUniversity(),
-                                                                    searchOption.getName(),
-                                                                    pageable));
+            return clubJoinStateService.getClubDtos(searchOption.getCategories(),
+                                                    authUser.getUniversity(),
+                                                    searchOption.getName(),
+                                                    pageable);
         }
     }
 
@@ -67,10 +64,9 @@ public class ClubApiController {
      *
      * GET /api/clubs/:club-id
      */
-    @Async
     @GetMapping("/{clubId}")
-    public CompletableFuture<ClubDTO.DetailResponse> searchClubDetails(@PathVariable("clubId") Long clubId) {
-        return completedFuture(clubJoinStateService.getClubDetailDto(clubId));
+    public ClubDTO.DetailResponse searchClubDetails(@PathVariable("clubId") Long clubId) {
+        return clubJoinStateService.getClubDetailDto(clubId);
     }
 
     /**
@@ -78,23 +74,20 @@ public class ClubApiController {
      *
      * POST /api/clubs
      */
-    @Async
     @PostMapping
-    public CompletableFuture<ClubDTO.Response> registerClub(@AuthenticationPrincipal AuthUserDTO authUser,
-                                                            @Valid @RequestBody ClubDTO.RegisterRequest req) {
+    public ClubDTO.Response registerClub(@AuthenticationPrincipal AuthUserDTO authUser,
+                                            @Valid @RequestBody ClubDTO.RegisterRequest req) {
 
-        ClubDTO.Response registerClub = clubService.registerClub(
-                req.getName(),
-                req.getAddress(),
-                authUser.getUniversity(),
-                req.getDescription(),
-                req.getCategory(),
-                req.getImageUrl()
-        );
+        ClubDTO.Response registerClub = clubService.registerClub(req.getName(),
+                                                                 req.getAddress(),
+                                                                 authUser.getUniversity(),
+                                                                 req.getDescription(),
+                                                                 req.getCategory(),
+                                                                 req.getImageUrl());
 
         clubJoinStateService.joinAsMaster(authUser.getId(), registerClub.getId());
 
-        return completedFuture(registerClub);
+        return registerClub;
     }
 
     /**
@@ -104,21 +97,19 @@ public class ClubApiController {
      *
      * TODO: 동아리 '대학교명'은 별도의 필드로 두지 않고 update시 사용자의 대학교명을 그대로 따라가게 하는 건 어떤지 (관리포인트 줄이기)
      */
-    @Async
     @PutMapping("/{clubId}")
-    public CompletableFuture<ClubDTO.Response> updateClub(@AuthenticationPrincipal AuthUserDTO authUser,
-                                                          @PathVariable("clubId") Long clubId,
-                                                          @RequestBody ClubDTO.UpdateRequest req) {
+    public ClubDTO.Response updateClub(@AuthenticationPrincipal AuthUserDTO authUser,
+                                          @PathVariable("clubId") Long clubId,
+                                          @RequestBody ClubDTO.UpdateRequest req) {
 
         if (clubJoinStateService.isClubMaster(authUser.getId(), clubId)) {
-            return completedFuture(clubService.updateClub(clubId,
-                                                          req.getName(),
-                                                          req.getAddress(),
-                                                          authUser.getUniversity(),
-                                                          req.getDescription(),
-                                                          req.getCategory(),
-                                                          req.getImageUrl())
-            );
+            return clubService.updateClub(clubId,
+                                          req.getName(),
+                                          req.getAddress(),
+                                          authUser.getUniversity(),
+                                          req.getDescription(),
+                                          req.getCategory(),
+                                          req.getImageUrl());
         }
 
         throw new ForbiddenException("동아리 수정 권한이 없습니다.");
@@ -129,7 +120,6 @@ public class ClubApiController {
      *
      * DELETE /api/clubs/:club-id
      */
-    @Async
     @DeleteMapping("/{clubId}")
     public void deleteClub(@AuthenticationPrincipal AuthUserDTO authUser,
                            @PathVariable("clubId") Long clubId) {
