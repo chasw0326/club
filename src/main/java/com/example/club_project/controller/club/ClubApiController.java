@@ -1,7 +1,7 @@
 package com.example.club_project.controller.club;
 
 import com.example.club_project.exception.custom.ForbiddenException;
-import com.example.club_project.exception.custom.UnHandleException;
+import com.example.club_project.exception.custom.UnloadException;
 import com.example.club_project.security.dto.AuthUserDTO;
 import com.example.club_project.service.club.ClubService;
 import com.example.club_project.service.clubjoinstate.ClubJoinStateService;
@@ -140,10 +140,10 @@ public class ClubApiController {
                         clubService.updateImage(clubId, clubImageUrl);
                     })
                     .exceptionally(throwable -> {
-                        if (throwable instanceof UnHandleException) {
-                            log.warn("{}",throwable.getMessage(), throwable);
-                        } else if (throwable instanceof RuntimeException) {
-                            log.warn("{}",throwable.getMessage(), throwable);
+                        if (throwable instanceof UnloadException) {
+                            log.warn("UnloadException: {}",throwable.getMessage(), throwable);
+                        } else if (throwable instanceof Exception) {
+                            log.warn("UnHandleException: {}",throwable.getMessage(), throwable);
                         }
                         return null;
                     });

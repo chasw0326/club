@@ -5,12 +5,12 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
-import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 
 @Getter
@@ -24,22 +24,30 @@ public class Category extends AuditingCreateEntity {
     private Long id;
 
     @Column(length = 20, nullable = false)
-    @Length(max = 20, message = "사이즈를 확인하세요.")
-    @NotBlank(message = "카테고리명은 필수 값 입니다.")
     private String name;
 
     @Column(length = 50, nullable = false)
-    @Length(max = 50, message = "사이즈를 확인하세요.")
-    @NotBlank(message = "카테고리 설명은 필수 값 입니다.")
     private String description;
 
     public void update(String name, String description) {
-        this.name = StringUtils.isEmpty(name) ? this.name : name;
-        this.description = StringUtils.isEmpty(description) ? this.description : description;
+        checkArgument(
+                isEmpty(name) || name.length() <= 20,
+                "카테고리명은 20자 이하여야 합니다.");
+        checkArgument(
+                isEmpty(description) || description.length() <= 50,
+                "카테고리 설명은 50자 이하여야 합니다.");
+
+        this.name = isEmpty(name) ? this.name : name;
+        this.description = isEmpty(description) ? this.description : description;
     }
 
     @Builder
     private Category(String name, String description) {
+        checkArgument(isNotEmpty(name), "카테고리명은 필수 값 입니다.");
+        checkArgument(name.length() <= 20, "카테고리명은 20자 이하여야 합니다.");
+        checkArgument(isNotEmpty(description), "카테고리 설명은 필수 값 입니다.");
+        checkArgument(description.length() <= 50, "카테고리 설명은 50자 이하여야 합니다.");
+
         this.name = name;
         this.description = description;
     }

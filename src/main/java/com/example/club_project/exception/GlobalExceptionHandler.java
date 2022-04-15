@@ -6,15 +6,19 @@ import com.example.club_project.exception.custom.ForbiddenException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentConversionNotSupportedException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.MultipartException;
 
 import javax.validation.ConstraintViolationException;
 
@@ -75,6 +79,18 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({ConstraintViolationException.class})
     public ResponseEntity<?> validateUtilHandler(ConstraintViolationException ex){
         log.warn("validate Error: {}", ex.getMessage());
+        String message = ex.getMessage();
+        return createErrorResponse(message, HttpStatus.BAD_REQUEST);
+    }
+
+    // Validation(@Valid 제외) exception catch
+    @ExceptionHandler({
+        IllegalArgumentException.class, IllegalStateException.class,
+        TypeMismatchException.class, HttpMessageNotReadableException.class,
+        MissingServletRequestParameterException.class, MultipartException.class,
+    })
+    public ResponseEntity<?> badRequestExceptionHandler(Exception ex) {
+        log.warn("Bad request exception occurred: {}: {}", ex.getMessage());
         String message = ex.getMessage();
         return createErrorResponse(message, HttpStatus.BAD_REQUEST);
     }
