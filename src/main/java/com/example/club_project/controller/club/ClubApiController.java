@@ -1,22 +1,31 @@
 package com.example.club_project.controller.club;
 
 import com.example.club_project.exception.custom.ForbiddenException;
+import com.example.club_project.exception.custom.UnHandleException;
 import com.example.club_project.security.dto.AuthUserDTO;
 import com.example.club_project.service.club.ClubService;
 import com.example.club_project.service.clubjoinstate.ClubJoinStateService;
+import com.example.club_project.util.upload.UploadUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
+
+import static java.util.concurrent.CompletableFuture.supplyAsync;
 
 
 /**
  * Club 자체에 대한 CRUD만 담당하는 API Controller
  */
+@Slf4j
 @RequestMapping("/api/clubs")
 @RestController
 @RequiredArgsConstructor
@@ -24,6 +33,8 @@ public class ClubApiController {
 
     private final ClubService clubService;
     private final ClubJoinStateService clubJoinStateService;
+    private final UploadUtil uploadUtil;
+    private final TaskExecutor taskExecutor;
 
     /**
      * 사용자가 등록한 대학교와 같은 대학교에 있는 동아리를 반환한다.
@@ -82,8 +93,7 @@ public class ClubApiController {
                                                                  req.getAddress(),
                                                                  authUser.getUniversity(),
                                                                  req.getDescription(),
-                                                                 req.getCategory(),
-                                                                 req.getImageUrl());
+                                                                 req.getCategory());
 
         clubJoinStateService.joinAsMaster(authUser.getId(), registerClub.getId());
 
@@ -100,7 +110,7 @@ public class ClubApiController {
     @PutMapping("/{clubId}")
     public ClubDTO.Response updateClub(@AuthenticationPrincipal AuthUserDTO authUser,
                                           @PathVariable("clubId") Long clubId,
-                                          @RequestBody ClubDTO.UpdateRequest req) {
+                                          @Valid @RequestBody ClubDTO.UpdateRequest req) {
 
         if (clubJoinStateService.isClubMaster(authUser.getId(), clubId)) {
             return clubService.updateClub(clubId,
@@ -108,11 +118,40 @@ public class ClubApiController {
                                           req.getAddress(),
                                           authUser.getUniversity(),
                                           req.getDescription(),
-                                          req.getCategory(),
-                                          req.getImageUrl());
+                                          req.getCategory());
         }
 
         throw new ForbiddenException("동아리 수정 권한이 없습니다.");
+    }
+
+    /**
+     * 동아리 image 정보를 수정할 수 있다.
+     *
+     * PUT /api/clubs/image/:club-id
+     */
+    @PutMapping(value = "/image/{clubId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public void updateClubImage(@AuthenticationPrincipal AuthUserDTO authUser,
+                                @PathVariable("clubId") Long clubId,
+                                @RequestPart MultipartFile clubImage) {
+
+        if (clubJoinStateService.isClubMaster(authUser.getId(), clubId)) {
+            supplyAsync(() -> uploadUtil.upload(clubImage, "club-image"), taskExecutor)
+                    .thenAccept(clubImageUrl -> {
+                        clubService.updateImage(clubId, clubImageUrl);
+                    })
+                    .exceptionally(throwable -> {
+                        if (throwable instanceof UnHandleException) {
+                            log.warn("{}",throwable.getMessage(), throwable);
+                        } else if (throwable instanceof RuntimeException) {
+                            log.warn("{}",throwable.getMessage(), throwable);
+                        }
+                        return null;
+                    });
+
+            return;
+        }
+
+        throw new ForbiddenException("동아리 이미지 수정 권한이 없습니다.");
     }
 
     /**

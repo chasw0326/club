@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+@Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
@@ -29,13 +30,11 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public CategoryDTO.Response getCategoryDto(Long id) {
         return convertToDTO(getCategory(id));
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<CategoryDTO.Response> getCategoryDtos() {
         return categoryRepository.findAll()
                 .stream()
@@ -75,7 +74,6 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Category getCategory(Long id) {
         Objects.requireNonNull(id, "id 입력값은 필수입니다.");
 
@@ -84,7 +82,6 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Category getCategory(String name) {
         Objects.requireNonNull(name, "name 입력값은 필수입니다.");
 
@@ -93,20 +90,17 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<Category> getCategories() {
         return categoryRepository.findAll();
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<Category> getCategoriesById(List<Long> categories) {
         Objects.requireNonNull(categories, "categories 입력값은 필수입니다.");
         return categoryRepository.findAllById(categories);
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<Category> getCategoriesByName(List<String> categoryNames) {
         Objects.requireNonNull(categoryNames, "categoryNames 입력값은 필수입니다.");
         return categoryRepository.findAllNames(categoryNames);

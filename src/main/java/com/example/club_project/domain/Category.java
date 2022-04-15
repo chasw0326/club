@@ -6,8 +6,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 
 @Getter
@@ -21,9 +24,13 @@ public class Category extends AuditingCreateEntity {
     private Long id;
 
     @Column(length = 20, nullable = false)
+    @Length(max = 20, message = "사이즈를 확인하세요.")
+    @NotBlank(message = "카테고리명은 필수 값 입니다.")
     private String name;
 
     @Column(length = 50, nullable = false)
+    @Length(max = 50, message = "사이즈를 확인하세요.")
+    @NotBlank(message = "카테고리 설명은 필수 값 입니다.")
     private String description;
 
     public void update(String name, String description) {

@@ -7,20 +7,6 @@ import lombok.Getter;
 public class ClubJoinStateDTO {
 
     /**
-     * POST
-     */
-    @Getter
-    public static class RegisterRequest {
-        private String name;
-        private String address;
-        private String description;
-        private Long category;
-        private String imageUrl;
-    }
-
-
-
-    /**
      * ResponseBody
      * 클럽 가입과 관련한 사용자 정보를 나타낸다.
      */

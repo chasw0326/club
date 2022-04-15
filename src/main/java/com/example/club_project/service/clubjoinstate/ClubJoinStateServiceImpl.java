@@ -23,12 +23,14 @@ import java.util.List;
 import java.util.Objects;
 
 import static java.util.stream.Collectors.toList;
+import static org.springframework.data.domain.Sort.Direction.*;
 
+@Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor
 public class ClubJoinStateServiceImpl implements ClubJoinStateService {
 
-    private static final int CLUB_MEMBER_SIZE = 5;
+    private static final int MEMBER_SIZE = 10;
 
     private final ClubJoinStateRepository clubJoinStateRepository;
     private final UserService userService;
@@ -39,14 +41,12 @@ public class ClubJoinStateServiceImpl implements ClubJoinStateService {
      * for Controller
      */
     @Override
-    @Transactional(readOnly = true)
     public List<ClubDTO> getClubDtos(String university, Pageable pageable) {
         Objects.requireNonNull(university, "university 입력값은 필수입니다.");
         return clubJoinStateRepository.findAllByUniversity(university, getPageByClub(pageable));
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<ClubDTO> getClubDtos(String name, String university, Pageable pageable) {
         Objects.requireNonNull(name, "name 입력값은 필수입니다.");
         Objects.requireNonNull(university, "university 입력값은 필수입니다.");
@@ -55,7 +55,6 @@ public class ClubJoinStateServiceImpl implements ClubJoinStateService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<ClubDTO> getClubDtos(List<Long> categories, String university, Pageable pageable) {
         Objects.requireNonNull(categories, "categories 입력값은 필수입니다.");
         Objects.requireNonNull(university, "university 입력값은 필수입니다.");
@@ -64,7 +63,6 @@ public class ClubJoinStateServiceImpl implements ClubJoinStateService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<ClubDTO> getClubDtos(List<Long> categories, String university, String name, Pageable pageable) {
         Objects.requireNonNull(categories, "categories 입력값은 필수입니다.");
         Objects.requireNonNull(university, "university 입력값은 필수입니다.");
@@ -76,20 +74,19 @@ public class ClubJoinStateServiceImpl implements ClubJoinStateService {
     private Pageable getPageByClub(Pageable defaultPageable) {
         return PageRequest.of(defaultPageable.getPageNumber(),
                               defaultPageable.getPageSize(),
-                              Sort.by(Sort.Direction.DESC, "club"));
+                              Sort.by(DESC, "club"));
     }
 
     @Override
-    @Transactional(readOnly = true)
     public ClubDTO.DetailResponse getClubDetailDto(Long clubId) {
         Objects.requireNonNull(clubId, "clubId 입력값은 필수입니다.");
 
         Club club = clubService.getClub(clubId);
-        List<ClubJoinState> members = getAllMembers(clubId,
-                                    PageRequest.of(0, CLUB_MEMBER_SIZE, Sort.by(Sort.Direction.ASC, "joinState")))
-                                .stream()
-                                    .filter(ClubJoinState::isUsed)
-                                    .collect(toList());
+        List<ClubJoinState> members =
+                getManagerRoleMembers(clubId, PageRequest.of(0, MEMBER_SIZE, Sort.by(ASC, "joinState")))
+                                                        .stream()
+                                                        .filter(ClubJoinState::isUsed)
+                                                        .collect(toList());
 
         return ClubDTO.DetailResponse.of(club, members);
     }
@@ -107,7 +104,6 @@ public class ClubJoinStateServiceImpl implements ClubJoinStateService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<ClubJoinStateDTO.Response> getAllMemberDtos(Long clubId, Pageable pageable) {
         return getAllMembers(clubId, pageable).stream()
                 .map(this::convertToDTO)
@@ -115,7 +111,6 @@ public class ClubJoinStateServiceImpl implements ClubJoinStateService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<ClubJoinStateDTO.Response> getAppliedMemberDtos(Long clubId, Pageable pageable) {
         return getAppliedMembers(clubId, pageable).stream()
                 .map(this::convertToDTO)
@@ -123,7 +118,6 @@ public class ClubJoinStateServiceImpl implements ClubJoinStateService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<ClubDTO.Response> getJoinedClubs(Long userId, Pageable pageable) {
         return getClubJoinStatesByUser(userId, pageable).stream()
                 .filter(state -> !state.getJoinState().equals(JoinState.NOT_JOINED))
@@ -133,7 +127,6 @@ public class ClubJoinStateServiceImpl implements ClubJoinStateService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<ClubDTO.Response> getWaitingApprovalClubs(Long userId, Pageable pageable) {
         return getClubJoinStatesByUser(userId, pageable).stream()
                 .filter(state -> state.getJoinState().equals(JoinState.NOT_JOINED))
@@ -217,7 +210,6 @@ public class ClubJoinStateServiceImpl implements ClubJoinStateService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public ClubJoinState getClubJoinState(Long clubJoinStateId) {
         Objects.requireNonNull(clubJoinStateId, "clubJoinStateId 입력값은 필수입니다.");
 
@@ -226,7 +218,6 @@ public class ClubJoinStateServiceImpl implements ClubJoinStateService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public ClubJoinState getClubJoinState(Long userId, Long clubId) {
         Objects.requireNonNull(userId, "userId 입력값은 필수입니다.");
         Objects.requireNonNull(clubId, "clubId 입력값은 필수입니다.");
@@ -259,7 +250,6 @@ public class ClubJoinStateServiceImpl implements ClubJoinStateService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public boolean isClubMaster(Long userId, Long clubId) {
         Objects.requireNonNull(userId, "userId 입력값은 필수입니다.");
         Objects.requireNonNull(clubId, "clubId 입력값은 필수입니다.");
@@ -270,7 +260,6 @@ public class ClubJoinStateServiceImpl implements ClubJoinStateService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public boolean isClubManager(Long userId, Long clubId) {
         Objects.requireNonNull(userId, "userId 입력값은 필수입니다.");
         Objects.requireNonNull(clubId, "clubId 입력값은 필수입니다.");
@@ -281,7 +270,6 @@ public class ClubJoinStateServiceImpl implements ClubJoinStateService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public boolean isClubMember(Long userId, Long clubId) {
         Objects.requireNonNull(userId, "userId 입력값은 필수입니다.");
         Objects.requireNonNull(clubId, "clubId 입력값은 필수입니다.");
@@ -292,7 +280,6 @@ public class ClubJoinStateServiceImpl implements ClubJoinStateService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public boolean isWaitingApproval(Long userId, Long clubId) {
         Objects.requireNonNull(userId, "userId 입력값은 필수입니다.");
         Objects.requireNonNull(clubId, "clubId 입력값은 필수입니다.");
@@ -303,7 +290,6 @@ public class ClubJoinStateServiceImpl implements ClubJoinStateService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public boolean isJoined(Long userId, Long clubId) {
         Objects.requireNonNull(userId, "userId 입력값은 필수입니다.");
         Objects.requireNonNull(clubId, "clubId 입력값은 필수입니다.");
@@ -314,7 +300,6 @@ public class ClubJoinStateServiceImpl implements ClubJoinStateService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public boolean existed(Long userId, Long clubId) {
         Objects.requireNonNull(userId, "userId 입력값은 필수입니다.");
         Objects.requireNonNull(clubId, "clubId 입력값은 필수입니다.");
@@ -325,7 +310,6 @@ public class ClubJoinStateServiceImpl implements ClubJoinStateService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public boolean isLeaveClub(Long userId, Long clubId) {
         Objects.requireNonNull(userId, "userId 입력값은 필수입니다.");
         Objects.requireNonNull(clubId, "clubId 입력값은 필수입니다.");
@@ -336,7 +320,6 @@ public class ClubJoinStateServiceImpl implements ClubJoinStateService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public boolean isRegistered(Long userId, Long clubId) {
         Objects.requireNonNull(userId, "userId 입력값은 필수입니다.");
         Objects.requireNonNull(clubId, "clubId 입력값은 필수입니다.");
@@ -345,7 +328,6 @@ public class ClubJoinStateServiceImpl implements ClubJoinStateService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public boolean hasManagerRole(Long userId, Long clubId) {
         Objects.requireNonNull(userId, "userId 입력값은 필수입니다.");
         Objects.requireNonNull(clubId, "clubId 입력값은 필수입니다.");
@@ -354,7 +336,6 @@ public class ClubJoinStateServiceImpl implements ClubJoinStateService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public boolean hasMemberRole(Long userId, Long clubId) {
         Objects.requireNonNull(userId, "userId 입력값은 필수입니다.");
         Objects.requireNonNull(clubId, "clubId 입력값은 필수입니다.");
@@ -375,7 +356,6 @@ public class ClubJoinStateServiceImpl implements ClubJoinStateService {
      * Club Region (for Club API)
      */
     @Override
-    @Transactional(readOnly = true)
     public ClubJoinState getMaster(Long clubId, Pageable pageable) {
         Objects.requireNonNull(clubId, "clubId 입력값은 필수입니다.");
 
@@ -387,7 +367,6 @@ public class ClubJoinStateServiceImpl implements ClubJoinStateService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<ClubJoinState> getManagers(Long clubId, Pageable pageable) {
         Objects.requireNonNull(clubId, "clubId 입력값은 필수입니다.");
 
@@ -398,7 +377,6 @@ public class ClubJoinStateServiceImpl implements ClubJoinStateService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<ClubJoinState> getMembers(Long clubId, Pageable pageable) {
         Objects.requireNonNull(clubId, "clubId 입력값은 필수입니다.");
 
@@ -409,7 +387,6 @@ public class ClubJoinStateServiceImpl implements ClubJoinStateService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<ClubJoinState> getAllMembers(Long clubId, Pageable pageable) {
         Objects.requireNonNull(clubId, "clubId 입력값은 필수입니다.");
 
@@ -420,7 +397,6 @@ public class ClubJoinStateServiceImpl implements ClubJoinStateService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<ClubJoinState> getAppliedMembers(Long clubId, Pageable pageable) {
         Objects.requireNonNull(clubId, "clubId 입력값은 필수입니다.");
 
@@ -431,7 +407,6 @@ public class ClubJoinStateServiceImpl implements ClubJoinStateService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<ClubJoinState> getManagerRoleMembers(Long clubId, Pageable pageable) {
         Objects.requireNonNull(clubId, "clubId 입력값은 필수입니다.");
 
@@ -442,7 +417,6 @@ public class ClubJoinStateServiceImpl implements ClubJoinStateService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<ClubJoinState> getMemberRoleMembers(Long clubId, Pageable pageable) {
         Objects.requireNonNull(clubId, "clubId 입력값은 필수입니다.");
 
@@ -457,7 +431,6 @@ public class ClubJoinStateServiceImpl implements ClubJoinStateService {
      * User Region (for User API)
      */
     @Override
-    @Transactional(readOnly = true)
     public List<ClubJoinState> getClubJoinStatesByUser(Long userId, Pageable pageable) {
         Objects.requireNonNull(userId, "userId 입력값은 필수입니다.");
 
@@ -468,7 +441,6 @@ public class ClubJoinStateServiceImpl implements ClubJoinStateService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<ClubJoinState> getClubJoinStatesByUser(Long userId, int joinStateCode, Pageable pageable) {
         Objects.requireNonNull(userId, "userId 입력값은 필수입니다.");
 
@@ -481,7 +453,6 @@ public class ClubJoinStateServiceImpl implements ClubJoinStateService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<ClubJoinState> getClubJoinStatesByUserHasRole(Long userId, int joinStateCode, Pageable pageable) {
         Objects.requireNonNull(userId, "userId 입력값은 필수입니다.");
 

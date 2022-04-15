@@ -62,37 +62,37 @@ public class InitService {
 
         public void initUsers() {
             User testUser1 = User.builder()
-                    .email("test10@gmail.com")
-                    .password("Test1234!@")
-                    .name("test10")
-                    .nickname("testNickname10")
+                    .email("test@gmail.com")
+                    .password("1q2w3eQWE!@#")
+                    .name("test")
+                    .nickname("testNickname")
                     .university("서울사이버대학교")
                     .introduction("안녕하세요")
                     .build();
 
             User testUser2 = User.builder()
-                    .email("test11@gmail.com")
-                    .password("Test1234!@")
+                    .email("test2@gmail.com")
+                    .password("1q2w3eQWE!@#")
                     .name("test11")
-                    .nickname("testNickname11")
+                    .nickname("testNickname2")
                     .university("서울사이버대학교")
                     .introduction("안녕하세요")
                     .build();
 
             User testUser3 = User.builder()
-                    .email("test12@gmail.com")
-                    .password("Test1234!@")
+                    .email("test3@gmail.com")
+                    .password("1q2w3eQWE!@#")
                     .name("test12")
-                    .nickname("testNickname12")
+                    .nickname("testNickname3")
                     .university("서울사이버대학교")
                     .introduction("안녕하세요")
                     .build();
 
             User testUser4 = User.builder()
-                    .email("test13@gmail.com")
-                    .password("Test1234!@")
+                    .email("test4@gmail.com")
+                    .password("1q2w3eQWE!@#")
                     .name("test13")
-                    .nickname("testNickname13")
+                    .nickname("testNickname4")
                     .university("서울사이버대학교")
                     .introduction("안녕하세요")
                     .build();
@@ -110,27 +110,27 @@ public class InitService {
         }
 
         public void initClubs() {
-            clubService.registerClub("문화/예술/공연1", "A동", "서울사이버대학교", "문화/예술/공연 동아리입니다.", 1L, null);
-            clubService.registerClub("봉사/사회활동1", "A동", "서울사이버대학교", "봉사/사회활동 동아리입니다.", 2L, null);
-            clubService.registerClub("학술/교양1", "A동", "서울사이버대학교", "학술/교양 동아리입니다.", 3L, null);
-            clubService.registerClub("창업/취업1", "A동", "서울사이버대학교", "창업/취업 동아리입니다.", 4L, null);
-            clubService.registerClub("어학1", "A동", "서울사이버대학교", "어학 동아리입니다.", 5L, null);
-            clubService.registerClub("체육1", "A동", "서울사이버대학교", "체육 동아리입니다.", 6L, null);
-            clubService.registerClub("친목1", "A동", "서울사이버대학교", "친목 동아리입니다.", 7L, null);
-            clubService.registerClub("문화/예술/공연2", "A동", "서울사이버대학교", "문화/예술/공연 동아리입니다.", 1L, null);
-            clubService.registerClub("봉사/사회활동2", "A동", "서울사이버대학교", "봉사/사회활동 동아리입니다.", 2L, null);
-            clubService.registerClub("학술/교양2", "A동", "서울사이버대학교", "학술/교양 동아리입니다.", 3L, null);
-            clubService.registerClub("창업/취업2", "A동", "서울사이버대학교", "창업/취업 동아리입니다.", 4L, null);
-            clubService.registerClub("어학2", "A동", "서울사이버대학교", "어학 동아리입니다.", 5L, null);
-            clubService.registerClub("체육2", "A동", "서울사이버대학교", "체육 동아리입니다.", 6L, null);
-            clubService.registerClub("친목2", "A동", "서울사이버대학교", "친목 동아리입니다.", 7L, null);
-            clubService.registerClub("문화/예술/공연3", "A동", "테스트대학교", "문화/예술/공연 동아리입니다.", 1L, null);
-            clubService.registerClub("봉사/사회활동3", "A동", "테스트대학교", "봉사/사회활동 동아리입니다.", 2L, null);
-            clubService.registerClub("학술/교양3", "A동", "테스트대학교", "학술/교양 동아리입니다.", 3L, null);
-            clubService.registerClub("창업/취업3", "A동", "테스트대학교", "창업/취업 동아리입니다.", 4L, null);
-            clubService.registerClub("어학3", "A동", "테스트대학교", "어학 동아리입니다.", 5L, null);
-            clubService.registerClub("체육3", "A동", "테스트대학교", "체육 동아리입니다.", 6L, null);
-            clubService.registerClub("친목3", "A동", "테스트대학교", "친목 동아리입니다.", 7L, null);
+            clubService.registerClub("문화/예술/공연1", "A동", "서울사이버대학교", "문화/예술/공연 동아리입니다.", 1L);
+            clubService.registerClub("봉사/사회활동1", "A동", "서울사이버대학교", "봉사/사회활동 동아리입니다.", 2L);
+            clubService.registerClub("학술/교양1", "A동", "서울사이버대학교", "학술/교양 동아리입니다.", 3L);
+            clubService.registerClub("창업/취업1", "A동", "서울사이버대학교", "창업/취업 동아리입니다.", 4L);
+            clubService.registerClub("어학1", "A동", "서울사이버대학교", "어학 동아리입니다.", 5L);
+            clubService.registerClub("체육1", "A동", "서울사이버대학교", "체육 동아리입니다.", 6L);
+            clubService.registerClub("친목1", "A동", "서울사이버대학교", "친목 동아리입니다.", 7L);
+            clubService.registerClub("문화/예술/공연2", "A동", "서울사이버대학교", "문화/예술/공연 동아리입니다.", 1L);
+            clubService.registerClub("봉사/사회활동2", "A동", "서울사이버대학교", "봉사/사회활동 동아리입니다.", 2L);
+            clubService.registerClub("학술/교양2", "A동", "서울사이버대학교", "학술/교양 동아리입니다.", 3L);
+            clubService.registerClub("창업/취업2", "A동", "서울사이버대학교", "창업/취업 동아리입니다.", 4L);
+            clubService.registerClub("어학2", "A동", "서울사이버대학교", "어학 동아리입니다.", 5L);
+            clubService.registerClub("체육2", "A동", "서울사이버대학교", "체육 동아리입니다.", 6L);
+            clubService.registerClub("친목2", "A동", "서울사이버대학교", "친목 동아리입니다.", 7L);
+            clubService.registerClub("문화/예술/공연3", "A동", "테스트대학교", "문화/예술/공연 동아리입니다.", 1L);
+            clubService.registerClub("봉사/사회활동3", "A동", "테스트대학교", "봉사/사회활동 동아리입니다.", 2L);
+            clubService.registerClub("학술/교양3", "A동", "테스트대학교", "학술/교양 동아리입니다.", 3L);
+            clubService.registerClub("창업/취업3", "A동", "테스트대학교", "창업/취업 동아리입니다.", 4L);
+            clubService.registerClub("어학3", "A동", "테스트대학교", "어학 동아리입니다.", 5L);
+            clubService.registerClub("체육3", "A동", "테스트대학교", "체육 동아리입니다.", 6L);
+            clubService.registerClub("친목3", "A동", "테스트대학교", "친목 동아리입니다.", 7L);
         }
 
         public void initClubJoinStates() {
@@ -140,17 +140,23 @@ public class InitService {
             int notJoinedCode = JoinState.NOT_JOINED.getCode();
 
             clubJoinStateService.register(1L,1L, masterCode);
-            clubJoinStateService.register(1L,2L, managerCode);
             clubJoinStateService.register(1L,3L, memberCode);
             clubJoinStateService.register(1L,4L, notJoinedCode);
             clubJoinStateService.register(1L,5L, masterCode);
             clubJoinStateService.register(1L,6L, memberCode);
+
             clubJoinStateService.register(2L,6L, memberCode);
             clubJoinStateService.register(3L,6L, managerCode);
             clubJoinStateService.register(4L,6L, masterCode);
-            clubJoinStateService.register(2L,1L, notJoinedCode);
+
+            clubJoinStateService.register(2L,1L, managerCode);
             clubJoinStateService.register(3L,1L, notJoinedCode);
-            clubJoinStateService.register(4L,1L, notJoinedCode);
+            clubJoinStateService.register(4L,1L, managerCode);
+
+            clubJoinStateService.register(2L,2L, masterCode);
+            clubJoinStateService.register(3L,2L, managerCode);
+            clubJoinStateService.register(4L,2L, memberCode);
+            clubJoinStateService.register(1L,2L, notJoinedCode);
         }
 
         public void initPosts() {

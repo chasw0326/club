@@ -3,6 +3,7 @@ package com.example.club_project.service.category;
 import com.example.club_project.controller.category.CategoryDTO;
 import com.example.club_project.domain.Category;
 import com.example.club_project.exception.custom.NotFoundException;
+import com.example.club_project.repository.CategoryRepository;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Transactional
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -26,8 +28,11 @@ class CategoryServiceTest {
 
     private static String categoryName, categoryDescription;
 
+    @Autowired
+    private CategoryRepository categoryRepository;  // deleteAll 호출 용도
+
     @BeforeAll
-    public static void setup() {
+    public void setup() {
         categoryName = "test";
         categoryDescription = "description";
     }
@@ -251,5 +256,10 @@ class CategoryServiceTest {
 
         //then
         assertThrows(NotFoundException.class, () -> categoryService.getCategory(registeredCategory.getId()));
+    }
+
+    @AfterAll
+    public void destroy() {
+        categoryRepository.deleteAll();
     }
 }

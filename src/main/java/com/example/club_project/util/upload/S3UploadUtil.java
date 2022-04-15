@@ -36,7 +36,7 @@ public class S3UploadUtil implements UploadUtil {
     public String upload(MultipartFile uploadFile, String uploadPath) {
 
         if (!isImageFile(uploadFile)) {
-            throw new InvalidArgsException("You can only use the image file format");
+            throw new InvalidArgsException("Only image file format is allowed.");
         }
 
         try {
