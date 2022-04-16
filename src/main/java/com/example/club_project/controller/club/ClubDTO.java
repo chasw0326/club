@@ -8,6 +8,8 @@ import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -74,9 +76,8 @@ public class ClubDTO {
         private String address;
         @NotBlank(message = "description 필드에는 빈 값이 허용되지 않습니다.")
         private String description;
-        @NotBlank(message = "category 필드에는 빈 값이 허용되지 않습니다.")
+        @NotNull(message = "category 필드에는 빈 값이 허용되지 않습니다.")
         private Long category;
-        private String imageUrl;
     }
 
     /**
@@ -84,11 +85,14 @@ public class ClubDTO {
      */
     @Getter
     public static class UpdateRequest {
+        @NotEmpty
         private String name;
+        @NotEmpty
         private String address;
+        @NotEmpty
         private String description;
+        @NotNull
         private Long category;
-        private String imageUrl;
     }
 
     /**

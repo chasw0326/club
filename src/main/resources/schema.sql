@@ -15,7 +15,7 @@ CREATE TABLE users
     name                varchar(10)     NOT NULL COMMENT '이름',
     nickname            varchar(20)     NOT NULL COMMENT '닉네임',
     university          varchar(20)     NOT NULL COMMENT '대학교명',
-    profile_url         varchar(500)    DEFAULT NULL COMMENT '프로필 사진',
+    profile_url         varchar(250)    DEFAULT NULL COMMENT '프로필 사진',
     introduction        varchar(100)    NOT NULL COMMENT '자기소개',
     created_at          datetime        NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일시',
     updated_at          datetime        DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일시',
@@ -38,7 +38,7 @@ CREATE TABLE clubs
 (
     id                  bigint          NOT NULL AUTO_INCREMENT COMMENT 'id',
     name                varchar(10)     NOT NULL COMMENT '동아리명',
-    image_url           varchar(500)    DEFAULT NULL COMMENT '동아리 사진',
+    image_url           varchar(250)    DEFAULT NULL COMMENT '동아리 사진',
     address             varchar(50)     NOT NULL COMMENT '동아리 위치',
     university          varchar(20)     NOT NULL COMMENT '소속 대학교',
     description         varchar(100)    NOT NULL COMMENT '동아리 소개',
@@ -75,7 +75,7 @@ CREATE TABLE club_join_states
 CREATE TABLE pictures
 (
     id                  bigint          NOT NULL AUTO_INCREMENT COMMENT 'id',
-    url                 varchar(500)    NOT NULL COMMENT '사진 URL',
+    url                 varchar(250)    NOT NULL COMMENT '사진 URL',
     description         varchar(100)    DEFAULT NULL COMMENT '사진 설명',
     created_at          datetime        NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일시',
     updated_at          datetime        DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일시',

@@ -5,7 +5,7 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.example.club_project.config.AwsConfigure;
 import com.example.club_project.exception.custom.InvalidArgsException;
-import com.example.club_project.exception.custom.UnHandleException;
+import com.example.club_project.exception.custom.UnloadException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
@@ -36,20 +36,20 @@ public class S3UploadUtil implements UploadUtil {
     public String upload(MultipartFile uploadFile, String uploadPath) {
 
         if (!isImageFile(uploadFile)) {
-            throw new InvalidArgsException("You can only use the image file format");
+            throw new InvalidArgsException("Only image file format is allowed.");
         }
 
         try {
             // 파일로 변환할 수 없으면 에러
             File convertedFile = convert(uploadFile)
-                    .orElseThrow(() -> new UnHandleException(
+                    .orElseThrow(() -> new UnloadException(
                             String.format("File convert fail with %s", uploadFile.getOriginalFilename()))
                     );
 
             return upload(convertedFile, uploadPath);
 
         } catch (IOException ignored) {
-            throw new UnHandleException(String.format("ignored IOException occur with %s",uploadFile.getOriginalFilename()));
+            throw new UnloadException(String.format("ignored IOException occur with %s", uploadFile.getOriginalFilename()));
         }
     }
 
