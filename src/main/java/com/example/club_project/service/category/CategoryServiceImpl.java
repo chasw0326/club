@@ -5,12 +5,15 @@ import com.example.club_project.domain.Category;
 import com.example.club_project.exception.custom.NotFoundException;
 import com.example.club_project.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 @Transactional(readOnly = true)
 @Service
@@ -60,8 +63,8 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional
     public Category register(String name, String description) {
-        Objects.requireNonNull(name, "name 입력값은 필수입니다.");
-        Objects.requireNonNull(description, "description 입력값은 필수입니다.");
+        checkArgument(StringUtils.isNotEmpty(name), "name 입력값은 필수입니다.");
+        checkArgument(StringUtils.isNotEmpty(description), "description 입력값은 필수입니다.");
 
         return categoryRepository.save(createCategory(name, description));
     }
@@ -75,7 +78,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category getCategory(Long id) {
-        Objects.requireNonNull(id, "id 입력값은 필수입니다.");
+        checkArgument(ObjectUtils.isNotEmpty(id), "id 입력값은 필수입니다.");
 
         return categoryRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("존재하지 않는 id 입니다."));
@@ -83,7 +86,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category getCategory(String name) {
-        Objects.requireNonNull(name, "name 입력값은 필수입니다.");
+        checkArgument(StringUtils.isNotEmpty(name), "name 입력값은 필수입니다.");
 
         return categoryRepository.findByName(name)
                 .orElseThrow(() -> new NotFoundException("존재하지 않는 카테고리이름입니다."));
@@ -96,20 +99,24 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<Category> getCategoriesById(List<Long> categories) {
-        Objects.requireNonNull(categories, "categories 입력값은 필수입니다.");
+        checkArgument(ObjectUtils.isNotEmpty(categories), "categories 입력값은 필수입니다.");
+
         return categoryRepository.findAllById(categories);
     }
 
     @Override
     public List<Category> getCategoriesByName(List<String> categoryNames) {
-        Objects.requireNonNull(categoryNames, "categoryNames 입력값은 필수입니다.");
+        checkArgument(ObjectUtils.isNotEmpty(categoryNames), "categoryNames 입력값은 필수입니다.");
+
         return categoryRepository.findAllNames(categoryNames);
     }
 
     @Override
     @Transactional
     public Category update(Long id, String name, String description) {
-        Objects.requireNonNull(id, "id 입력값은 필수입니다.");
+        checkArgument(ObjectUtils.isNotEmpty(id), "id 입력값은 필수입니다.");
+        checkArgument(StringUtils.isNotEmpty(name), "name 입력값은 필수입니다.");
+        checkArgument(StringUtils.isNotEmpty(description), "description 입력값은 필수입니다.");
 
         Category updatedCategory = categoryRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("수정하려는 id값이 존재하지 않습니다."));
@@ -122,7 +129,8 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional
     public void delete(Long id) {
-        Objects.requireNonNull(id, "id 입력값은 필수입니다.");
+        checkArgument(ObjectUtils.isNotEmpty(id), "id 입력값은 필수입니다.");
+
         Category deleteCategory = categoryRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("삭제하려는 id값이 존재하지 않습니다."));
 
