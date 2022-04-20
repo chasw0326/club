@@ -15,9 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 
-import static java.util.Objects.requireNonNull;
+import static com.google.common.base.Preconditions.checkArgument;
 
 
 @Transactional(readOnly = true)
@@ -35,17 +34,18 @@ public class ClubServiceImpl implements ClubService {
     @Override
     @Transactional
     public ClubDTO.Response registerClub(String name, String address, String university, String description, Long categoryId) {
-        return convertToDTO(this.register(name, address, university, description, categoryId));
+        return convertToDTO(register(name, address, university, description, categoryId));
     }
 
     @Override
     @Transactional
     public ClubDTO.Response updateClub(Long id, String name, String address, String university, String description, Long categoryId) {
-        return convertToDTO(this.update(id, name, address, university, description, categoryId));
+        return convertToDTO(update(id, name, address, university, description, categoryId));
     }
 
     @Override
     public ClubDTO.Response convertToDTO(Club club) {
+        checkArgument(ObjectUtils.isNotEmpty(club), "club 값은 필수입니다.");
         return ClubDTO.Response.from(club);
     }
 
@@ -56,11 +56,11 @@ public class ClubServiceImpl implements ClubService {
     @Override
     @Transactional
     public Club register(String name, String address, String university, String description, Long categoryId) {
-        requireNonNull(name, "name 입력값은 필수입니다.");
-        requireNonNull(address, "address 입력값은 필수입니다.");
-        requireNonNull(university, "university 입력값은 필수입니다.");
-        requireNonNull(description, "description 입력값은 필수입니다.");
-        requireNonNull(categoryId, "categoryId 입력값은 필수입니다.");
+        checkArgument(StringUtils.isNotEmpty(name), "name 입력값은 필수입니다.");
+        checkArgument(StringUtils.isNotEmpty(address), "address 입력값은 필수입니다.");
+        checkArgument(StringUtils.isNotEmpty(university), "university 입력값은 필수입니다.");
+        checkArgument(StringUtils.isNotEmpty(description), "description 입력값은 필수입니다.");
+        checkArgument(ObjectUtils.isNotEmpty(categoryId), "categoryId 입력값은 필수입니다.");
 
         if (existed(name, university)) {
             throw new AlreadyExistsException("이미 존재하는 클럽입니다");
@@ -81,7 +81,7 @@ public class ClubServiceImpl implements ClubService {
 
     @Override
     public Club getClub(Long id) {
-        requireNonNull(id, "id 입력값은 필수입니다.");
+        checkArgument(ObjectUtils.isNotEmpty(id), "id 입력값은 필수입니다.");
 
         return clubRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("존재하지 않는 클럽입니다."));
@@ -89,8 +89,8 @@ public class ClubServiceImpl implements ClubService {
 
     @Override
     public Club getClub(String name, String university) {
-        requireNonNull(name, "name 입력값은 필수입니다.");
-        requireNonNull(university, "university 입력값은 필수입니다.");
+        checkArgument(StringUtils.isNotEmpty(name), "name 입력값은 필수입니다.");
+        checkArgument(StringUtils.isNotEmpty(university), "university 입력값은 필수입니다.");
 
         return clubRepository.findByNameAndUniversity(name, university)
                 .orElseThrow(() -> new NotFoundException("존재하지 않는 클럽입니다."));
@@ -98,23 +98,23 @@ public class ClubServiceImpl implements ClubService {
 
     @Override
     public List<Club> getClubs(String university, Pageable pageable) {
-        requireNonNull(university, "university 입력값은 필수입니다.");
+        checkArgument(StringUtils.isNotEmpty(university), "university 입력값은 필수입니다.");
 
         return clubRepository.findAllByUniversity(university, pageable);
     }
 
     @Override
     public List<Club> getClubs(String name, String university, Pageable pageable) {
-        requireNonNull(name, "name 입력값은 필수입니다.");
-        requireNonNull(university, "university 입력값은 필수입니다.");
+        checkArgument(StringUtils.isNotEmpty(name), "name 입력값은 필수입니다.");
+        checkArgument(StringUtils.isNotEmpty(university), "university 입력값은 필수입니다.");
 
         return clubRepository.findAllByNameAndUniversity(name, university, pageable);
     }
 
     @Override
     public List<Club> getClubs(List<Long> categories, String university, Pageable pageable) {
-        requireNonNull(categories, "categories 입력값은 필수입니다.");
-        requireNonNull(university, "university 입력값은 필수입니다.");
+        checkArgument(ObjectUtils.isNotEmpty(categories), "categories 입력값은 필수입니다.");
+        checkArgument(StringUtils.isNotEmpty(university), "university 입력값은 필수입니다.");
 
         List<Category> clubCategories = categoryService.getCategoriesById(categories);
 
@@ -123,9 +123,9 @@ public class ClubServiceImpl implements ClubService {
 
     @Override
     public List<Club> getClubs(List<Long> categories, String university, String name, Pageable pageable) {
-        requireNonNull(categories, "categories 입력값은 필수입니다.");
-        requireNonNull(university, "university 입력값은 필수입니다.");
-        requireNonNull(name, "name 입력값은 필수입니다.");
+        checkArgument(ObjectUtils.isNotEmpty(categories), "categories 입력값은 필수입니다.");
+        checkArgument(StringUtils.isNotEmpty(university), "university 입력값은 필수입니다.");
+        checkArgument(StringUtils.isNotEmpty(name), "name 입력값은 필수입니다.");
 
         List<Category> clubCategories = categoryService.getCategoriesById(categories);
 
@@ -135,12 +135,12 @@ public class ClubServiceImpl implements ClubService {
     @Override
     @Transactional
     public Club update(Long id, String name, String address, String university, String description, Long categoryId) {
-        requireNonNull(id, "id 입력값은 필수입니다.");
-        requireNonNull(name, "name 입력값은 필수입니다.");
-        requireNonNull(address, "address 입력값은 필수입니다.");
-        requireNonNull(university, "university 입력값은 필수입니다.");
-        requireNonNull(description, "description 입력값은 필수입니다.");
-        requireNonNull(categoryId, "categoryId 입력값은 필수입니다.");
+        checkArgument(ObjectUtils.isNotEmpty(id), "id 입력값은 필수입니다.");
+        checkArgument(StringUtils.isNotEmpty(name), "name 입력값은 필수입니다.");
+        checkArgument(StringUtils.isNotEmpty(address), "address 입력값은 필수입니다.");
+        checkArgument(StringUtils.isNotEmpty(university), "university 입력값은 필수입니다.");
+        checkArgument(StringUtils.isNotEmpty(description), "description 입력값은 필수입니다.");
+        checkArgument(ObjectUtils.isNotEmpty(categoryId), "categoryId 입력값은 필수입니다.");
 
         Club updatedClub = clubRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("존재하지 않는 클럽입니다."));
@@ -169,6 +169,9 @@ public class ClubServiceImpl implements ClubService {
     @Override
     @Transactional
     public void updateImage(Long id, String imageUrl) {
+        checkArgument(ObjectUtils.isNotEmpty(id), "id 입력값은 필수입니다.");
+        checkArgument(StringUtils.isNotEmpty(imageUrl), "imageUrl 입력값은 필수입니다.");
+
         Club updatedClub = getClub(id);
         updatedClub.updateImage(imageUrl);
     }
@@ -176,7 +179,7 @@ public class ClubServiceImpl implements ClubService {
     @Override
     @Transactional
     public void delete(Long id) {
-        requireNonNull(id, "id 입력값은 필수입니다.");
+        checkArgument(ObjectUtils.isNotEmpty(id), "id 입력값은 필수입니다.");
 
         Club deleteClub = clubRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("삭제하려는 id값이 존재하지 않습니다."));
@@ -186,8 +189,8 @@ public class ClubServiceImpl implements ClubService {
 
     @Override
     public boolean existed(String name, String university) {
-        requireNonNull(name, "name 입력값은 필수입니다.");
-        requireNonNull(university, "university 입력값은 필수입니다.");
+        checkArgument(StringUtils.isNotEmpty(name), "name 입력값은 필수입니다.");
+        checkArgument(StringUtils.isNotEmpty(university), "university 입력값은 필수입니다.");
 
         return clubRepository.existsByNameAndUniversity(name, university);
     }
