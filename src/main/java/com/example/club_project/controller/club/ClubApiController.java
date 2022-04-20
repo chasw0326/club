@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -48,8 +50,11 @@ public class ClubApiController {
      */
     @GetMapping
     public List<ClubDTO> searchClubs(@AuthenticationPrincipal AuthUserDTO authUser,
-                                                                ClubDTO.SearchOption searchOption,
-                                                                Pageable pageable) {
+                                                              ClubDTO.SearchOption searchOption,
+                                     @PageableDefault(
+                                            size = 20,
+                                            sort = "id",
+                                            direction = Sort.Direction.DESC) Pageable pageable) {
 
         if (ObjectUtils.isEmpty(searchOption.getName()) && ObjectUtils.isEmpty(searchOption.getCategories())) {
             return clubJoinStateService.getClubDtos(authUser.getUniversity(), pageable);
