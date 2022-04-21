@@ -22,10 +22,27 @@ const RightComponent = ({ curCategory }: { curCategory: string }) => {
   if (curCategory === '부원 관리') {
     return (
       <>
-        <div ref={setTarget} onClick={fetchData}>
-          {nonMemberList?.map((val: any, idx: number) => {
-            return <div>{val?.name}</div>;
-          })}
+        <div className="ClubSetting__div--member-manage-wrap">
+          <div className="ClubSetting__text--title">
+            동아리 신청<hr className="ClubSetting__hr--horizon"></hr>
+          </div>
+
+          <div
+            className="ClubSetting__div--accept-wrap"
+            ref={setTarget}
+            onClick={fetchData}
+          >
+            {nonMemberList?.map((val: any, idx: number) => {
+              return (
+                <div className="ClubSetting__div--accept-item-wrap">
+                  <span className="ClubSetting__span--nonmember-name"></span>
+                  {val?.name}
+                  <span className="ClubSetting__span--accept">수락</span>
+                  <span className="ClubSetting__span--deny">거절</span>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </>
     );
