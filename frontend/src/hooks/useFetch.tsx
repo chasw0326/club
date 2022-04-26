@@ -70,15 +70,31 @@ const postAPI: Function = async (
       body: JSON.stringify(requestData),
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + `${window.localStorage.getItem('token')}`,
       },
     });
-
+    
     const res = await fData.json();
 
-    return res;
+    return [fData.status, res];
   } else {
     return;
   }
 };
 
-export { useAsync, postAPI };
+const getAPI = async (api : string) =>{
+
+  const fData = await fetch(`${process.env.REACT_APP_TEST_API}${api}`, {
+      headers: {
+        Authorization: 'bearer ' + `${localStorage.getItem('token')}`,
+      },
+    });
+
+  const res = await fData.json();
+
+  return [fData.status, res];
+
+}
+
+
+export { useAsync, postAPI, getAPI };

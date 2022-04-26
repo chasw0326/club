@@ -2,6 +2,7 @@ import React, { MutableRefObject, RefObject, useEffect, useRef } from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SignUpModal from './Component/SignUpModal';
+import { postAPI } from '../hooks/useFetch';
 import './Style/login.scss';
 
 const LoginPage = () => {
@@ -19,24 +20,23 @@ const LoginPage = () => {
     setPwState(e.target.value);
   };
 
+  const enterLogin = (e: any) => {
+
+    if(e.key ==='Enter') login();
+
+  }
+
   const login = async () => {
-    const testData = { email: idState, password: pwState };
+    const loginInformation = { email: idState, password: pwState };
 
-    const data = await fetch(`${process.env.REACT_APP_TEST_API}/login`, {
-      method: 'POST',
-      credentials: 'include',
-      body: JSON.stringify(testData),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }).then((res) => res.json());
+    const [responseStatus, res] = await postAPI(loginInformation, 'json', '/auth/signin');
 
-    const realData = await data;
-
-    if (realData.status === 'ok') {
+    if (responseStatus !== 302) {
+      const localStorage = window.localStorage;
+      localStorage.setItem('token', res);
       navigate('/home');
     } else {
-      alert('정보가 올바르지 않습니다.');
+      alert(res.message);
     }
   };
 
@@ -57,14 +57,16 @@ const LoginPage = () => {
           className="loginPage-loginBox-id"
           type="text"
           placeholder="ID"
-          onKeyPress={idInputChange}
+          onChange={idInputChange}
+          onKeyPress={enterLogin}
         ></input>
         <br></br>
         <input
           className="loginPage-loginBox-pw"
           type="password"
           placeholder="PW"
-          onKeyPress={pwInputChange}
+          onChange={pwInputChange}
+          onKeyPress={enterLogin}
         ></input>
         <div className="loginPage-loginBox-signLogin">
           <input

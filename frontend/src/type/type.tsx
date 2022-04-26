@@ -4,6 +4,12 @@ type fetchState = {
   error: any;
 };
 
+type category = {
+  id : number;
+  name : string;
+  description : string;
+}
+
 type SignUp = {
   email: string;
   password: string;
@@ -62,6 +68,6 @@ const init = [
   },
 ];
 
-export type { fetchState, SignUp, clubItem, myClub, myPost, myComment };
+export type { fetchState, SignUp, clubItem, myClub, myPost, myComment, category };
 
 export { init };

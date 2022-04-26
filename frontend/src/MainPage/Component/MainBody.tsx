@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { clubItem } from '../../type/type';
+import { clubItem, category } from '../../type/type';
 import { useAsync } from '../../hooks/useFetch';
 import { fetchState } from '../../type/type';
 import ClubItem from '../../SharedComponent/ClubItem';
 import '../Style/body.scss';
 import { store } from '../../hooks/store';
+import { getAPI } from '../../hooks/useFetch';
 
 const categoryList: any = Object.freeze({
   '문화/예술/공연': 1,
@@ -18,22 +19,7 @@ const categoryList: any = Object.freeze({
 
 const MainBody = () => {
   const [globalCategory, setGlobalCategory] = useContext(store);
-
-  const categoryAPI = async () => {
-    const rData = await fetch('http://localhost:3001/api/category', {
-      headers: {
-        Authorization: 'bearer ' + 'asdfasfdasfjadsofajasdfAds213',
-      },
-    });
-
-    const data = await rData.json();
-
-    return data;
-  };
-
-  const [categoryState, fetchCategory] = useAsync(categoryAPI, []);
-
-  const { data: category } = categoryState as fetchState;
+  const [categoryState  , setCategory] = useState<category[]>([]);
   const [curCategory, setCurCategory] = useState(0);
   const [clubList, setClubList] = useState<clubItem[]>([]);
 
@@ -44,6 +30,15 @@ const MainBody = () => {
     // );
     setClubList([]);
   };
+
+  const categorySetting = async ()=>{
+    const [status, res] : any = await getAPI('/api/category');
+
+    console.log(res);
+
+    setCategory((categoryState) => [...categoryState, ...res]);
+
+  }
 
   const abc = async () => {
     const rData = await fetch(
@@ -70,14 +65,16 @@ const MainBody = () => {
     }
   };
 
+  useEffect(()=>{
+    categorySetting();
+  },[])
+
   useEffect(() => {
-    setGlobalCategory({ ...globalCategory, categories: category });
-  }, [category]);
+    setGlobalCategory({ ...globalCategory, categories: categoryState });
+  }, [categoryState]);
 
   useEffect(() => {
     let observer: any;
-
-    console.log('두번 실행');
 
     if (target) {
       observer = new IntersectionObserver(callback, { threshold: 1.0 });
@@ -92,9 +89,9 @@ const MainBody = () => {
     <>
       <hr></hr>
       <div className="MainBody-CategoryFrame">
-        {category?.map((val: any, idx: any) => {
+        {categoryState?.map((val: any, idx: any) => {
           return (
-            <div className="MainBody__div--category-box" onClick={categorizing}>
+            <div key={idx} className="MainBody__div--category-box" onClick={categorizing}>
               {val.name}
             </div>
           );

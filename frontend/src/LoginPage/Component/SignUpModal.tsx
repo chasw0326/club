@@ -50,7 +50,7 @@ const SignUpModal = ({
 
   const upload = async () => {
     if (isValidity(signInfo.email, signInfo.password)) {
-      console.log(await postAPI(uploadController(signInfo), 'form', '/signUp'));
+      console.log(await postAPI(signInfo, 'json', '/auth/signup'));
       alert('등록이 완료되었습니다');
       modalOnOffB();
     }
@@ -68,7 +68,7 @@ const SignUpModal = ({
         닉네임<input id="nickname" type="text" onChange={setInput}></input>
         대학교<input id="university" type="text" onChange={setInput}></input>
         프로필<input id="profile" type="file" onChange={setInput}></input>
-        자기소개<textarea id="introduce" onChange={setInput}></textarea>
+        자기소개<textarea id="introduction" onChange={setInput}></textarea>
         <input type="button" value="등록" onClick={upload}></input>
         <input type="button" value="닫기" onClick={modalOnOffA}></input>
       </div>
