@@ -6,12 +6,12 @@ import {
   Routes,
   HistoryRouterProps,
 } from 'react-router-dom';
-import MainPage from './MainPage/MainPage';
-import LoginPage from './LoginPage/LoginPage';
+import MainPage from './Page/MainPage/MainPage';
+import LoginPage from './Page/LoginPage/LoginPage';
 import './App.css';
-import ResultPage from './ResultPage/ResultPage';
-import ClubPage from './ClubPage/ClubPage';
-import MyPage from './MyPage/MyPage';
+import ResultPage from './Page/ResultPage/ResultPage';
+import ClubPage from './Page/ClubPage/ClubPage';
+import MyPage from './Page/MyPage/MyPage';
 
 function App() {
   return (

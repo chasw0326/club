@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import { Route, BrowserRouter, Routes } from 'react-router-dom';
-import MainPage from './MainPage/MainPage';
-import LoginPage from './LoginPage/LoginPage';
+import MainPage from './Page/MainPage/MainPage';
+import LoginPage from './Page/LoginPage/LoginPage';
 import reportWebVitals from './reportWebVitals';
 import { StoreProvider } from './hooks/store';
 

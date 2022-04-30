@@ -20,6 +20,14 @@ type SignUp = {
   introduction: string;
 };
 
+type clubInformation = {
+  club: string;
+  address: string;
+  description: string;
+  category : string;
+};
+
+
 type clubItem = {
   id: number | null;
   name: string;
@@ -68,6 +76,6 @@ const init = [
   },
 ];
 
-export type { fetchState, SignUp, clubItem, myClub, myPost, myComment, category };
+export type { clubInformation, fetchState, SignUp, clubItem, myClub, myPost, myComment, category };
 
 export { init };

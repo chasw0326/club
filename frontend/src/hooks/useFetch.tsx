@@ -74,6 +74,10 @@ const postAPI: Function = async (
       },
     });
     
+    if(fData.status === 200) {
+      return [fData.status, null];
+    }
+
     const res = await fData.json();
 
     return [fData.status, res];

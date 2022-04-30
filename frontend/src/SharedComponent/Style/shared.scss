@@ -314,3 +314,23 @@ body {
   z-index: 1;
   filter: blur(5px);
 }
+
+
+div[class*="submit"]{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  font-size: 20px;
+  color: white;
+  font-weight: bold;
+  margin-top: 50px;
+  width: 160px;
+  height: 35px;
+  text-align: center;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: lightgray;
+
+  cursor: pointer;
+}
