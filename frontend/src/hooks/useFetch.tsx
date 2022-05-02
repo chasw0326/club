@@ -70,11 +70,11 @@ const postAPI: Function = async (
       body: JSON.stringify(requestData),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + `${window.localStorage.getItem('token')}`,
+        Authorization: 'Bearer ' + `${window.localStorage.getItem('token')}`,
       },
     });
-    
-    if(fData.status === 200) {
+
+    if (fData.status === 200) {
       return [fData.status, null];
     }
 
@@ -86,19 +86,35 @@ const postAPI: Function = async (
   }
 };
 
-const getAPI = async (api : string) =>{
-
+const getAPI = async (api: string) => {
   const fData = await fetch(`${process.env.REACT_APP_TEST_API}${api}`, {
-      headers: {
-        Authorization: 'bearer ' + `${localStorage.getItem('token')}`,
-      },
-    });
+    headers: {
+      Authorization: 'bearer ' + `${localStorage.getItem('token')}`,
+    },
+  });
 
   const res = await fData.json();
 
   return [fData.status, res];
+};
 
-}
+const putAPI = async (requestData: any, api: string) => {
+  const fData = await fetch(`${process.env.REACT_APP_TEST_API}${api}`, {
+    method: 'PUT',
+    body: JSON.stringify(requestData),
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + `${window.localStorage.getItem('token')}`,
+    },
+  });
 
+  if (fData.status === 200) {
+    return [fData.status, null];
+  }
 
-export { useAsync, postAPI, getAPI };
+  const res = await fData.json();
+
+  return [fData.status, res];
+};
+
+export { useAsync, postAPI, getAPI, putAPI };

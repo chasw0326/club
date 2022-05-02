@@ -12,12 +12,11 @@ const ClubCreateModal = ({
   modalState: boolean;
   setModal: any;
 }) => {
-
-  const initialState: clubInformation  = {
-    club: "",
-    address: "",
-    description: "",
-    category : "",
+  const initialState: clubInformation = {
+    name: '',
+    address: '',
+    description: '',
+    category: '',
   };
 
   const [clubInfo, setClubInfo] = useState(initialState);
@@ -26,21 +25,20 @@ const ClubCreateModal = ({
   const setInput = (event: any) => {
     if (event.target.id === 'profile') {
       setClubInfo({ ...clubInfo, [event.target.id]: event.target.files[0] });
-    } else setClubInfo({ ...clubInfo, [event.target.id]: event.target.value });
+    } else {
+      setClubInfo({ ...clubInfo, [event.target.id]: event.target.value });
+    }
   };
 
   const upload = async () => {
-    const [status, res] = await postAPI(clubInfo, 'json', '/api/clubs') 
+    const [status, res] = await postAPI(clubInfo, 'json', '/api/clubs');
 
-    if(status === 200){
+    if (status === 200) {
       alert('등록이 완료되었습니다.');
       setModal();
-    }
-
-    else{
+    } else {
       alert(res.message.exception);
     }
-
   };
 
   if (modalState) {
@@ -99,7 +97,9 @@ const ClubCreateModal = ({
             <label className="MainHeader__label--file" htmlFor="file">
               이미지 업로드
             </label>
-            <div className="MainHeader__div--modify-submit" onClick={upload}>확인</div>
+            <div className="MainHeader__div--modify-submit" onClick={upload}>
+              확인
+            </div>
           </div>
         </div>
 

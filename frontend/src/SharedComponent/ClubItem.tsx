@@ -11,7 +11,7 @@ const ClubItem = ({ item }: { item: clubItem }) => {
     <div
       className="MainBody-itemFrame-clubItem"
       onClick={() => {
-        navigate(`/club/${item?.name}`);
+        navigate(`/club/${item?.id}`);
       }}
     >
       <img width="200px" height="200px" src={thumbnail}></img>

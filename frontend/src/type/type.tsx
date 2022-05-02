@@ -5,10 +5,10 @@ type fetchState = {
 };
 
 type category = {
-  id : number;
-  name : string;
-  description : string;
-}
+  id: number;
+  name: string;
+  description: string;
+};
 
 type SignUp = {
   email: string;
@@ -21,12 +21,11 @@ type SignUp = {
 };
 
 type clubInformation = {
-  club: string;
+  name: string;
   address: string;
   description: string;
-  category : string;
+  category: string;
 };
-
 
 type clubItem = {
   id: number | null;
@@ -76,6 +75,15 @@ const init = [
   },
 ];
 
-export type { clubInformation, fetchState, SignUp, clubItem, myClub, myPost, myComment, category };
+export type {
+  clubInformation,
+  fetchState,
+  SignUp,
+  clubItem,
+  myClub,
+  myPost,
+  myComment,
+  category,
+};
 
 export { init };
