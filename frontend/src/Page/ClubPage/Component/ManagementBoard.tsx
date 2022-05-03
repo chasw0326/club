@@ -62,10 +62,7 @@ const RightComponent = ({ curCategory }: { curCategory: string }) => {
   const accept = async (event: any) => {
     const userId = event.target.dataset.userid;
 
-    const [status, res] = await putAPI(
-      {},
-      `/api/clubs/${clubID}/member/${userId}`
-    );
+    const [status, res] = await putAPI({}, `/api/clubs/${clubID}/member/123`);
 
     console.log(status);
   };

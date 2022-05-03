@@ -18,7 +18,7 @@ const SettingModal = ({
             className="MyPage__button--cancel"
             onClick={setModal}
           ></img>
-          <ModalContent></ModalContent>
+          <ModalContent setModal={setModal}></ModalContent>
         </div>
         <div className="blur"></div>
       </>

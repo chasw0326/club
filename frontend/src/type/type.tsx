@@ -58,6 +58,25 @@ type myComment = {
   content: string;
   createdAt: string;
 };
+
+type postInfo = {
+  postId: number;
+  profileUrl: null;
+  nickname: string;
+  title: string;
+  content: string;
+  createdAt: string;
+  commentCnt: number;
+};
+
+type commentInfo = {
+  commentId: number;
+  profileUrl: string;
+  nickname: string;
+  content: string;
+  createdAt: string;
+};
+
 const init = [
   {
     club: '',
@@ -84,6 +103,8 @@ export type {
   myPost,
   myComment,
   category,
+  postInfo,
+  commentInfo,
 };
 
 export { init };
