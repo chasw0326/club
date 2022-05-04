@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-
+import { useNavigate } from 'react-router-dom';
 import InformationBoard from './InformationBoard';
 import '../Style/clubPage.scss';
 import ManangementBoard from './ManagementBoard';
@@ -15,6 +15,8 @@ const Board = ({ state, setState }: { state: any; setState: any }) => {
     게시판: 'board',
     사진: 'photo',
   });
+
+  const navigate = useNavigate();
 
   useEffect(() => {}, []);
 
