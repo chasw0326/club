@@ -114,7 +114,7 @@ const NoticeBoard = () => {
       });
       setStuffOpen(true);
       setCommentInput({ ...commentInput, postId: tempPostId });
-      navigate(`/club/${clubID}/${tempPostId}`);
+      navigate(`/board/${clubID}/${tempPostId}`);
     }
   };
 

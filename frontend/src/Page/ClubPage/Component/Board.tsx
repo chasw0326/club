@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useState } from 'react';
+
 import InformationBoard from './InformationBoard';
 import '../Style/clubPage.scss';
 import ManangementBoard from './ManagementBoard';
@@ -10,7 +10,11 @@ const PhotoBoard = () => {
 };
 
 const Board = ({ state, setState }: { state: any; setState: any }) => {
-  const stateToAPI = { 정보: 'information', 게시판: 'board', 사진: 'photo' };
+  const stateToAPI = Object.freeze({
+    정보: 'information',
+    게시판: 'board',
+    사진: 'photo',
+  });
 
   useEffect(() => {}, []);
 

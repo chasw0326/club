@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, SyntheticEvent } from 'react';
 import { clubItem, category } from '../../../type/type';
 import { useAsync } from '../../../hooks/useFetch';
 import { fetchState } from '../../../type/type';
@@ -19,20 +19,22 @@ const categoryList: any = Object.freeze({
 
 const MainBody = () => {
   const [globalCategory, setGlobalCategory] = useContext(store);
-  const [categoryState  , setCategory] = useState<category[]>([]);
+  const [categoryState, setCategory] = useState<category[]>([]);
   const [curCategory, setCurCategory] = useState(0);
   const [clubList, setClubList] = useState<clubItem[]>([]);
 
-  const categorizing = (e: any) => {
-    setCurCategory(categoryList[e.target.innerHTML]);
+  const categorizing = (e: SyntheticEvent) => {
+    const target = e.target as HTMLDivElement;
+
+    setCurCategory(categoryList[target.innerHTML]);
 
     setClubList([]);
   };
 
-  const categorySetting = async ()=>{
-    const [status, res] : any = await getAPI('/api/category');
+  const categorySetting = async () => {
+    const [status, res]: any = await getAPI('/api/category');
     setCategory((categoryState) => [...categoryState, ...res]);
-  }
+  };
 
   const [target, setTarget]: any = useState(null);
 
@@ -49,9 +51,9 @@ const MainBody = () => {
     }
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     categorySetting();
-  },[])
+  }, []);
 
   useEffect(() => {
     setGlobalCategory({ ...globalCategory, categories: categoryState });
@@ -75,7 +77,11 @@ const MainBody = () => {
       <div className="MainBody-CategoryFrame">
         {categoryState?.map((val: any, idx: any) => {
           return (
-            <div key={idx} className="MainBody__div--category-box" onClick={categorizing}>
+            <div
+              key={idx}
+              className="MainBody__div--category-box"
+              onClick={categorizing}
+            >
               {val.name}
             </div>
           );

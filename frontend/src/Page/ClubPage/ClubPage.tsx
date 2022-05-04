@@ -1,13 +1,26 @@
 import React, { MouseEventHandler, RefAttributes, useEffect } from 'react';
 import MainHeader from '../../SharedComponent/Header';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Board from './Component/Board';
+
+const BOARDSTATE: any = Object.freeze({
+  정보: 'information',
+  게시판: 'board',
+  사진: 'photo',
+  관리: 'management',
+});
 
 const ClubPage = () => {
   const [category, setCategory] = useState('정보');
+  const clubID = window.location.pathname.split('/')[2];
+  const navigate = useNavigate();
 
-  const selectCategory = (e: any) => {
-    setCategory(e.target.innerHTML);
+  const selectCategory = (e: React.SyntheticEvent) => {
+    const target = e.target as HTMLDivElement;
+    console.log(target.innerHTML);
+    setCategory(target.innerHTML);
+    navigate(`/${BOARDSTATE[target.innerHTML]}/${clubID}`);
   };
 
   return (
