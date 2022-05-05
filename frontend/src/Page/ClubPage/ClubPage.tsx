@@ -18,9 +18,8 @@ const ClubPage = () => {
 
   const selectCategory = (e: React.SyntheticEvent) => {
     const target = e.target as HTMLDivElement;
-    console.log(target.innerHTML);
-    setCategory(target.innerHTML);
-    navigate(`/${BOARDSTATE[target.innerHTML]}/${clubID}`);
+    setCategory(target.id);
+    navigate(`/${target.id}/${clubID}`);
   };
 
   return (
@@ -32,21 +31,22 @@ const ClubPage = () => {
           <div
             className="ClubPage-navigateBar-information"
             onClick={selectCategory}
+            id='information'
           >
             정보
           </div>
-          <div className="ClubPage-navigateBar-board" onClick={selectCategory}>
+          <div id='board' className="ClubPage-navigateBar-board" onClick={selectCategory}>
             게시판
           </div>
-          <div className="ClubPage-navigateBar-photo" onClick={selectCategory}>
+          <div id='photo' className="ClubPage-navigateBar-photo" onClick={selectCategory}>
             사진
           </div>
-          <div className="ClubPage-navigateBar-chat" onClick={selectCategory}>
+          <div id='management' className="ClubPage-navigateBar-chat" onClick={selectCategory}>
             관리
           </div>
         </div>
         <hr className="horizon"></hr>
-        <Board state={category} setState={setCategory}></Board>
+        <Board state={category} setCategory={setCategory}></Board>
         <hr></hr>
       </div>
     </>
