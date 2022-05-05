@@ -3,6 +3,9 @@ package com.example.club_project.service.clubjoinstate;
 import com.example.club_project.controller.club.ClubDTO;
 import com.example.club_project.domain.*;
 import com.example.club_project.exception.custom.NotFoundException;
+import com.example.club_project.repository.ClubJoinStateRepository;
+import com.example.club_project.repository.ClubRepository;
+import com.example.club_project.repository.UserRepository;
 import com.example.club_project.service.category.CategoryService;
 import com.example.club_project.service.club.ClubService;
 import com.example.club_project.service.user.UserService;
@@ -23,6 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Transactional
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -58,21 +62,29 @@ class ClubJoinStateServiceTest {
     private int testPagingLimitSize = 50;
     private PageRequest testPageRequest = PageRequest.of(testPagingOffsetSize, testPagingLimitSize);
 
+    @Autowired
+    private ClubJoinStateRepository clubJoinStateRepository;    // deleteAll 호출 용도
+    @Autowired
+    private UserRepository userRepository;  // deleteAll 호출 용도
+    @Autowired
+    private ClubRepository clubRepository;  // deleteAll 호출 용도
+
+
     @BeforeAll
-    public static void setup(@Autowired CategoryService categoryService,
-                             @Autowired ClubService clubService,
-                             @Autowired UserService userService) {
+    public void setup(@Autowired CategoryService categoryService,
+                      @Autowired ClubService clubService,
+                      @Autowired UserService userService) {
         //init user
-        User user1 = User.builder().email("email1").name("test").password("test").nickname("test").university("test").introduction("test").build();
-        User user2 = User.builder().email("email2").name("test").password("test").nickname("test").university("test").introduction("test").build();
-        User user3 = User.builder().email("email3").name("test").password("test").nickname("test").university("test").introduction("test").build();
-        User user4 = User.builder().email("email4").name("test").password("test").nickname("test").university("test").introduction("test").build();
-        User user5 = User.builder().email("email5").name("test").password("test").nickname("test").university("test").introduction("test").build();
-        User user6 = User.builder().email("email6").name("test").password("test").nickname("test").university("test").introduction("test").build();
-        User user7 = User.builder().email("email7").name("test").password("test").nickname("test").university("test").introduction("test").build();
-        User user8 = User.builder().email("email8").name("test").password("test").nickname("test").university("test").introduction("test").build();
-        User user9 = User.builder().email("email9").name("test").password("test").nickname("test").university("test").introduction("test").build();
-        User user10 = User.builder().email("email10").name("test").password("test").nickname("test").university("test").introduction("test").build();
+        User user1 = User.builder().email("test1@gmail.com").name("test").password("Test1234!@").nickname("test").university("test").introduction("test").build();
+        User user2 = User.builder().email("test2@gmail.com").name("test").password("Test1234!@").nickname("test").university("test").introduction("test").build();
+        User user3 = User.builder().email("test3@gmail.com").name("test").password("Test1234!@").nickname("test").university("test").introduction("test").build();
+        User user4 = User.builder().email("test4@gmail.com").name("test").password("Test1234!@").nickname("test").university("test").introduction("test").build();
+        User user5 = User.builder().email("test5@gmail.com").name("test").password("Test1234!@").nickname("test").university("test").introduction("test").build();
+        User user6 = User.builder().email("test6@gmail.com").name("test").password("Test1234!@").nickname("test").university("test").introduction("test").build();
+        User user7 = User.builder().email("test7@gmail.com").name("test").password("Test1234!@").nickname("test").university("test").introduction("test").build();
+        User user8 = User.builder().email("test8@gmail.com").name("test").password("Test1234!@").nickname("test").university("test").introduction("test").build();
+        User user9 = User.builder().email("test9@gmail.com").name("test").password("Test1234!@").nickname("test").university("test").introduction("test").build();
+        User user10 = User.builder().email("test10@gmail.com").name("test").password("Test1234!@").nickname("test").university("test").introduction("test").build();
 
         Long userId1 = userService.signup(user1);
         Long userId2 = userService.signup(user2);
@@ -110,29 +122,29 @@ class ClubJoinStateServiceTest {
         mockCategory5 = categoryService.register(category5.getName(), category5.getDescription());
 
         //init Club
-        Club club1 = Club.builder().name("club1").address("test").university("test").description("test").category(mockCategory1).imageUrl(null).build();
-        Club club2 = Club.builder().name("club2").address("test").university("test").description("test").category(mockCategory2).imageUrl(null).build();
-        Club club3 = Club.builder().name("club3").address("test").university("test").description("test").category(mockCategory3).imageUrl(null).build();
-        Club club4 = Club.builder().name("club4").address("test").university("test").description("test").category(mockCategory4).imageUrl(null).build();
-        Club club5 = Club.builder().name("club5").address("test").university("test").description("test").category(mockCategory5).imageUrl(null).build();
+        Club club1 = Club.builder().name("club1").address("test").university("test").description("test").category(mockCategory1).build();
+        Club club2 = Club.builder().name("club2").address("test").university("test").description("test").category(mockCategory2).build();
+        Club club3 = Club.builder().name("club3").address("test").university("test").description("test").category(mockCategory3).build();
+        Club club4 = Club.builder().name("club4").address("test").university("test").description("test").category(mockCategory4).build();
+        Club club5 = Club.builder().name("club5").address("test").university("test").description("test").category(mockCategory5).build();
 
-        mockClub1 = clubService.register(club1.getName(), club1.getAddress(), club1.getUniversity(), club1.getDescription(), club1.getCategory().getId(), null);
-        mockClub2 = clubService.register(club2.getName(), club2.getAddress(), club2.getUniversity(), club2.getDescription(), club2.getCategory().getId(), null);
-        mockClub3 = clubService.register(club3.getName(), club3.getAddress(), club3.getUniversity(), club3.getDescription(), club3.getCategory().getId(), null);
-        mockClub4 = clubService.register(club4.getName(), club4.getAddress(), club4.getUniversity(), club4.getDescription(), club4.getCategory().getId(), null);
-        mockClub5 = clubService.register(club5.getName(), club5.getAddress(), club5.getUniversity(), club5.getDescription(), club5.getCategory().getId(), null);
+        mockClub1 = clubService.register(club1.getName(), club1.getAddress(), club1.getUniversity(), club1.getDescription(), club1.getCategory().getId());
+        mockClub2 = clubService.register(club2.getName(), club2.getAddress(), club2.getUniversity(), club2.getDescription(), club2.getCategory().getId());
+        mockClub3 = clubService.register(club3.getName(), club3.getAddress(), club3.getUniversity(), club3.getDescription(), club3.getCategory().getId());
+        mockClub4 = clubService.register(club4.getName(), club4.getAddress(), club4.getUniversity(), club4.getDescription(), club4.getCategory().getId());
+        mockClub5 = clubService.register(club5.getName(), club5.getAddress(), club5.getUniversity(), club5.getDescription(), club5.getCategory().getId());
     }
 
     /**
      * Start DTO Region
      */
     @Test
-    @DisplayName("ClubId가 주어지면 해당 Club 정보와 가입한 멤버들의 정보를 ClubDTO.DetailResponse 객체로 반환한다.")
+    @DisplayName("ClubId가 주어지면 해당 Club 정보와 가입한 마스터, 운영진들의 정보를 ClubDTO.DetailResponse 객체로 반환한다.")
     public void Should_Return_ClubDTO_DetailResponse_When_ClubId_Provided() {
         //given
         clubJoinStateService.register(mockUser1.getId(), mockClub1.getId(), joinStateCodeMaster);
         clubJoinStateService.register(mockUser2.getId(), mockClub1.getId(), joinStateCodeMANAGER);
-        clubJoinStateService.register(mockUser3.getId(), mockClub1.getId(), joinStateCodeMEMBER);
+        clubJoinStateService.register(mockUser3.getId(), mockClub1.getId(), joinStateCodeMANAGER);
         clubJoinStateService.register(mockUser4.getId(), mockClub1.getId(), joinStateCodeMEMBER);
         clubJoinStateService.register(mockUser5.getId(), mockClub1.getId(), joinStateCodeMEMBER);
 
@@ -146,7 +158,7 @@ class ClubJoinStateServiceTest {
         assertThat(clubDetailDto.getUniversity()).isEqualTo(mockClub1.getUniversity());
         assertThat(clubDetailDto.getDescription()).isEqualTo(mockClub1.getDescription());
         assertThat(clubDetailDto.getCategory()).isEqualTo(mockClub1.getCategory().getName());
-        assertThat(clubDetailDto.getMembers().size()).isEqualTo(5);
+        assertThat(clubDetailDto.getMembers().size()).isEqualTo(3);
     }
 
     @Test
@@ -896,4 +908,11 @@ class ClubJoinStateServiceTest {
     /**
      * End User Region (for User API) Test
      */
+
+    @AfterAll
+    public void destrory() {
+        clubJoinStateRepository.deleteAll();
+        clubRepository.deleteAll();
+        userRepository.deleteAll();
+    }
 }

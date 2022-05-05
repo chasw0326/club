@@ -1,34 +1,6 @@
 spring:
-  datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:testdb;MODE=MYSQL;
-    username: sa
-    password:
-  jpa:
-    properties:
-      hibernate:
-        show_sql: true
-        format_sql: true
-    hibernate:
-      ddl-auto: create-drop
-    defer-datasource-initialization: true
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-
-# 쿼리 파라미터 로그 확인용
-logging:
-  level:
-    org.hibernate.type: trace
-
-# 커스텀 yml 설정값
-club:
-  query-param:
-    offset-name: "page"
-    offset-size: 0
-    limit-name: "size"
-    limit-size: 10
+  profiles:
+    active: local
 
 # 쓰레드풀 설정
 async:
@@ -37,3 +9,36 @@ async:
     core-pool-size: 10  # 동시에 실행시킬 쓰레드의 갯수
     max-pool-size: 50   # 쓰레드 풀의 최대 사이즈
     queue-capacity: 100 # 쓰레드 풀 큐의 사이즈. corePoolSize 갯수를 넘어서는 task가 들어왔을 때 queue에 해당 task들이 쌓이게 됩니다. 최대로 maxPoolSize 갯수만큼 쌓일 수 있습니다.
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb;MODE=MYSQL;
+    username: sa
+    password:
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+    hibernate:
+      ddl-auto: create-drop
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+---
+spring:
+  config:
+    activate:
+      on-profile: production

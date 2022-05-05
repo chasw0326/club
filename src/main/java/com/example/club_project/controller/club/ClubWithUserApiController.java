@@ -6,14 +6,11 @@ import com.example.club_project.service.clubjoinstate.ClubJoinStateService;
 import com.example.club_project.service.post.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
-import static java.util.concurrent.CompletableFuture.completedFuture;
 
 /**
  * Club에서 관리하는 사용자 정보 처리를 담당하는 API Controller
@@ -31,14 +28,13 @@ public class ClubWithUserApiController {
      *
      * GET /api/clubs/:club-id/member
      */
-    @Async
     @GetMapping("/{clubId}/member")
-    public CompletableFuture<List<ClubJoinStateDTO.Response>> searchMember(@AuthenticationPrincipal AuthUserDTO authUser,
-                                                                           @PathVariable("clubId") Long clubId,
-                                                                           Pageable pageable) {
+    public List<ClubJoinStateDTO.Response> searchMember(@AuthenticationPrincipal AuthUserDTO authUser,
+                                                        @PathVariable("clubId") Long clubId,
+                                                        Pageable pageable) {
 
         if (clubJoinStateService.hasMemberRole(authUser.getId(), clubId)) {
-            return completedFuture(clubJoinStateService.getAllMemberDtos(clubId, pageable));
+            return clubJoinStateService.getAllMemberDtos(clubId, pageable);
         }
 
         throw new ForbiddenException("권한이 없습니다.");
@@ -49,14 +45,13 @@ public class ClubWithUserApiController {
      *
      * GET /api/clubs/:club-id/non-member
      */
-    @Async
     @GetMapping("/{clubId}/non-member")
-    public CompletableFuture<List<ClubJoinStateDTO.Response>> searchNonMember(@AuthenticationPrincipal AuthUserDTO authUser,
-                                                                              @PathVariable("clubId") Long clubId,
-                                                                              Pageable pageable) {
+    public List<ClubJoinStateDTO.Response> searchNonMember(@AuthenticationPrincipal AuthUserDTO authUser,
+                                                              @PathVariable("clubId") Long clubId,
+                                                              Pageable pageable) {
 
         if (clubJoinStateService.hasManagerRole(authUser.getId(), clubId)) {
-            return completedFuture(clubJoinStateService.getAppliedMemberDtos(clubId, pageable));
+            return clubJoinStateService.getAppliedMemberDtos(clubId, pageable);
         }
 
         throw new ForbiddenException("권한이 없습니다.");
@@ -67,7 +62,6 @@ public class ClubWithUserApiController {
      *
      * POST api/clubs/{clubId}/member
      */
-    @Async
     @PostMapping("/{clubId}/member")
     public void join(@AuthenticationPrincipal AuthUserDTO authUser, @PathVariable("clubId") Long clubId) {
         if (clubJoinStateService.isJoined(authUser.getId(), clubId)) {
@@ -84,10 +78,11 @@ public class ClubWithUserApiController {
      *
      * DELETE api/clubs/{clubId}/member
      */
-    @Async
     @DeleteMapping("/{clubId}/member")
     public void leave(@AuthenticationPrincipal AuthUserDTO authUser, @PathVariable("clubId") Long clubId) {
-        if (clubJoinStateService.isClubMember(authUser.getId(), clubId)) {
+        if (clubJoinStateService.isClubMaster(authUser.getId(), clubId)) {
+            throw new ForbiddenException("마스터는 탈퇴할 수 없습니다. 동아리 마스터를 변경하거나 동아리를 삭제하세요.");
+        } else if (clubJoinStateService.isJoined(authUser.getId(), clubId)) {
             clubJoinStateService.delete(authUser.getId(), clubId);
             postService.deleteWhenLeaveClub(authUser.getId(), clubId);
             return;
@@ -97,17 +92,18 @@ public class ClubWithUserApiController {
     }
 
     /**
-     * 사용자를 탈퇴시킬 수 있다.
+     * 사용자를 강퇴시킬 수 있다.
      *
      * DELETE api/clubs/{clubId}/member/{userId}
      */
-    @Async
     @DeleteMapping("/{clubId}/member/{userId}")
     public void deleteMember(@AuthenticationPrincipal AuthUserDTO authUser,
                              @PathVariable("clubId") Long clubId,
                              @PathVariable("userId") Long userId) {
 
-        if (clubJoinStateService.isClubMaster(authUser.getId(), clubId)) {
+        if (authUser.getId().equals(userId)) {
+            throw new ForbiddenException("자기 자신은 강퇴시킬 수 없습니다.");
+        } else if (clubJoinStateService.isClubMaster(authUser.getId(), clubId)) {
             clubJoinStateService.delete(userId, clubId);
             postService.deleteWhenLeaveClub(userId, clubId);
             return;
@@ -129,14 +125,17 @@ public class ClubWithUserApiController {
      *
      * requestBody userId
      */
-    @Async
     @PutMapping("/{clubId}/member/{userId}")
     public void toMember(@AuthenticationPrincipal AuthUserDTO authUser,
                          @PathVariable("clubId") Long clubId,
                          @PathVariable("userId") Long userId) {
 
         if (clubJoinStateService.hasManagerRole(authUser.getId(), clubId)) {
-            clubJoinStateService.toMember(userId, clubId);
+
+            if (!clubJoinStateService.isJoined(userId, clubId)) {
+                clubJoinStateService.toMember(userId, clubId);
+            }
+
             return;
         }
 
@@ -150,13 +149,17 @@ public class ClubWithUserApiController {
      *
      * requestBody userId
      */
-    @Async
     @PutMapping("/{clubId}/manager/{userId}")
     public void toManager(@AuthenticationPrincipal AuthUserDTO authUser,
                           @PathVariable("clubId") Long clubId,
                           @PathVariable("userId") Long userId) {
 
         if (clubJoinStateService.isClubMaster(authUser.getId(), clubId)) {
+
+            if (authUser.getId().equals(userId)) {
+                throw new ForbiddenException("마스터는 운영진으로 변경할 수 없습니다.");
+            }
+
             clubJoinStateService.toManager(userId, clubId);
             return;
         }
@@ -171,7 +174,6 @@ public class ClubWithUserApiController {
      *
      * requestBody userId
      */
-    @Async
     @PutMapping("/{clubId}/master/{userId}")
     public void changeMaster(@AuthenticationPrincipal AuthUserDTO authUser,
                              @PathVariable("clubId") Long clubId,

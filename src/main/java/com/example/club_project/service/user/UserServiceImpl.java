@@ -98,6 +98,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
+    public void updateProfileImage(Long userId, String profileImageUrl) {
+        User user = getUser(userId);
+        user.updateProfileImage(profileImageUrl);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public User getUser(Long userId) {
         return userRepository.findById(userId)

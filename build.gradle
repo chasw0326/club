@@ -39,6 +39,9 @@ dependencies {
     // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-webflux
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-webflux', version: '2.6.3'
     implementation group: 'org.apache.commons', name: 'commons-lang3'
+    implementation("com.google.guava:guava:31.1-jre")
+    implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.1000')
+    implementation 'com.amazonaws:aws-java-sdk-s3'
     // https://mvnrepository.com/artifact/org.mockito/mockito-core
     testImplementation group: 'org.mockito', name: 'mockito-core', version: '4.3.1'
     // https://mvnrepository.com/artifact/org.springframework.security/spring-security-test

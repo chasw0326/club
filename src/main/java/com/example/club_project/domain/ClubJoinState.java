@@ -10,6 +10,9 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -53,6 +56,9 @@ public class ClubJoinState extends AuditingCreateUpdateEntity {
 
     @Builder
     private ClubJoinState(User user, Club club, JoinState joinState) {
+        checkArgument(isNotEmpty(user), "user 값은 필수 값 입니다.");
+        checkArgument(isNotEmpty(club), "club 값은 필수 값 입니다.");
+
         this.user = user;
         this.club = club;
         this.joinState = joinState;

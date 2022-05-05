@@ -5,6 +5,8 @@ import com.example.club_project.domain.Category;
 import com.example.club_project.domain.Club;
 import com.example.club_project.exception.custom.AlreadyExistsException;
 import com.example.club_project.exception.custom.NotFoundException;
+import com.example.club_project.repository.CategoryRepository;
+import com.example.club_project.repository.ClubRepository;
 import com.example.club_project.service.category.CategoryService;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,6 +24,7 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Transactional
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -45,8 +48,13 @@ class ClubServiceTest {
     private final int testPagingLimitSize = 50;
     private final PageRequest testPageRequest = PageRequest.of(testPagingOffsetSize, testPagingLimitSize);
 
+    @Autowired
+    private ClubRepository clubRepository;  // deleteAll 호출 용도
+    @Autowired
+    private CategoryRepository categoryRepository;  // deleteAll 호출 용도
+
     @BeforeAll
-    public static void setup(@Autowired CategoryService categoryService) {
+    public void setup(@Autowired CategoryService categoryService) {
 
         List<Long> testCategoryLists = new ArrayList<>();
 
@@ -64,7 +72,7 @@ class ClubServiceTest {
     @DisplayName("동아리 Entity를 DTO로 변환할 수 있다")
     public void Should_TranslateEntity() {
         //given
-        Club registeredClub = clubService.register(testName, testAddress, testUniversity, testDescription, testCategoryId, null);
+        Club registeredClub = clubService.register(testName, testAddress, testUniversity, testDescription, testCategoryId);
 
         //when
         ClubDTO.Response registeredClubDTO = ClubDTO.Response.from(registeredClub);
@@ -84,7 +92,7 @@ class ClubServiceTest {
     @DisplayName("동아리를 등록할 수 있다")
     public void Should_CreateEntity() {
         //given
-        Club registeredClub = clubService.register(testName, testAddress, testUniversity, testDescription, testCategoryId, null);
+        Club registeredClub = clubService.register(testName, testAddress, testUniversity, testDescription, testCategoryId);
 
         //when
         //then
@@ -100,14 +108,14 @@ class ClubServiceTest {
     @DisplayName("동아리 정보를 수정할 수 있다")
     public void Should_UpdateEntity() {
         //given
-        Club registeredClub = clubService.register(testName, testAddress, testUniversity, testDescription, testCategoryId, null);
+        Club registeredClub = clubService.register(testName, testAddress, testUniversity, testDescription, testCategoryId);
 
         //when
         String newName = "새 동아리 이름";
         String newAddress = "새 주소";
         String newUniversity = "새 대학교";
         String newDescription = "새 소개";
-        Club updatedClub = clubService.update(registeredClub.getId(), newName, newAddress, newUniversity, newDescription, null, null);
+        Club updatedClub = clubService.update(registeredClub.getId(), newName, newAddress, newUniversity, newDescription, testCategoryId);
 
         //then
         assertThat(updatedClub.getId()).isEqualTo(registeredClub.getId());
@@ -121,18 +129,18 @@ class ClubServiceTest {
     @DisplayName("{동아리명, 대학교} 정보가 중복된 동아리는 등록할 수 없다")
     public void Should_ThrowException_When_Registerd_Club_NameAndUniversity_Duplicated() {
         //given
-        clubService.register(testName, testAddress, testUniversity, testDescription, testCategoryId, null);
+        clubService.register(testName, testAddress, testUniversity, testDescription, testCategoryId);
 
         //when
         //then
-        assertThrows(AlreadyExistsException.class, () -> clubService.register(testName, testAddress, testUniversity, testDescription, testCategoryId, null));
+        assertThrows(AlreadyExistsException.class, () -> clubService.register(testName, testAddress, testUniversity, testDescription, testCategoryId));
     }
 
     @Test
     @DisplayName("{동아리명, 대학교} 정보는 중복될 수 없다")
     public void Should_True_When_NameAndUniversity_Duplicated() {
         //given
-        clubService.register(testName, testAddress, testUniversity, testDescription, testCategoryId, null);
+        clubService.register(testName, testAddress, testUniversity, testDescription, testCategoryId);
 
         //when
         String invalidClubName = "존재하지 않는 동아리";
@@ -148,7 +156,7 @@ class ClubServiceTest {
     @DisplayName("Id에 속하는 하나의 동아리를 반환한다.")
     public void Should_ReturnClub_When_ClubId_Valid() {
         //given
-        Club registeredClub = clubService.register(testName, testAddress, testUniversity, testDescription, testCategoryId, null);
+        Club registeredClub = clubService.register(testName, testAddress, testUniversity, testDescription, testCategoryId);
 
         //when
         Club club = clubService.getClub(registeredClub.getId());
@@ -163,7 +171,7 @@ class ClubServiceTest {
     @DisplayName("특정 대학교에 속하는 하나의 동아리를 반환한다.")
     public void Should_ReturnClub_When_NameAndUniversity_Valid() {
         //given
-        clubService.register(testName, testAddress, testUniversity, testDescription, testCategoryId, null);
+        clubService.register(testName, testAddress, testUniversity, testDescription, testCategoryId);
 
         //when
         Club club = clubService.getClub(testName, testUniversity);
@@ -178,7 +186,7 @@ class ClubServiceTest {
     @DisplayName("특정 대학교에 속하는 동아리가 없다면 예외를 반환한다")
     public void Should_ThrowException_When_NameAndUniversity_InValid() {
         //given
-        clubService.register(testName, testAddress, testUniversity, testDescription, testCategoryId, null);
+        clubService.register(testName, testAddress, testUniversity, testDescription, testCategoryId);
 
         //when
         String invalidClubName = "존재하지 않는 동아리";
@@ -196,9 +204,9 @@ class ClubServiceTest {
         //given
         String clubName1 = "ABC";
         String clubName2 = "ABCD";
-        clubService.register(clubName1, testAddress, testUniversity, testDescription, testCategoryId, null);
-        clubService.register(clubName2, testAddress, testUniversity, testDescription, testCategoryId, null);
-        clubService.register(testName, testAddress, testUniversity, testDescription, testCategoryId, null);
+        clubService.register(clubName1, testAddress, testUniversity, testDescription, testCategoryId);
+        clubService.register(clubName2, testAddress, testUniversity, testDescription, testCategoryId);
+        clubService.register(testName, testAddress, testUniversity, testDescription, testCategoryId);
 
         //when
         String searchKeyword = "AB";
@@ -217,13 +225,13 @@ class ClubServiceTest {
         String aUniversity = "A대학교";
         for (int i = 0; i < testCategoriesName.length; ++i) {
             String clubName = String.format("%d번 테스트 동아리", i);
-            clubService.register(clubName, testAddress, aUniversity, testDescription, testCategoryIds[i], null);
+            clubService.register(clubName, testAddress, aUniversity, testDescription, testCategoryIds[i]);
         }
 
         String bUniversity = "B대학교";
         for (int i = 0; i < testCategoriesName.length / 2; ++i) {
             String clubName = String.format("%d번 테스트 동아리", i);
-            clubService.register(clubName, testAddress, bUniversity, testDescription, testCategoryIds[i], null);
+            clubService.register(clubName, testAddress, bUniversity, testDescription, testCategoryIds[i]);
         }
 
         //when
@@ -244,13 +252,13 @@ class ClubServiceTest {
         String aUniversity = "A대학교";
         for (int i = 0; i < testCategoriesName.length; ++i) {
             String clubName = String.format("%d번 테스트 동아리", i);
-            clubService.register(clubName, testAddress, aUniversity, testDescription, testCategoryIds[i], null);
+            clubService.register(clubName, testAddress, aUniversity, testDescription, testCategoryIds[i]);
         }
 
         String bUniversity = "B대학교";
         for (int i = 0; i < testCategoriesName.length / 2; ++i) {
             String clubName = String.format("%d번 테스트 동아리", i);
-            clubService.register(clubName, testAddress, bUniversity, testDescription, testCategoryIds[i], null);
+            clubService.register(clubName, testAddress, bUniversity, testDescription, testCategoryIds[i]);
         }
 
         //when
@@ -286,13 +294,13 @@ class ClubServiceTest {
         String aUniversity = "A대학교";
         for (int i = 0; i < testCategoriesName.length; ++i) {
             String clubName = String.format("%d번 테스트 동아리", i);
-            clubService.register(clubName, testAddress, aUniversity, testDescription, testCategoryIds[i], null);
+            clubService.register(clubName, testAddress, aUniversity, testDescription, testCategoryIds[i]);
         }
 
         String bUniversity = "B대학교";
         for (int i = 0; i < testCategoriesName.length / 2; ++i) {
             String clubName = String.format("%d번 테스트 동아리", i);
-            clubService.register(clubName, testAddress, bUniversity, testDescription, testCategoryIds[i], null);
+            clubService.register(clubName, testAddress, bUniversity, testDescription, testCategoryIds[i]);
         }
 
         //when
@@ -326,7 +334,7 @@ class ClubServiceTest {
     @DisplayName("Club id를 parameter로 주면 동아리를 삭제한다")
     public void Should_DeleteClub_When_ClubId_Valid() {
         //given
-        clubService.register(testName, testAddress, testUniversity, testDescription, testCategoryId, null);
+        clubService.register(testName, testAddress, testUniversity, testDescription, testCategoryId);
 
         //when
         Club club = clubService.getClub(testName, testUniversity);
@@ -334,5 +342,11 @@ class ClubServiceTest {
 
         //then
         assertThrows(NotFoundException.class, () -> clubService.getClub(testName, testUniversity));
+    }
+
+    @AfterAll
+    public void destroy() {
+        clubRepository.deleteAll();
+        categoryRepository.deleteAll();
     }
 }

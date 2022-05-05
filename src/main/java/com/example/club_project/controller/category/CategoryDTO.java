@@ -4,6 +4,8 @@ import com.example.club_project.domain.Category;
 import lombok.Builder;
 import lombok.Getter;
 
+import javax.validation.constraints.NotEmpty;
+
 public class CategoryDTO {
 
     /**
@@ -11,7 +13,9 @@ public class CategoryDTO {
      */
     @Getter
     public static class RegisterRequest {
+        @NotEmpty
         private String name;
+        @NotEmpty
         private String description;
     }
 
@@ -20,7 +24,9 @@ public class CategoryDTO {
      */
     @Getter
     public static class UpdateRequest {
+        @NotEmpty
         private String name;
+        @NotEmpty
         private String description;
     }
 

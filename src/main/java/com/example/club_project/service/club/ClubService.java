@@ -11,16 +11,16 @@ public interface ClubService {
     /**
      * DTO Region (for other controllers)
      */
-    ClubDTO.Response registerClub(String name, String address, String university, String description, Long categoryId, String imageUrl);
+    ClubDTO.Response registerClub(String name, String address, String university, String description, Long categoryId);
 
-    ClubDTO.Response updateClub(Long id, String name, String address, String university, String description, Long categoryId, String imageUrl);
+    ClubDTO.Response updateClub(Long id, String name, String address, String university, String description, Long categoryId);
 
     ClubDTO.Response convertToDTO(Club club);
 
     /**
      * Entity Region (for other services)
      */
-    Club register(String name, String address, String university, String description, Long categoryId, String imageUrl);
+    Club register(String name, String address, String university, String description, Long categoryId);
 
     Club getClub(Long id);
 
@@ -36,7 +36,9 @@ public interface ClubService {
 
     List<Club> getClubs(List<Long> categories, String university, String name, Pageable pageable);
 
-    Club update(Long id, String name, String address, String university, String description, Long categoryId, String imageUrl);
+    Club update(Long id, String name, String address, String university, String description, Long categoryId);
+
+    void updateImage(Long id, String imageUrl);
 
     /**
      * Common Region

@@ -36,3 +36,9 @@ out/
 ### VS Code ###
 .vscode/
 node_modules
+
+### aws ###
+aws.yml
+
+### log ###
+log
