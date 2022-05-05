@@ -81,6 +81,19 @@ const postAPI: Function = async (
     const res = await fData.json();
 
     return [fData.status, res];
+  } else if (checkType === 'login') {
+    const fData = await fetch(`${process.env.REACT_APP_TEST_API}${api}`, {
+      method: 'POST',
+      body: JSON.stringify(requestData),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + `${window.localStorage.getItem('token')}`,
+      },
+    });
+
+    const res = await fData.json();
+
+    return [fData.status, res];
   } else {
     return;
   }

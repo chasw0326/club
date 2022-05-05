@@ -1,32 +1,20 @@
 import React, { useEffect } from 'react';
 import { useState } from 'react';
+import { getAPI } from '../../../hooks/useFetch';
 import { myClub, myComment, myPost } from '../../../type/type';
 import thumbnail from '../../../image/thumbnail.svg';
 import { init } from '../../../type/type';
 
 const MyClub = () => {
-  const [clubInfo, setClubInfo] = useState<myClub[]>();
+  const [clubInfo, setClubInfo] = useState<myClub[]>([]);
+
+  const fetchData = async () => {
+    const [status, res] = await getAPI('/api/users/joined-club');
+    setClubInfo((clubInfo) => [...clubInfo, ...res]);
+  };
 
   useEffect(() => {
-    //api 호출해야하는 부분
-
-    const data: myClub[] = [
-      {
-        universitiy: '인하대학교',
-        club: '네타스',
-
-        description: '네타스입니다',
-        address: '하이테크1층',
-      },
-      {
-        universitiy: '인하대학교',
-        club: '아이그루스',
-        description: '아이그루스입니다',
-        address: '하이테크3층',
-      },
-    ];
-
-    setClubInfo(data);
+    fetchData();
   }, []);
 
   return (
@@ -37,8 +25,8 @@ const MyClub = () => {
             <div className="MyPage__div--belong-club">
               <img src={thumbnail}></img>
               <div className="MyPage__div--club-info">
-                <div>{val.universitiy}</div>
-                <div>{val.club}</div>
+                <div>{val.university}</div>
+                <div>{val.name}</div>
                 <div>{val.description}</div>
                 <div className="MyPage__text--club-address">{val.address}</div>
               </div>
@@ -51,27 +39,15 @@ const MyClub = () => {
 };
 
 const MyPost = () => {
-  const [postInfo, setPostInfo] = useState<myPost[]>();
+  const [postInfo, setPostInfo] = useState<myPost[]>([]);
+
+  const fetchData = async () => {
+    const [status, res] = await getAPI('/api/user/posts');
+    setPostInfo((postInfo) => [...postInfo, ...res]);
+  };
 
   useEffect(() => {
-    //api 호출해야하는 부분
-
-    const data: myPost[] = [
-      {
-        nickname: '팀버너스리',
-        title: 'html',
-        content: 'html의 창시자',
-        createdAt: '2021-03-29',
-      },
-      {
-        nickname: '브랜던 아이크',
-        title: 'javascript',
-        content: 'javascript의 창시자',
-        createdAt: '2021-03-29',
-      },
-    ];
-
-    setPostInfo(data);
+    fetchData();
   }, []);
 
   return (
@@ -92,27 +68,15 @@ const MyPost = () => {
 };
 
 const MyComment = () => {
-  const [commentInfo, setCommentInfo] = useState<myComment[]>();
+  const [commentInfo, setCommentInfo] = useState<myComment[]>([]);
+
+  const fetchData = async () => {
+    const [status, res] = await getAPI('/api/user/comments');
+    setCommentInfo((commentInfo) => [...commentInfo, ...res]);
+  };
 
   useEffect(() => {
-    //api 호출해야하는 부분
-
-    const data: myComment[] = [
-      {
-        nickname: '팀버너스리',
-        title: 'html',
-        content: 'html의 창시자',
-        createdAt: '2021-03-29',
-      },
-      {
-        nickname: '브랜던 아이크',
-        title: 'javascript',
-        content: 'javascript의 창시자',
-        createdAt: '2021-03-29',
-      },
-    ];
-
-    setCommentInfo(data);
+    fetchData();
   }, []);
 
   return (
@@ -121,9 +85,9 @@ const MyComment = () => {
         return (
           <>
             <div className="MyPage__div--myPost">
-              <div>{val.title}</div>
-              <div>{val.content}</div>
-              <div>{val.createdAt}</div>
+              <div>{val.postTitle}</div>
+              <div>{val.commentData.content}</div>
+              <div>{val.commentData.createdAt}</div>
             </div>
           </>
         );

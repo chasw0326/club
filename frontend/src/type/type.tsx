@@ -27,6 +27,22 @@ type clubInformation = {
   category: string;
 };
 
+type member = {
+  joinState: string;
+  name: string;
+};
+
+type clubInfo = {
+  id: number;
+  name: string;
+  address: string;
+  university: string;
+  description: string;
+  imageUrl: string;
+  category: string;
+  members: member[];
+};
+
 type clubItem = {
   id: number | null;
   name: string;
@@ -39,24 +55,35 @@ type clubItem = {
 };
 
 type myClub = {
-  club: string;
+  id: number;
+  name: string;
   address: string;
-  universitiy: string;
+  university: string;
   description: string;
+  imageUrl: string;
+  category: number;
 };
 
 type myPost = {
+  profileUrl: string;
   nickname: string;
   title: string;
   content: string;
   createdAt: string;
+  commentCnt: number;
 };
 
 type myComment = {
-  title: string;
-  nickname: string;
-  content: string;
-  createdAt: string;
+  postId: number;
+  postTitle: string;
+  postContent: string;
+  commentData: {
+    commentId: number;
+    profileUrl: string;
+    nickname: string;
+    content: string;
+    createdAt: string;
+  };
 };
 
 type postInfo = {
@@ -105,6 +132,7 @@ export type {
   category,
   postInfo,
   commentInfo,
+  clubInfo,
 };
 
 export { init };

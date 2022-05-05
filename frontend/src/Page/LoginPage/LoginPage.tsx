@@ -21,18 +21,21 @@ const LoginPage = () => {
   };
 
   const enterLogin = (e: any) => {
-
-    if(e.key ==='Enter') login();
-
-  }
+    if (e.key === 'Enter') login();
+  };
 
   const login = async () => {
     const loginInformation = { email: idState, password: pwState };
 
-    const [responseStatus, res] = await postAPI(loginInformation, 'json', '/auth/signin');
+    const [responseStatus, res] = await postAPI(
+      loginInformation,
+      'login',
+      '/auth/signin'
+    );
 
     if (responseStatus !== 302) {
       const localStorage = window.localStorage;
+      console.log('토큰', res);
       localStorage.setItem('token', res);
       navigate('/home');
     } else {
