@@ -62,7 +62,7 @@ jar {
     enabled = false
 }
 
-task deleteJarDirectory(type: Exec, description: 'npm install for front-module') {
+task deleteJarDirectory(type: Exec, description: 'Delete ExecutableJar directory') {
     workingDir "$projectDir"
 
     if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
