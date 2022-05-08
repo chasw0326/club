@@ -18,7 +18,7 @@ const categoryList: any = Object.freeze({
 });
 
 const MainBody = () => {
-  const [globalCategory, setGlobalCategory] = useContext(store);
+  const [globalState, setGlobalState] = useContext(store);
   const [categoryState, setCategory] = useState<category[]>([]);
   const [curCategory, setCurCategory] = useState(0);
   const [clubList, setClubList] = useState<clubItem[]>([]);
@@ -56,7 +56,7 @@ const MainBody = () => {
   }, []);
 
   useEffect(() => {
-    setGlobalCategory({ ...globalCategory, categories: categoryState });
+    setGlobalState({ ...globalState, categories: categoryState });
   }, [categoryState]);
 
   useEffect(() => {

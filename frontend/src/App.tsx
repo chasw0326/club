@@ -12,7 +12,6 @@ import './App.css';
 import ResultPage from './Page/ResultPage/ResultPage';
 import ClubPage from './Page/ClubPage/ClubPage';
 import MyPage from './Page/MyPage/MyPage';
-import { Post } from './Page/ClubPage/Component/NoticeBoard';
 
 function App() {
   return (
