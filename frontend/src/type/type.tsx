@@ -4,6 +4,12 @@ type fetchState = {
   error: any;
 };
 
+type category = {
+  id: number;
+  name: string;
+  description: string;
+};
+
 type SignUp = {
   email: string;
   password: string;
@@ -12,6 +18,29 @@ type SignUp = {
   university: string;
   profile: any;
   introduction: string;
+};
+
+type clubInformation = {
+  name: string;
+  address: string;
+  description: string;
+  category: string;
+};
+
+type member = {
+  joinState: string;
+  name: string;
+};
+
+type clubInfo = {
+  id: number;
+  name: string;
+  address: string;
+  university: string;
+  description: string;
+  imageUrl: string;
+  category: string;
+  members: member[];
 };
 
 type clubItem = {
@@ -26,25 +55,55 @@ type clubItem = {
 };
 
 type myClub = {
-  club: string;
+  id: number;
+  name: string;
   address: string;
-  universitiy: string;
+  university: string;
   description: string;
+  imageUrl: string;
+  category: number;
 };
 
 type myPost = {
+  profileUrl: string;
   nickname: string;
   title: string;
+  content: string;
+  createdAt: string;
+  commentCnt: number;
+};
+
+type myComment = {
+  postId: number;
+  postTitle: string;
+  postContent: string;
+  commentData: {
+    commentId: number;
+    profileUrl: string;
+    nickname: string;
+    content: string;
+    createdAt: string;
+  };
+};
+
+type postInfo = {
+  postId: number;
+  profileUrl: null;
+  nickname: string;
+  title: string;
+  content: string;
+  createdAt: string;
+  commentCnt: number;
+};
+
+type commentInfo = {
+  commentId: number;
+  profileUrl: string;
+  nickname: string;
   content: string;
   createdAt: string;
 };
 
-type myComment = {
-  title: string;
-  nickname: string;
-  content: string;
-  createdAt: string;
-};
 const init = [
   {
     club: '',
@@ -62,6 +121,18 @@ const init = [
   },
 ];
 
-export type { fetchState, SignUp, clubItem, myClub, myPost, myComment };
+export type {
+  clubInformation,
+  fetchState,
+  SignUp,
+  clubItem,
+  myClub,
+  myPost,
+  myComment,
+  category,
+  postInfo,
+  commentInfo,
+  clubInfo,
+};
 
 export { init };

@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from 'react';
 import { clubItem } from '../type/type';
 import { useNavigate } from 'react-router-dom';
 import './Style/shared.scss';
@@ -11,7 +10,7 @@ const ClubItem = ({ item }: { item: clubItem }) => {
     <div
       className="MainBody-itemFrame-clubItem"
       onClick={() => {
-        navigate(`/club/${item?.name}`);
+        navigate(`/information/${item?.id}`);
       }}
     >
       <img width="200px" height="200px" src={thumbnail}></img>
