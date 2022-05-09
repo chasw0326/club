@@ -69,7 +69,7 @@ public class Club extends AuditingCreateUpdateEntity {
                 isEmpty(imageUrl) || imageUrl.length() <= 250,
                 "imageUrl 길이는 250자 이하여야 합니다.");
 
-        this.name = isEmpty(imageUrl) ? this.imageUrl : imageUrl;
+        this.imageUrl = isEmpty(imageUrl) ? this.imageUrl : imageUrl;
     }
 
     @Builder
