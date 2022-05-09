@@ -186,4 +186,55 @@ public class ClubWithUserApiController {
 
         throw new ForbiddenException("권한이 없습니다.");
     }
+
+    /**
+     * 동아리 마스터인지
+     *
+     * GET api/clubs/is-master?clubId={clubId}
+     *
+     * master: true
+     * manager: false
+     * member: false
+     */
+    @GetMapping("/is-master")
+    public ClubJoinStateDTO.JoinStateResponse isClubMaster(@AuthenticationPrincipal AuthUserDTO authUser,
+                                                           @RequestParam("clubId") Long clubId) {
+
+        boolean result = clubJoinStateService.isClubMaster(authUser.getId(), clubId);
+        return new ClubJoinStateDTO.JoinStateResponse(result);
+    }
+
+    /**
+     * 동아리 운영진인지
+     *
+     * GET api/clubs/is-manager?clubId={clubId}
+     *
+     * master: true
+     * manager: true
+     * member: false
+     */
+    @GetMapping("/is-manager")
+    public ClubJoinStateDTO.JoinStateResponse isClubManager(@AuthenticationPrincipal AuthUserDTO authUser,
+                                                            @RequestParam("clubId") Long clubId) {
+
+        boolean result = clubJoinStateService.hasManagerRole(authUser.getId(), clubId);
+        return new ClubJoinStateDTO.JoinStateResponse(result);
+    }
+
+    /**
+     * 동아리 회원인지
+     *
+     * GET api/clubs/is-member?clubId={clubId}
+     *
+     * master: true
+     * manager: true
+     * member: true
+     */
+    @GetMapping("/is-member")
+    public ClubJoinStateDTO.JoinStateResponse isClubMember(@AuthenticationPrincipal AuthUserDTO authUser,
+                                                           @RequestParam("clubId") Long clubId) {
+
+        boolean result = clubJoinStateService.hasMemberRole(authUser.getId(), clubId);
+        return new ClubJoinStateDTO.JoinStateResponse(result);
+    }
 }
