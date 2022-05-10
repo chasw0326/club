@@ -130,4 +130,21 @@ const putAPI = async (requestData: any, api: string) => {
   return [fData.status, res];
 };
 
-export { useAsync, postAPI, getAPI, putAPI };
+const deleteAPI = async (api: string) => {
+  const fData = await fetch(`${process.env.REACT_APP_TEST_API}${api}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: 'bearer ' + `${localStorage.getItem('token')}`,
+    },
+  });
+
+  if (fData.status === 200) {
+    return [fData.status, null];
+  }
+
+  const res = await fData.json();
+
+  return [fData.status, res];
+};
+
+export { useAsync, postAPI, getAPI, putAPI, deleteAPI };

@@ -6,11 +6,11 @@ import React, {
   useState,
 } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { postAPI, getAPI, putAPI } from '../../../hooks/useFetch';
+import { postAPI, getAPI } from '../../../hooks/useFetch';
 import { postInfo, commentInfo } from '../../../type/type';
 import comment from '../../../image/comment.svg';
 import ModifyBoard from './ModifyBoard';
-import { store } from '../../../hooks/store';
+import CommentItem from './CommentItem';
 
 const WritePage = ({ postInfo }: { postInfo: any }) => {
   const [inputInfo, setInputInfo] = useState({
@@ -24,8 +24,6 @@ const WritePage = ({ postInfo }: { postInfo: any }) => {
     const { id, value } = e.target;
     setInputInfo({ ...inputInfo, [id]: value });
   };
-
-  const clubID = window.location.pathname.split('/')[2];
 
   const submitPost = async () => {
     const [status, res] = await postAPI(inputInfo, 'json', '/api/post');
@@ -243,67 +241,6 @@ const Post = () => {
             <div className="ClubPage__button--submit" onClick={commentSubmit}>
               등록
             </div>
-          </div>
-        </div>
-      )}
-    </>
-  );
-};
-
-const CommentItem = ({ commentData }: { commentData: any }) => {
-  const [globalState, setGlobalState] = useContext(store);
-  const [commentModifyMode, setCommentModifyMode] = useState(false);
-  const setModifyMode = () => {
-    if (commentModifyMode) setCommentModifyMode(false);
-    else setCommentModifyMode(true);
-  };
-
-  const [commentInput, setCommentInput] = useState({
-    content: '',
-  });
-
-  const modifySubmit = () => {
-    setModifyMode();
-    const modifyData = { content: commentInput.content };
-    putAPI(modifyData, `/api/comment/${commentData.commentId}`);
-    window.location.reload();
-  };
-
-  const setInputValue = (e: any) => {
-    const { id, value } = e.target;
-    setCommentInput({ ...commentInput, [id]: value });
-  };
-
-  return (
-    <>
-      {commentModifyMode ? (
-        <div className="ClubPage__div--submit-frame">
-          <textarea
-            className="ClubPage__textarea--submit-comment"
-            id="content"
-            onChange={setInputValue}
-          ></textarea>
-          <div className="ClubPage__button--submit" onClick={modifySubmit}>
-            수정
-          </div>
-        </div>
-      ) : (
-        <div
-          className="ClubPage__div--comment-frame"
-          key={commentData.commentId}
-        >
-          <div className="ClubPage__text--comment-nickname">
-            {commentData?.nickname}
-            {commentData?.nickname === globalState.nickname ? (
-              <span onClick={setModifyMode}>수정</span>
-            ) : null}
-          </div>
-
-          <div
-            className="ClubPage__text--comment-content"
-            key={commentData.commentId}
-          >
-            {commentData?.content}
           </div>
         </div>
       )}
