@@ -5,20 +5,17 @@ import MainBody from './Component/MainBody';
 import MainHeader from '../../SharedComponent/Header';
 
 const MainPage = () => {
-  const [globalState, setGlobalState] = useContext(store);
+  // const fetchData = async () => {
+  //   const [status, res] = await getAPI('/api/user');
+  //   setGlobalState({ ...globalState, nickname: res.nickname });
+  // };
 
-  const fetchData = async () => {
-    const [status, res] = await getAPI('/api/user');
-    setGlobalState({ ...globalState, nickname: res.nickname });
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
   return (
     <>
       <MainHeader></MainHeader>
-      {globalState?.nickname}
       <MainBody></MainBody>
     </>
   );

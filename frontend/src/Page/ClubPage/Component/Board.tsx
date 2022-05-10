@@ -29,7 +29,7 @@ const Board = ({ state, setCategory }: { state: any; setCategory: any }) => {
       <PostList setPostInfo={setPostInfo} setCategory={setCategory}></PostList>
     );
   } else if (state === 'post') {
-    return <Post postInfo={postInfo}></Post>;
+    return <Post></Post>;
   } else if (state === 'photo') {
     return (
       <>
@@ -39,7 +39,7 @@ const Board = ({ state, setCategory }: { state: any; setCategory: any }) => {
   } else if (state === 'management') {
     return <ManangementBoard></ManangementBoard>;
   } else if (state === 'write') {
-    return <WritePage></WritePage>;
+    return <WritePage postInfo={{}}></WritePage>;
   } else return null;
 };
 
