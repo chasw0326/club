@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getAPI, putAPI } from '../../../hooks/useFetch';
+import { getAPI, deleteAPI } from '../../../hooks/useFetch';
 
 const MemberManagement = () => {
   const [nonMemberList, setNonMemberList]: any = useState([]);
@@ -9,7 +9,7 @@ const MemberManagement = () => {
 
   const fetchData = async () => {
     const [statusNonMember, targetMember] = await getAPI(
-      '/api/clubs/testClub/non-member'
+      `/api/clubs/${clubID}/member`
     );
 
     setNonMemberList((nonMemberList: any) => [
@@ -18,10 +18,12 @@ const MemberManagement = () => {
     ]);
   };
 
-  const accept = async (event: any) => {
+  const kick = async (event: any) => {
     const userId = event.target.dataset.userid;
 
-    const [status, res] = await putAPI({}, `/api/clubs/${clubID}/member/123`);
+    const [status, res] = await deleteAPI(
+      `/api/clubs/${clubID}/member/${userId}`
+    );
 
     console.log(status);
   };
@@ -47,11 +49,16 @@ const MemberManagement = () => {
                 <span
                   className="ClubSetting__span--accept"
                   data-userid={val?.userId}
-                  onClick={accept}
                 >
-                  수락
+                  직위변경
                 </span>
-                <span className="ClubSetting__span--deny">거절</span>
+                <span
+                  className="ClubSetting__span--deny"
+                  data-userid={val?.userId}
+                  onClick={kick}
+                >
+                  강퇴
+                </span>
               </div>
             );
           })}

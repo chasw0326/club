@@ -9,7 +9,7 @@ const AcceptMember = () => {
 
   const fetchData = async () => {
     const [statusNonMember, targetMember] = await getAPI(
-      '/api/clubs/testClub/non-member'
+      `/api/clubs/${clubID}/non-member`
     );
 
     setNonMemberList((nonMemberList: any) => [
@@ -21,7 +21,10 @@ const AcceptMember = () => {
   const accept = async (event: any) => {
     const userId = event.target.dataset.userid;
 
-    const [status, res] = await putAPI({}, `/api/clubs/${clubID}/member/123`);
+    const [status, res] = await putAPI(
+      {},
+      `/api/clubs/${clubID}/member/${userId}`
+    );
 
     console.log(status);
   };

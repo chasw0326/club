@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { getAPI, putAPI } from '../../../hooks/useFetch';
 import ClubSetting from './ClubSetting';
 import AcceptMember from './AcceptMember';
+import MemberManagement from './MemberManagement';
 
 const RightComponent = ({ curCategory }: { curCategory: string }) => {
   if (curCategory === '가입 승인') {
     return <AcceptMember></AcceptMember>;
-  } else {
-    return <ClubSetting></ClubSetting>;
-  }
+  } else if (curCategory === '부원 관리') {
+    return <MemberManagement></MemberManagement>;
+  } else return <ClubSetting></ClubSetting>;
 };
 
 const ManangementBoard = () => {
