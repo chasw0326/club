@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { postAPI, getAPI } from '../../../hooks/useFetch';
+import { postAPI, getAPI, deleteAPI } from '../../../hooks/useFetch';
 import { clubInfo } from '../../../type/type';
 import thumbnail from '../../../image/thumbnail.svg';
 const InformationBoard = () => {
@@ -33,6 +33,10 @@ const InformationBoard = () => {
     setClubInformation({ ...clubInformation, ...res });
   };
 
+  const quitClub = () => {
+    deleteAPI(`/api/clubs/${clubID}/member`);
+  };
+
   useEffect(() => {
     signCheck();
     setInfo();
@@ -51,7 +55,9 @@ const InformationBoard = () => {
       </div>
       <hr></hr>
       {isSigned ? (
-        <div className="ClubPage-sign-done">가입완료</div>
+        <div className="ClubPage-sign-done" onClick={quitClub}>
+          탈퇴하기
+        </div>
       ) : signWait ? (
         <div className="ClubPage-sign-wait" onClick={requestSign}>
           가입대기 중

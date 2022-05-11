@@ -1,12 +1,6 @@
-import React, {
-  SyntheticEvent,
-  useEffect,
-  useRef,
-  useContext,
-  useState,
-} from 'react';
+import React, { SyntheticEvent, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { postAPI, getAPI } from '../../../hooks/useFetch';
+import { postAPI, getAPI, putAPI, deleteAPI } from '../../../hooks/useFetch';
 import { postInfo, commentInfo } from '../../../type/type';
 import comment from '../../../image/comment.svg';
 import ModifyBoard from './ModifyBoard';
@@ -34,16 +28,17 @@ const WritePage = ({ postInfo }: { postInfo: any }) => {
   };
 
   useEffect(() => {
-    if (postInfo)
+    if (postInfo.title === '') {
+      console.log(postInfo);
       setInputInfo({
         ...inputInfo,
         title: postInfo?.title,
         content: postInfo?.content,
       });
-
-    inputRef?.current?.forEach((val: any, idx: number) => {
-      val.value = postInfo[val.id];
-    });
+      inputRef?.current?.forEach((val: any, idx: number) => {
+        val.value = postInfo[val.id];
+      });
+    }
   }, []);
 
   return (
@@ -120,7 +115,7 @@ const PostList = ({
         {postList?.map((postData, idx) => {
           return (
             <>
-              <div className="ClubPage-boardStuff" key={idx}>
+              <div className="ClubPage-boardStuff" key={postData.postId}>
                 <span className="ClubPage__span--post-ID">
                   {postData.postId}
                 </span>
@@ -195,8 +190,12 @@ const Post = () => {
     setUserNickname(resUser.nickname);
   };
 
-  const modify = () => {
+  const setModify = () => {
     if (!modifyMode) setModifyMode(true);
+  };
+
+  const erasePost = () => {
+    deleteAPI(`/api/post/${postInfo?.postId}?clubId=${clubID}`);
   };
 
   useEffect(() => {
@@ -217,9 +216,21 @@ const Post = () => {
           </div>
           <div className="ClubPage__text--contents">{postInfo?.content}</div>
           {postInfo?.nickname === userNickname ? (
-            <div className="ClubPage__button--post-modify" onClick={modify}>
-              글수정
-            </div>
+            <>
+              <span
+                className="ClubPage__button--post-modify"
+                onClick={setModify}
+              >
+                글수정
+              </span>
+              &nbsp; &nbsp; &nbsp; &nbsp;
+              <span
+                className="ClubPage__button--post-erase"
+                onClick={erasePost}
+              >
+                글삭제
+              </span>
+            </>
           ) : null}
 
           <div className="ClubPage__text--comment">

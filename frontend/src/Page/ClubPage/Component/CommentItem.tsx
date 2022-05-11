@@ -27,6 +27,7 @@ const CommentItem = ({ commentData }: { commentData: commentInfo }) => {
     const [status, res] = await deleteAPI(
       `/api/comment/${commentData.commentId}?clubId=${clubID}`
     );
+    window.location.reload();
   };
 
   const setInputValue = (e: any) => {
