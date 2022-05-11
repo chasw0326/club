@@ -11,6 +11,7 @@ import com.example.club_project.exception.custom.NotFoundException;
 import com.example.club_project.repository.ClubJoinStateRepository;
 import com.example.club_project.service.club.ClubService;
 import com.example.club_project.service.user.UserService;
+import com.example.club_project.util.ValidateUtil;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -36,6 +37,7 @@ public class ClubJoinStateServiceImpl implements ClubJoinStateService {
     private final ClubJoinStateRepository clubJoinStateRepository;
     private final UserService userService;
     private final ClubService clubService;
+    private final ValidateUtil validateUtil;
 
     /**
      * DTO region
@@ -189,11 +191,13 @@ public class ClubJoinStateServiceImpl implements ClubJoinStateService {
                 .orElse(createClubJoinState(userId, clubId, joinStateCode));
 
         if (ObjectUtils.isEmpty(findJoinState.getId())) {
+            validateUtil.validate(findJoinState);
             return clubJoinStateRepository.save(findJoinState);
         }
 
         if (findJoinState.isNotUsed()) {
             findJoinState.update(JoinState.from(joinStateCode), true);
+            validateUtil.validate(findJoinState);
             return findJoinState;
         }
 
@@ -237,6 +241,7 @@ public class ClubJoinStateServiceImpl implements ClubJoinStateService {
         JoinState joinState = JoinState.from(joinStateCode);
 
         updatedJoinState.update(joinState);
+        validateUtil.validate(updatedJoinState);
         return updatedJoinState;
     }
 
