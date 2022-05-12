@@ -1,5 +1,6 @@
 package com.example.club_project.controller.club;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -20,5 +21,11 @@ public class ClubJoinStateDTO {
         private String profileUrl;
         private Long clubId;
         private Integer joinStateCode;
+    }
+
+    @AllArgsConstructor
+    @Getter
+    public static class JoinStateResponse {
+        private boolean result;
     }
 }

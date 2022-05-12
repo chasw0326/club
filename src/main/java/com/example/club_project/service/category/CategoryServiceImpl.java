@@ -4,6 +4,7 @@ import com.example.club_project.controller.category.CategoryDTO;
 import com.example.club_project.domain.Category;
 import com.example.club_project.exception.custom.NotFoundException;
 import com.example.club_project.repository.CategoryRepository;
+import com.example.club_project.util.ValidateUtil;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -21,6 +22,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final ValidateUtil validateUtil;
 
     /**
      * DTO region
@@ -66,7 +68,10 @@ public class CategoryServiceImpl implements CategoryService {
         checkArgument(StringUtils.isNotEmpty(name), "name 입력값은 필수입니다.");
         checkArgument(StringUtils.isNotEmpty(description), "description 입력값은 필수입니다.");
 
-        return categoryRepository.save(createCategory(name, description));
+        Category category = createCategory(name, description);
+        validateUtil.validate(category);
+
+        return categoryRepository.save(category);
     }
 
     private Category createCategory(String name, String description) {
@@ -122,6 +127,8 @@ public class CategoryServiceImpl implements CategoryService {
                 .orElseThrow(() -> new NotFoundException("수정하려는 id값이 존재하지 않습니다."));
 
         updatedCategory.update(name, description);
+
+        validateUtil.validate(updatedCategory);
 
         return updatedCategory;
     }

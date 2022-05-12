@@ -9,9 +9,8 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -30,11 +29,13 @@ public class ClubJoinState extends AuditingCreateUpdateEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @NotNull(message = "user 값은 필수 값 입니다.")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "club_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @NotNull(message = "club 값은 필수 값 입니다.")
     private Club club;
 
     public boolean isNotUsed() {
@@ -56,9 +57,6 @@ public class ClubJoinState extends AuditingCreateUpdateEntity {
 
     @Builder
     private ClubJoinState(User user, Club club, JoinState joinState) {
-        checkArgument(isNotEmpty(user), "user 값은 필수 값 입니다.");
-        checkArgument(isNotEmpty(club), "club 값은 필수 값 입니다.");
-
         this.user = user;
         this.club = club;
         this.joinState = joinState;

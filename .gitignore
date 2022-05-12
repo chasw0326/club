@@ -39,6 +39,7 @@ node_modules
 
 ### aws ###
 aws.yml
+aws.properties
 
 ### log ###
 log
