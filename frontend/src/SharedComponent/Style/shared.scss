@@ -37,7 +37,7 @@ body {
   }
 
   &__div--club-create-modal {
-    position: absolute;
+    position: fixed;
     display: flex;
     flex-direction: row;
     width: 500px;
@@ -307,12 +307,27 @@ body {
 }
 
 .blur {
-  position: absolute;
+  position: fixed;
+  top: 0;
+  right: 0;
   background-color: black;
+  top: 0px;
   opacity: 0.55;
   height: 100vh;
   width: 100vw;
-  top: 0px;
+  z-index: 1;
+  filter: blur(5px);
+}
+
+.blur2 {
+  position: absolute;
+  background-color: black;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0.55;
+  height: 117vh;
+  width: 100vw;
   z-index: 1;
   filter: blur(5px);
 }

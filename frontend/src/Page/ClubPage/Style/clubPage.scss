@@ -198,15 +198,17 @@
 }
 
 .ManagementBoard {
+  position: relative;
+  display: flex;
+  justify-content: center;
   &__div {
     &--wrap {
       position: relative;
       display: flex;
+      justify-content: center;
       flex-direction: row;
       width: 500px;
       height: 500px;
-      left: 50%;
-      transform: translateX(-50%);
       border: 2px solid lightgray;
       border-radius: 0.25rem;
     }
@@ -317,6 +319,7 @@ input[class*='input'] {
       left: 67%;
       height: 40px;
       border-radius: 0.5rem;
+      cursor: pointer;
     }
 
     &--deny {
@@ -332,6 +335,7 @@ input[class*='input'] {
       left: 85%;
       height: 40px;
       border-radius: 0.5rem;
+      cursor: pointer;
     }
   }
 
@@ -340,6 +344,86 @@ input[class*='input'] {
       position: relative;
       width: 370px;
       margin-right: 30px;
+    }
+  }
+}
+
+.MemberManagement {
+  &__div {
+    &--position-modify-modal {
+      position: fixed;
+      display: flex;
+      flex-direction: row;
+      width: 350px;
+      height: 300px;
+      left: 50%;
+      top: 50%;
+      z-index: 2;
+      border-radius: 0.5em;
+      background-color: white;
+      transform: translate(-50%, -50%);
+      justify-content: space-evenly;
+      align-items: center;
+    }
+  }
+
+  &__text {
+    &--notice {
+      position: absolute;
+      top: 25px;
+      font-weight: bold;
+    }
+  }
+
+  &__button {
+    &--delegation {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100px;
+      height: 50px;
+      border: solid 1px gray;
+      border-radius: 0.25rem;
+      cursor: pointer;
+    }
+
+    &--delegation:hover {
+      background-color: gray;
+      color: $semi-white;
+      font-weight: bold;
+      border: 0cm;
+      transition: background-color 0.5s;
+    }
+  }
+}
+
+.Information {
+  &__button {
+    &--edit-button {
+      display: flex;
+      left: 50%;
+      transform: translateX(-50%);
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      width: 80px;
+      height: 30px;
+      border: solid 2px $navyblue;
+      border-radius: 0.25rem;
+      cursor: pointer;
+    }
+
+    &--edit-button:hover {
+      font-size: 20px;
+    }
+  }
+
+  &__img {
+    &--edit-button {
+      width: 20px;
+      height: 20px;
+      padding-right: 5px;
     }
   }
 }

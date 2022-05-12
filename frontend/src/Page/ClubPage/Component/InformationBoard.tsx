@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { postAPI, getAPI, deleteAPI } from '../../../hooks/useFetch';
 import { clubInfo } from '../../../type/type';
-import thumbnail from '../../../image/thumbnail.svg';
+import setting from '../../../image/setting.svg';
 const InformationBoard = () => {
   const [clubInformation, setClubInformation] = useState<clubInfo>();
 
@@ -45,10 +45,17 @@ const InformationBoard = () => {
   return (
     <>
       <div className="ClubPage-middleFrame">
-        <img
-          className="ClubPage-thumbnail"
-          src={clubInformation?.imageUrl}
-        ></img>
+        <div>
+          <img
+            className="ClubPage-thumbnail"
+            src={clubInformation?.imageUrl}
+          ></img>
+          <div className="Information__button--edit-button">
+            <img className="Information__img--edit-button" src={setting}></img>
+            edit
+          </div>
+        </div>
+
         <div className="ClubPage-description">
           {clubInformation?.description}
         </div>

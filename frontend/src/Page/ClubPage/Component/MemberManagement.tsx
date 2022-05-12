@@ -1,11 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { getAPI, deleteAPI } from '../../../hooks/useFetch';
+import React, { useState, useEffect, SyntheticEvent } from 'react';
+import { getAPI, deleteAPI, putAPI } from '../../../hooks/useFetch';
+import cancel from '../../../image/cancel.svg';
 
 const MemberManagement = () => {
   const [nonMemberList, setNonMemberList]: any = useState([]);
-  const [target, setTarget]: any = useState(null);
+  const [target, setTarget] = useState({ userId: '', nickname: '' });
 
   const clubID = window.location.pathname.split('/')[2];
+
+  const [modalState, setModalState] = useState(false);
+
+  const modalOnOff = () => {
+    if (modalState) setModalState(false);
+    else setModalState(true);
+  };
 
   const fetchData = async () => {
     const [statusNonMember, targetMember] = await getAPI(
@@ -28,6 +36,18 @@ const MemberManagement = () => {
     console.log(status);
   };
 
+  const modifyPosition = (e: SyntheticEvent) => {
+    const _target = e.target as HTMLSpanElement;
+
+    setTarget({
+      ...target,
+      userId: _target.dataset.userid!,
+      nickname: _target.dataset.nickname!,
+    });
+
+    modalOnOff();
+  };
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -44,11 +64,18 @@ const MemberManagement = () => {
             return (
               <div className="ClubSetting__div--accept-item-wrap">
                 <span className="ClubSetting__span--nonmember-name">
-                  {val?.name + val?.userId}
+                  {'이름 ' +
+                    val?.nickname +
+                    'id ' +
+                    val?.userId +
+                    '직위 ' +
+                    val?.joinStateCode}
                 </span>
                 <span
                   className="ClubSetting__span--accept"
-                  data-userid={val?.userId}
+                  data-nickname={val?.nickname}
+                  data-userid={val?.userid}
+                  onClick={modifyPosition}
                 >
                   직위변경
                 </span>
@@ -63,9 +90,66 @@ const MemberManagement = () => {
             );
           })}
         </div>
+        <ChangePositionModal
+          modalState={modalState}
+          setModal={modalOnOff}
+          selectedUser={target}
+        ></ChangePositionModal>
       </div>
     </>
   );
 };
 
+const ChangePositionModal = ({
+  modalState,
+  setModal,
+  selectedUser,
+}: {
+  modalState: boolean;
+  setModal: any;
+  selectedUser: any;
+}) => {
+  const clubID = window.location.pathname.split('/')[2];
+
+  const delegateManager = () => {
+    putAPI({}, `/api/clubs/${clubID}/manager/${selectedUser.userId}`);
+    setModal();
+  };
+
+  const delegateMaster = () => {
+    putAPI({}, `/api/clubs/${clubID}/master/${selectedUser.userId}`);
+    setModal();
+  };
+
+  if (modalState) {
+    return (
+      <>
+        <div className="MemberManagement__div--position-modify-modal">
+          <img
+            src={cancel}
+            className="MyPage__button--cancel"
+            onClick={setModal}
+          ></img>
+          <div className="MemberManagement__text--notice">
+            {selectedUser.nickname}님의 직책을 변경합니다.
+          </div>
+          <div
+            className="MemberManagement__button--delegation"
+            onClick={delegateManager}
+          >
+            운영진 위임
+          </div>
+          <div
+            className="MemberManagement__button--delegation"
+            onClick={delegateMaster}
+          >
+            마스터 위임
+          </div>
+          <div className="MemberManagement__button--delegation">일반 멤버</div>
+        </div>
+        <div className="blur"></div>
+      </>
+    );
+  } else return null;
+};
 export default MemberManagement;

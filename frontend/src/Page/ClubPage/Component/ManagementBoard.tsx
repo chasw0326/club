@@ -21,13 +21,15 @@ const ManangementBoard = () => {
 
   return (
     <>
-      <div className="ManagementBoard__div--wrap">
-        <div className="ManagementBoard__div--category-wrap">
-          <div onClick={setCategory}>동아리 설정</div>
-          <div onClick={setCategory}>가입 승인</div>
-          <div onClick={setCategory}>부원 관리</div>
+      <div className="ManagementBoard">
+        <div className="ManagementBoard__div--wrap">
+          <div className="ManagementBoard__div--category-wrap">
+            <div onClick={setCategory}>동아리 설정</div>
+            <div onClick={setCategory}>가입 승인</div>
+            <div onClick={setCategory}>부원 관리</div>
+          </div>
+          <RightComponent curCategory={curCategory}></RightComponent>
         </div>
-        <RightComponent curCategory={curCategory}></RightComponent>
       </div>
     </>
   );
