@@ -1,6 +1,8 @@
 package com.example.club_project.domain;
 
+import com.example.club_project.repository.CategoryRepository;
 import com.example.club_project.repository.ClubRepository;
+import com.example.club_project.util.ValidateUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -8,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.validation.ValidationException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,7 +21,13 @@ import static org.junit.jupiter.api.Assertions.*;
 class ClubTest {
 
     @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
     private ClubRepository clubRepository;
+
+    @Autowired
+    private ValidateUtil validateUtil;
 
     @Test
     @DisplayName("Club Entity Validation 테스트")
@@ -34,7 +44,9 @@ class ClubTest {
                 .description(description)
                 .build();
 
-        //then
+        categoryRepository.save(category);
+
+        //when
         Club club = Club.builder()
                 .name(validClubName)
                 .address(address)
@@ -43,14 +55,20 @@ class ClubTest {
                 .category(category)
                 .build();
 
+        //then
+        validateUtil.validate(club);
         clubRepository.save(club);
 
-        assertThrows(IllegalArgumentException.class, () -> Club.builder()
-                                                                .name(invalidClubName)
-                                                                .address(address)
-                                                                .university(university)
-                                                                .description(description)
-                                                                .category(category)
-                                                                .build());
+        //when
+        Club invalidClub = Club.builder()
+                .name(invalidClubName)
+                .address(address)
+                .university(university)
+                .description(description)
+                .category(category)
+                .build();
+
+        //then
+        assertThrows(ValidationException.class, () -> validateUtil.validate(invalidClub));
     }
 }
