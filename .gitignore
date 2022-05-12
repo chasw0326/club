@@ -43,3 +43,6 @@ aws.properties
 
 ### log ###
 log
+
+### executable jar for local test ###
+jar
