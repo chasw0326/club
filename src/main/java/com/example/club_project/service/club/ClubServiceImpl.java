@@ -7,6 +7,7 @@ import com.example.club_project.exception.custom.AlreadyExistsException;
 import com.example.club_project.exception.custom.NotFoundException;
 import com.example.club_project.repository.ClubRepository;
 import com.example.club_project.service.category.CategoryService;
+import com.example.club_project.util.ValidateUtil;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -26,6 +27,7 @@ public class ClubServiceImpl implements ClubService {
 
     private final ClubRepository clubRepository;
     private final CategoryService categoryService;
+    private final ValidateUtil validateUtil;
 
     /**
      * DTO region
@@ -75,6 +77,8 @@ public class ClubServiceImpl implements ClubService {
                 .description(description)
                 .category(category)
                 .build();
+
+        validateUtil.validate(club);
 
         return clubRepository.save(club);
     }
@@ -163,6 +167,8 @@ public class ClubServiceImpl implements ClubService {
             updatedClub.update(updatedClubName, address, university, description, category);
         }
 
+        validateUtil.validate(updatedClub);
+
         return updatedClub;
     }
 
@@ -174,6 +180,7 @@ public class ClubServiceImpl implements ClubService {
 
         Club updatedClub = getClub(id);
         updatedClub.updateImage(imageUrl);
+        validateUtil.validate(updatedClub);
     }
 
     @Override
