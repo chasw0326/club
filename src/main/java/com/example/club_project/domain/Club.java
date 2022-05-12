@@ -62,7 +62,7 @@ public class Club extends AuditingCreateUpdateEntity {
     }
 
     public void updateImage(String imageUrl) {
-        this.name = isEmpty(imageUrl) ? this.imageUrl : imageUrl;
+        this.imageUrl = isEmpty(imageUrl) ? this.imageUrl : imageUrl;
     }
 
     @Builder
