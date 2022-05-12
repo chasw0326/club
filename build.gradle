@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.example'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.1'
 sourceCompatibility = '1.8'
 
 configurations {
@@ -53,3 +53,28 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+bootJar{
+    archivesBaseName = 'club'
+}
+
+jar {
+    enabled = false
+}
+
+task deleteJarDirectory(type: Exec, description: 'Delete ExecutableJar directory') {
+    workingDir "$projectDir"
+
+    if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+        commandLine "rmdir", "/s", "jar"
+    } else {
+        commandLine "rm", "-rf", "jar"
+    }
+}
+
+task copyExecutableJar(type: Copy, dependsOn: deleteJarDirectory, description: 'Copy ExecutableJar') {
+    from "$projectDir/build/libs"
+    into "$projectDir/jar"
+}
+
+build.finalizedBy(copyExecutableJar)
