@@ -112,12 +112,12 @@ const ChangePositionModal = ({
   const clubID = window.location.pathname.split('/')[2];
 
   const delegateManager = () => {
-    putAPI({}, `/api/clubs/${clubID}/manager/${selectedUser.userId}`);
+    putAPI({}, 'json', `/api/clubs/${clubID}/manager/${selectedUser.userId}`);
     setModal();
   };
 
   const delegateMaster = () => {
-    putAPI({}, `/api/clubs/${clubID}/master/${selectedUser.userId}`);
+    putAPI({}, 'json', `/api/clubs/${clubID}/master/${selectedUser.userId}`);
     setModal();
   };
 

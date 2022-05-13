@@ -27,7 +27,11 @@ const ClubSetting = () => {
 
     console.log(clubInfo);
 
-    const [status, res] = await putAPI(clubInfo, `/api/clubs/${clubID}`);
+    const [status, res] = await putAPI(
+      clubInfo,
+      'json',
+      `/api/clubs/${clubID}`
+    );
 
     console.log(res);
   };

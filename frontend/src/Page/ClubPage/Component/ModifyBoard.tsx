@@ -19,6 +19,7 @@ const ModifyBoard = ({ postInfo }: { postInfo: postInfo | any }) => {
   const modifyPost = async () => {
     const [status, res] = await putAPI(
       inputInfo,
+      'json',
       `/api/post/${postInfo.postId}?clubId=${clubID}`
     );
 

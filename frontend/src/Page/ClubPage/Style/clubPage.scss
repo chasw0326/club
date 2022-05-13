@@ -426,4 +426,10 @@ input[class*='input'] {
       padding-right: 5px;
     }
   }
+
+  &__file {
+    &--edit-thumbnail {
+      display: none;
+    }
+  }
 }

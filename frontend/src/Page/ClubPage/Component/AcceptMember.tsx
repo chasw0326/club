@@ -23,6 +23,7 @@ const AcceptMember = () => {
 
     const [status, res] = await putAPI(
       {},
+      'json',
       `/api/clubs/${clubID}/member/${userId}`
     );
 

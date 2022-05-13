@@ -111,23 +111,43 @@ const getAPI = async (api: string) => {
   return [fData.status, res];
 };
 
-const putAPI = async (requestData: any, api: string) => {
-  const fData = await fetch(`${process.env.REACT_APP_TEST_API}${api}`, {
-    method: 'PUT',
-    body: JSON.stringify(requestData),
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + `${window.localStorage.getItem('token')}`,
-    },
-  });
+const putAPI = async (requestData: any, type: string, api: string) => {
+  if (type === 'form') {
+    console.log('이미지 테스트');
 
-  if (fData.status === 200) {
-    return [fData.status, null];
+    const fData = await fetch(`${process.env.REACT_APP_TEST_API}${api}`, {
+      method: 'PUT',
+      body: requestData,
+      headers: {
+        Authorization: 'Bearer ' + `${window.localStorage.getItem('token')}`,
+      },
+    });
+
+    if (fData.status === 200) {
+      return [fData.status, null];
+    }
+
+    const res = await fData.json();
+
+    return [fData.status, res];
+  } else {
+    const fData = await fetch(`${process.env.REACT_APP_TEST_API}${api}`, {
+      method: 'PUT',
+      body: JSON.stringify(requestData),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + `${window.localStorage.getItem('token')}`,
+      },
+    });
+
+    if (fData.status === 200) {
+      return [fData.status, null];
+    }
+
+    const res = await fData.json();
+
+    return [fData.status, res];
   }
-
-  const res = await fData.json();
-
-  return [fData.status, res];
 };
 
 const deleteAPI = async (api: string) => {
