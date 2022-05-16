@@ -20,6 +20,7 @@ const BOARDSTATE: any = Object.freeze({
 
 const ClubPage = () => {
   const [category, setCategory] = useState('정보');
+  const [isMaster, setIsMaster] = useState('false');
   const clubID = window.location.pathname.split('/')[2];
   const navigate = useNavigate();
   const [globalState, setGlobalState] = useContext(store);
@@ -31,7 +32,9 @@ const ClubPage = () => {
 
   const fetchData = async () => {
     const [statusUser, resUser] = await getAPI('/api/user');
-
+    const clubID = window.location.pathname.split('/')[2];
+    const [status, res] = await getAPI(`/api/clubs/${clubID}/is-master`);
+    setIsMaster(res.result);
     setGlobalState({ ...globalState, nickname: resUser.nickname });
   };
 
@@ -66,13 +69,17 @@ const ClubPage = () => {
           >
             사진
           </div>
-          <div
-            id="management"
-            className="ClubPage-navigateBar-chat"
-            onClick={selectCategory}
-          >
-            관리
-          </div>
+          {isMaster ? (
+            <>
+              <div
+                id="management"
+                className="ClubPage-navigateBar-chat"
+                onClick={selectCategory}
+              >
+                관리
+              </div>
+            </>
+          ) : null}
         </div>
         <hr className="horizon"></hr>
         <Board state={category} setCategory={setCategory}></Board>
