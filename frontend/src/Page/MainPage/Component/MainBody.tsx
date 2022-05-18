@@ -23,12 +23,13 @@ const MainBody = () => {
   const [curCategory, setCurCategory] = useState(0);
   const [clubList, setClubList] = useState<clubItem[]>([]);
 
-  const categorizing = (e: SyntheticEvent) => {
+  const categorizing = async (e: SyntheticEvent) => {
     const target = e.target as HTMLDivElement;
-
+    const [status, res] = await getAPI(
+      `/api/clubs?category=${categoryList[target.innerHTML]}`
+    );
+    setClubList(res);
     setCurCategory(categoryList[target.innerHTML]);
-
-    setClubList([]);
   };
 
   const categorySetting = async () => {
@@ -38,13 +39,25 @@ const MainBody = () => {
 
   const [target, setTarget]: any = useState(null);
 
+  const fetchData = async () => {
+    const [status, res] = await getAPI(`/api/clubs`);
+    setClubList(res);
+  };
+
   const updateClubList = async () => {
-    const [status, res] = await getAPI(`/api/clubs?category=${curCategory}`);
+    let api = '';
+
+    if (curCategory === 0) {
+      api = '/api/clubs';
+    } else api = `/api/clubs?category=${curCategory}`;
+
+    const [status, res] = await getAPI(api);
+
     setClubList((clubList) => [...clubList, ...res]);
   };
 
   const callback = async ([entry]: any, observer: any) => {
-    if (entry.isIntersecting) {
+    if (entry.isIntersecting && clubList.length > 4) {
       observer.unobserve(entry.target);
       await updateClubList();
       observer.observe(entry.target);
@@ -52,6 +65,7 @@ const MainBody = () => {
   };
 
   useEffect(() => {
+    fetchData();
     categorySetting();
   }, []);
 
@@ -89,12 +103,18 @@ const MainBody = () => {
       </div>
       <hr></hr>
       <div className="MainBody">
-        <div className="MainBody-itemFrame">
-          {clubList?.map((val: any, idx: number) => {
-            return <ClubItem key={idx} item={val}></ClubItem>;
-          })}
-          <div ref={setTarget} className="Target-Element"></div>
-        </div>
+        {clubList?.length === 0 ? (
+          <div>검색결과 없음</div>
+        ) : (
+          <>
+            <div className="MainBody-itemFrame">
+              {clubList?.map((val: any, idx: number) => {
+                return <ClubItem key={idx} item={val}></ClubItem>;
+              })}
+              <div ref={setTarget} className="Target-Element"></div>
+            </div>
+          </>
+        )}
       </div>
     </>
   );

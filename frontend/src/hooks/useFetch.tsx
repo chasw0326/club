@@ -74,11 +74,15 @@ const postAPI: Function = async (
       },
     });
 
+    console.log(fData.status);
+
     if (fData.status === 200) {
       return [fData.status, null];
     }
 
     const res = await fData.json();
+
+    console.log(res.message);
 
     return [fData.status, res];
   } else if (checkType === 'login') {
@@ -91,7 +95,7 @@ const postAPI: Function = async (
       },
     });
 
-    const res = await fData.json();
+    const res = await fData.text();
 
     return [fData.status, res];
   } else {
@@ -100,13 +104,17 @@ const postAPI: Function = async (
 };
 
 const getAPI = async (api: string) => {
+  console.log('getAPI 토큰 확인 : ', localStorage.getItem('token'));
+
   const fData = await fetch(`${process.env.REACT_APP_TEST_API}${api}`, {
     headers: {
-      Authorization: 'bearer ' + `${localStorage.getItem('token')}`,
+      Authorization: 'Bearer ' + `${localStorage.getItem('token')}`,
     },
   });
 
   const res = await fData.json();
+
+  console.log(res);
 
   return [fData.status, res];
 };
@@ -154,7 +162,7 @@ const deleteAPI = async (api: string) => {
   const fData = await fetch(`${process.env.REACT_APP_TEST_API}${api}`, {
     method: 'DELETE',
     headers: {
-      Authorization: 'bearer ' + `${localStorage.getItem('token')}`,
+      Authorization: 'Bearer ' + `${localStorage.getItem('token')}`,
     },
   });
 

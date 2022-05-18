@@ -3,7 +3,16 @@ import { store } from '../hooks/store';
 import cancel from '../image/cancel.svg';
 import { postAPI } from '../hooks/useFetch';
 import { clubInformation } from '../type/type';
-import { isConstructorDeclaration } from 'typescript';
+
+const categoryList: any = Object.freeze({
+  '문화/예술/공연': 1,
+  '봉사/사회활동': 2,
+  '학술/교양': 3,
+  '창업/취업': 4,
+  어학: 5,
+  체육: 6,
+  친목: 7,
+});
 
 const ClubCreateModal = ({
   modalState,
@@ -25,12 +34,19 @@ const ClubCreateModal = ({
   const setInput = (event: any) => {
     if (event.target.id === 'profile') {
       setClubInfo({ ...clubInfo, [event.target.id]: event.target.files[0] });
+    } else if (event.target.id === 'category') {
+      setClubInfo({
+        ...clubInfo,
+        [event.target.id]: categoryList[event.target.value],
+      });
     } else {
       setClubInfo({ ...clubInfo, [event.target.id]: event.target.value });
     }
   };
 
   const upload = async () => {
+    console.log(clubInfo);
+
     const [status, res] = await postAPI(clubInfo, 'json', '/api/clubs');
 
     if (status === 200) {
@@ -54,7 +70,7 @@ const ClubCreateModal = ({
             <div className="MainHeader__text--title">동아리 생성</div>
             <div className="MainHeader__text--current-password">동아리명</div>
             <input
-              id="club"
+              id="name"
               className="MainHeader__input--box"
               type="text"
               onChange={setInput}

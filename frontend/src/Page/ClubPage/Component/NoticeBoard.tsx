@@ -12,6 +12,8 @@ const WritePage = ({ postInfo }: { postInfo: any }) => {
     content: '',
   });
 
+  const clubID = window.location.pathname.split('/')[2];
+
   const inputRef = useRef<any>([]);
 
   const setInputValue = (e: any) => {
@@ -20,11 +22,17 @@ const WritePage = ({ postInfo }: { postInfo: any }) => {
   };
 
   const submitPost = async () => {
-    const [status, res] = await postAPI(inputInfo, 'json', '/api/post');
+    const [status, res] = await postAPI(
+      inputInfo,
+      'json',
+      `/api/post?clubId=${clubID}`
+    );
 
     if (status === 403) {
       alert(res.message);
     }
+
+    window.location.reload();
   };
 
   useEffect(() => {
@@ -159,7 +167,8 @@ const Post = () => {
 
   const commentSubmit = async () => {
     const [status, res] = await postAPI(commentInput, 'json', '/api/comment');
-    console.log(status);
+
+    window.location.reload();
   };
 
   const setInputValue = (e: any) => {
@@ -196,6 +205,8 @@ const Post = () => {
 
   const erasePost = () => {
     deleteAPI(`/api/post/${postInfo?.postId}?clubId=${clubID}`);
+
+    window.location.reload();
   };
 
   useEffect(() => {

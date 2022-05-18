@@ -4,6 +4,14 @@ type fetchState = {
   error: any;
 };
 
+type userInfo = {
+  email: string;
+  name: string;
+  nickname: string;
+  introduction: string;
+  university: string;
+};
+
 type category = {
   id: number;
   name: string;
@@ -133,6 +141,7 @@ export type {
   postInfo,
   commentInfo,
   clubInfo,
+  userInfo,
 };
 
 export { init };

@@ -26,6 +26,8 @@ const ModifyBoard = ({ postInfo }: { postInfo: postInfo | any }) => {
     if (status === 403) {
       alert(res.message);
     }
+
+    window.location.reload();
   };
 
   useEffect(() => {

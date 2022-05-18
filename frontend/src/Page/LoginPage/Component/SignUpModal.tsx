@@ -51,6 +51,9 @@ const SignUpModal = ({
   const upload = async () => {
     if (isValidity(signInfo.email, signInfo.password)) {
       console.log(await postAPI(signInfo, 'json', '/auth/signup'));
+
+      console.log(signInfo);
+
       alert('등록이 완료되었습니다');
       modalOnOffB();
     }
@@ -64,6 +67,8 @@ const SignUpModal = ({
         <input id="email" type="text" onChange={setInput}></input>
         비밀번호
         <input id="password" type="password" onChange={setInput}></input>
+        비밀번호 확인
+        <input id="password-check" type="password" onChange={setInput}></input>
         이름<input id="name" type="text" onChange={setInput}></input>
         닉네임<input id="nickname" type="text" onChange={setInput}></input>
         대학교<input id="university" type="text" onChange={setInput}></input>
