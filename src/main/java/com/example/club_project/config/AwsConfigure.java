@@ -15,13 +15,13 @@ import org.springframework.stereotype.Component;
 @PropertySource(value = {"classpath:/aws.properties"}, ignoreResourceNotFound = true)
 public class AwsConfigure {
 
-    private String region = "DUMMY_DATA_FOR_LOCAL_TEST";
+    private String region;
 
-    private String url = "DUMMY_DATA_FOR_LOCAL_TEST";
+    private String url;
 
-    private String bucket = "DUMMY_DATA_FOR_LOCAL_TEST";
+    private String bucket;
 
-    private String accessKey = "DUMMY_DATA_FOR_LOCAL_TEST";
+    private String accessKey;
 
-    private String secretKey = "DUMMY_DATA_FOR_LOCAL_TEST";
+    private String secretKey;
 }
