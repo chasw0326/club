@@ -2,6 +2,7 @@ package com.example.club_project.service.user;
 
 import com.example.club_project.domain.User;
 import com.example.club_project.repository.UserRepository;
+import com.example.club_project.security.service.ClubUserDetailsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -48,6 +49,7 @@ public class UserServiceTest {
         testUser = userRepository.save(testUser);
 
     }
+
 
 
     @DisplayName("정상적인 회원가입")
