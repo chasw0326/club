@@ -48,7 +48,7 @@ const ModalContent = ({ setModal }: { setModal: Function }) => {
   };
 
   const submitPassword = async () => {
-    const [status, res] = await postAPI(
+    const [status, res] = await putAPI(
       passwordInfo,
       'json',
       '/api/user/password'

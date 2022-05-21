@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { getAPI, putAPI, deleteAPI } from '../../../hooks/useFetch';
+import { useNavigate } from 'react-router-dom';
 
 const DeleteClub = () => {
   const clubID = window.location.pathname.split('/')[2];
-
+  const navigate = useNavigate();
   const deleteClub = async (event: any) => {
     const userId = event.target.dataset.userid;
 
     const [status, res] = await deleteAPI(`/api/clubs/${clubID}`);
+
+    if (status === 200) {
+      alert('동아리가 삭제되었습니다.');
+      navigate('/home');
+    }
   };
 
   return (

@@ -1,8 +1,16 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { clubInformation } from '../../../type/type';
-import { useContext } from 'react';
-import { store } from '../../../hooks/store';
+import { category, clubInformation } from '../../../type/type';
 import { getAPI, putAPI } from '../../../hooks/useFetch';
+
+const categoryList: any = Object.freeze({
+  '문화/예술/공연': 1,
+  '봉사/사회활동': 2,
+  '학술/교양': 3,
+  '창업/취업': 4,
+  어학: 5,
+  체육: 6,
+  친목: 7,
+});
 
 const ClubSetting = () => {
   const initialState: clubInformation = {
@@ -11,7 +19,7 @@ const ClubSetting = () => {
     description: '',
     category: '',
   };
-  const [globalCategory, setGlobalCategory] = useContext(store);
+  const [categories, setCategories] = useState<category[]>([]);
   const [clubInfo, setClubInfo] = useState(initialState);
   const inputRef = useRef<any>([]);
   const clubID = window.location.pathname.split('/')[2];
@@ -19,7 +27,12 @@ const ClubSetting = () => {
   const setInput = (event: any) => {
     if (event.target.id === 'profile') {
       setClubInfo({ ...clubInfo, [event.target.id]: event.target.files[0] });
-    } else setClubInfo({ ...clubInfo, [event.target.id]: event.target.value });
+    } else if (event.target.id === 'category')
+      setClubInfo({
+        ...clubInfo,
+        [event.target.id]: categoryList[event.target.value],
+      });
+    else setClubInfo({ ...clubInfo, [event.target.id]: event.target.value });
   };
 
   const modifyData = async () => {
@@ -38,6 +51,7 @@ const ClubSetting = () => {
 
   const fetchData = async () => {
     const [status, targetClub] = await getAPI(`/api/clubs/${clubID}`);
+    const [categoryStatus, categoryRes] = await getAPI(`/api/category`);
 
     let data: clubInformation = initialState;
 
@@ -46,6 +60,7 @@ const ClubSetting = () => {
       data = { ...data, [val.id]: val.value };
     });
 
+    setCategories((categories) => [...categories, ...categoryRes]);
     setClubInfo(data);
   };
 
@@ -90,7 +105,7 @@ const ClubSetting = () => {
           ref={(el) => (inputRef.current[3] = el)}
         >
           <option value="">카테고리 선택</option>
-          {globalCategory.categories?.map((val: any, idx: number) => {
+          {categories?.map((val: any, idx: number) => {
             return <option value={val.name}>{val.name}</option>;
           })}
         </select>

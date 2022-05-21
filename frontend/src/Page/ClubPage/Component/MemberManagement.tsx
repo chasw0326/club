@@ -39,6 +39,8 @@ const MemberManagement = () => {
   const modifyPosition = (e: SyntheticEvent) => {
     const _target = e.target as HTMLSpanElement;
 
+    console.log(_target.dataset.userid);
+
     setTarget({
       ...target,
       userId: _target.dataset.userid!,
@@ -74,7 +76,7 @@ const MemberManagement = () => {
                 <span
                   className="ClubSetting__span--accept"
                   data-nickname={val?.nickname}
-                  data-userid={val?.userid}
+                  data-userid={val?.userId}
                   onClick={modifyPosition}
                 >
                   직위변경
@@ -111,8 +113,17 @@ const ChangePositionModal = ({
 }) => {
   const clubID = window.location.pathname.split('/')[2];
 
-  const delegateManager = () => {
-    putAPI({}, 'json', `/api/clubs/${clubID}/manager/${selectedUser.userId}`);
+  const delegateManager = async () => {
+    console.log(selectedUser);
+
+    const [status, res] = await putAPI(
+      {},
+      'json',
+      `/api/clubs/${clubID}/manager/${selectedUser.userId}`
+    );
+
+    console.log(res);
+
     setModal();
   };
 

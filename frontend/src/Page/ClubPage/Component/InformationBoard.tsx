@@ -1,6 +1,7 @@
 import React, { useState, useEffect, SyntheticEvent } from 'react';
 import { postAPI, getAPI, deleteAPI, putAPI } from '../../../hooks/useFetch';
 import { clubInfo } from '../../../type/type';
+import { Navigate, useNavigate } from 'react-router-dom';
 import setting from '../../../image/setting.svg';
 const InformationBoard = () => {
   const [clubInformation, setClubInformation] = useState<clubInfo>();
@@ -8,6 +9,7 @@ const InformationBoard = () => {
   const [isSigned, setisSigned] = useState(false);
   const [signWait, setSignWait] = useState(false);
   const [isMaster, setIsMaster] = useState(false);
+  const navigate = useNavigate();
   const signCheck = async () => {
     const [statusSign, signRes] = await getAPI('/api/users/joined-club');
     const [statusWait, waitRes] = await getAPI('/api/users/not-joined-club');
@@ -36,8 +38,12 @@ const InformationBoard = () => {
     setClubInformation({ ...clubInformation, ...res });
   };
 
-  const quitClub = () => {
-    deleteAPI(`/api/clubs/${clubID}/member`);
+  const quitClub = async () => {
+    const [status, res] = await deleteAPI(`/api/clubs/${clubID}/member`);
+    if (status === 200) {
+      alert('동아리 탈퇴가 완료되었습니다.');
+      navigate(`/home`);
+    }
   };
 
   useEffect(() => {

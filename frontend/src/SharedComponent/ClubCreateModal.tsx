@@ -1,8 +1,7 @@
-import React, { useContext, useState } from 'react';
-import { store } from '../hooks/store';
+import React, { useContext, useState, useEffect } from 'react';
 import cancel from '../image/cancel.svg';
-import { postAPI } from '../hooks/useFetch';
-import { clubInformation } from '../type/type';
+import { postAPI, getAPI } from '../hooks/useFetch';
+import { clubInformation, category } from '../type/type';
 
 const categoryList: any = Object.freeze({
   '문화/예술/공연': 1,
@@ -29,7 +28,7 @@ const ClubCreateModal = ({
   };
 
   const [clubInfo, setClubInfo] = useState(initialState);
-  const [globalCategory, setGlobalCategory] = useContext(store);
+  const [categories, setCategories] = useState<category[]>([]);
 
   const setInput = (event: any) => {
     if (event.target.id === 'profile') {
@@ -44,6 +43,12 @@ const ClubCreateModal = ({
     }
   };
 
+  const fetchData = async () => {
+    const [categoryStatus, categoryRes] = await getAPI(`/api/category`);
+
+    setCategories(categoryRes);
+  };
+
   const upload = async () => {
     console.log(clubInfo);
 
@@ -56,6 +61,10 @@ const ClubCreateModal = ({
       alert(res.message.exception);
     }
   };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   if (modalState) {
     return (
@@ -97,7 +106,7 @@ const ClubCreateModal = ({
               onChange={setInput}
             >
               <option value="">카테고리 선택</option>
-              {globalCategory.categories?.map((val: any, idx: number) => {
+              {categories?.map((val: any, idx: number) => {
                 return <option value={val.name}>{val.name}</option>;
               })}
             </select>

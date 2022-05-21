@@ -27,7 +27,17 @@ const AcceptMember = () => {
       `/api/clubs/${clubID}/member/${userId}`
     );
 
-    console.log(status);
+    if (status === 200) {
+      alert('동아리 가입을 승인했습니다.');
+    } else {
+      alert(res.message);
+    }
+
+    const [statusMember, memberRes] = await getAPI(
+      `/api/clubs/${clubID}/non-member`
+    );
+
+    setNonMemberList(memberRes);
   };
 
   useEffect(() => {
