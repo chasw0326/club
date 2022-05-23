@@ -7,8 +7,12 @@ body {
 .MainHeader {
   display: flex;
   flex-direction: row;
-  justify-content: start;
+  justify-content: center;
+  align-items: center;
+  height: 90px;
   &-university {
+    position: relative;
+
     font-family: 'Jua', Arial, Helvetica, sans-serif;
     font-size: 50px;
     cursor: pointer;
@@ -18,7 +22,7 @@ body {
     width: 250px;
     height: 50px;
     position: relative;
-
+    margin-left: 10px;
     margin-top: 7px;
     font-family: inherit;
     font-weight: 700;
@@ -36,6 +40,13 @@ body {
     cursor: pointer;
   }
 
+  &__div--content-wrap {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    height: fit-content;
+    width: fit-content;
+  }
   &__div--club-create-modal {
     position: fixed;
     display: flex;
@@ -129,9 +140,11 @@ body {
 
   &__button {
     &--club-create {
+      position: relative;
       font-size: 25px;
       width: 150px;
       height: 50px;
+      top: 14px;
       cursor: pointer;
     }
   }

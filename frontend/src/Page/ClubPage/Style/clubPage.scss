@@ -207,17 +207,56 @@
       display: flex;
       justify-content: center;
       flex-direction: row;
-      width: 500px;
-      height: 500px;
+      width: 700px;
+      height: 600px;
       border: 2px solid lightgray;
       border-radius: 0.25rem;
     }
 
     &--category-wrap {
+      position: relative;
+      top: 20px;
+      left: 20px;
       height: fit-content;
       width: 150px;
       display: flex;
       flex-direction: column;
+    }
+
+    &--setting-category {
+      display: flex;
+      flex-direction: row;
+      justify-content: left;
+      align-items: center;
+      font-size: 18px;
+      margin-bottom: 15px;
+      padding-left: 5px;
+      width: 100px;
+      height: 30px;
+      border-radius: 0.25rem;
+      cursor: pointer;
+    }
+
+    &--setting-category-selected {
+      display: flex;
+      flex-direction: row;
+      justify-content: left;
+      align-items: center;
+      font-size: 18px;
+      margin-bottom: 15px;
+      padding-left: 5px;
+      width: 100px;
+      height: 30px;
+      border-radius: 0.25rem;
+      color: $whitegray;
+      font-weight: bold;
+      background-color: lightgrey;
+    }
+
+    &--setting-category:hover {
+      color: $whitegray;
+      font-weight: bold;
+      background-color: lightgrey;
     }
   }
 }
@@ -237,8 +276,8 @@ input[class*='input'] {
     }
 
     &--member-manage-wrap {
-      width: 100%;
-      height: 100%;
+      width: 500px;
+      height: 600px;
     }
 
     &--accept-wrap::-webkit-scrollbar {
@@ -266,11 +305,11 @@ input[class*='input'] {
 
     &--accept-wrap {
       position: relative;
-
+      border-radius: 0.25rem;
       overflow: scroll;
       width: 400px;
       height: 400px;
-      border: 1px solid black;
+      border: 2px solid lightgray;
     }
   }
 
@@ -316,7 +355,7 @@ input[class*='input'] {
       font-size: 20px;
       font-weight: bold;
       width: 50px;
-      left: 67%;
+      left: 71%;
       height: 40px;
       border-radius: 0.5rem;
       cursor: pointer;
@@ -333,9 +372,14 @@ input[class*='input'] {
       font-weight: bold;
       width: 50px;
       left: 85%;
-      height: 40px;
+      height: 42px;
       border-radius: 0.5rem;
       cursor: pointer;
+    }
+
+    &--nonmember-name {
+      position: relative;
+      left: 10px;
     }
   }
 
@@ -346,14 +390,59 @@ input[class*='input'] {
       margin-right: 30px;
     }
   }
+
+  &__text {
+    &--title {
+      margin-top: 20px;
+      font-size: 25px;
+      font-weight: bold;
+    }
+  }
 }
 
 .MemberManagement {
+  &__span {
+    &--delegate-wrap {
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+
+    &--position {
+      position: relative;
+      left: 10px;
+      width: fit-content;
+      font-weight: bold;
+    }
+    &--nickname {
+      position: relative;
+      left: 20px;
+    }
+
+    &--modify-position {
+      position: absolute;
+      display: flex;
+
+      align-items: center;
+      justify-content: center;
+      background-color: $navyblue;
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+      width: 50px;
+      left: 71%;
+      height: 43px;
+      border-radius: 0.5rem;
+      cursor: pointer;
+    }
+  }
+
   &__div {
     &--position-modify-modal {
       position: fixed;
       display: flex;
-      flex-direction: row;
+      flex-direction: column;
       width: 350px;
       height: 300px;
       left: 50%;
@@ -369,8 +458,8 @@ input[class*='input'] {
 
   &__text {
     &--notice {
-      position: absolute;
-      top: 25px;
+      position: relative;
+
       font-weight: bold;
     }
   }
@@ -451,6 +540,16 @@ input[class*='input'] {
 
     &--delete-club:hover {
       background-color: lightgray;
+      font-weight: bold;
+
+      color: $white;
     }
   }
+}
+
+.vertical-line {
+  margin-top: 26px;
+  margin-right: 40px;
+  border-left: 2px solid lightgray;
+  height: 90%;
 }

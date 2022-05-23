@@ -29,37 +29,39 @@ const MainHeader = () => {
   return (
     <>
       <div className="MainHeader">
-        <div
-          className="MainHeader-university"
-          onClick={() => {
-            navigate('/home');
-          }}
-        >
-          대학교명(API)
+        <div className="MainHeader__div--content-wrap">
+          <div
+            className="MainHeader-university"
+            onClick={() => {
+              navigate('/home');
+            }}
+          >
+            CLUB
+          </div>
+          <input
+            className="MainHeader-searchBar"
+            type="search"
+            placeholder="동아리를 검색하세요"
+            onChange={setInput}
+            onKeyPress={enter}
+          ></input>
+          <div className="MainHeader__button--club-create" onClick={modalOnOff}>
+            동아리 생성
+          </div>
+          <img
+            className="MainHeader-myPage"
+            src={person}
+            width="50px"
+            height="50px"
+            onClick={() => {
+              navigate('/mypage');
+            }}
+          ></img>
+          <ClubCreateModal
+            modalState={modalState}
+            setModal={modalOnOff}
+          ></ClubCreateModal>
         </div>
-        <input
-          className="MainHeader-searchBar"
-          type="search"
-          placeholder="동아리를 검색하세요"
-          onChange={setInput}
-          onKeyPress={enter}
-        ></input>
-        <img
-          className="MainHeader-myPage"
-          src={person}
-          width="50px"
-          height="50px"
-          onClick={() => {
-            navigate('/mypage');
-          }}
-        ></img>
-        <div className="MainHeader__button--club-create" onClick={modalOnOff}>
-          동아리 생성
-        </div>
-        <ClubCreateModal
-          modalState={modalState}
-          setModal={modalOnOff}
-        ></ClubCreateModal>
       </div>
     </>
   );

@@ -24,7 +24,7 @@ const AcceptMember = () => {
     const [status, res] = await putAPI(
       {},
       'json',
-      `/api/clubs/${clubID}/member/${userId}`
+      `/api/clubs/${clubID}/join-approval/${userId}`
     );
 
     if (status === 200) {
@@ -47,10 +47,8 @@ const AcceptMember = () => {
   return (
     <>
       <div className="ClubSetting__div--member-manage-wrap">
-        <div className="ClubSetting__text--title">
-          동아리 신청<hr className="ClubSetting__hr--horizon"></hr>
-        </div>
-
+        <div className="ClubSetting__text--title">가입 승인</div>
+        <hr></hr>
         <div className="ClubSetting__div--accept-wrap">
           {nonMemberList?.map((val: any, idx: number) => {
             return (

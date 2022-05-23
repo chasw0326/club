@@ -16,10 +16,8 @@ const RightComponent = ({ curCategory }: { curCategory: string }) => {
 };
 
 const ManangementBoard = () => {
-  const [curCategory, setCurCategory] = useState('');
-
+  const [curCategory, setCurCategory] = useState('동아리 설정');
   const clubID = window.location.pathname.split('/')[2];
-
   const setCategory = (e: any) => {
     setCurCategory(e.target.innerHTML);
   };
@@ -29,11 +27,48 @@ const ManangementBoard = () => {
       <div className="ManagementBoard">
         <div className="ManagementBoard__div--wrap">
           <div className="ManagementBoard__div--category-wrap">
-            <div onClick={setCategory}>동아리 설정</div>
-            <div onClick={setCategory}>가입 승인</div>
-            <div onClick={setCategory}>부원 관리</div>
-            <div onClick={setCategory}>동아리 삭제</div>
+            <div
+              className={
+                curCategory === '동아리 설정'
+                  ? 'ManagementBoard__div--setting-category-selected'
+                  : 'ManagementBoard__div--setting-category'
+              }
+              onClick={setCategory}
+            >
+              동아리 설정
+            </div>
+            <div
+              className={
+                curCategory === '가입 승인'
+                  ? 'ManagementBoard__div--setting-category-selected'
+                  : 'ManagementBoard__div--setting-category'
+              }
+              onClick={setCategory}
+            >
+              가입 승인
+            </div>
+            <div
+              className={
+                curCategory === '부원 관리'
+                  ? 'ManagementBoard__div--setting-category-selected'
+                  : 'ManagementBoard__div--setting-category'
+              }
+              onClick={setCategory}
+            >
+              부원 관리
+            </div>
+            <div
+              className={
+                curCategory === '동아리 삭제'
+                  ? 'ManagementBoard__div--setting-category-selected'
+                  : 'ManagementBoard__div--setting-category'
+              }
+              onClick={setCategory}
+            >
+              동아리 삭제
+            </div>
           </div>
+          <div className="vertical-line"></div>
           <RightComponent curCategory={curCategory}></RightComponent>
         </div>
       </div>

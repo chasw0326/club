@@ -19,6 +19,7 @@ const CommentItem = ({ commentData }: { commentData: commentInfo }) => {
   const modifySubmit = () => {
     setModifyMode();
     const modifyData = { content: commentInput.content };
+    console.log(commentInput.content);
     putAPI(modifyData, 'json', `/api/comment/${commentData.commentId}`);
     window.location.reload();
   };
