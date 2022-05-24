@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext, SyntheticEvent } from 'react';
 import { clubItem, category } from '../../../type/type';
-import { useAsync } from '../../../hooks/useFetch';
-import { fetchState } from '../../../type/type';
+import { Navigate, useNavigate } from 'react-router-dom';
 import ClubItem from '../../../SharedComponent/ClubItem';
 import '../Style/body.scss';
+import sad from '../../../image/sad.svg';
 import { store } from '../../../hooks/store';
 import { getAPI } from '../../../hooks/useFetch';
 
@@ -24,7 +24,7 @@ const MainBody = () => {
   const [categoryState, setCategory] = useState<category[]>([]);
   const [curCategory, setCurCategory] = useState(0);
   const [clubList, setClubList] = useState<clubItem[]>([]);
-
+  const navigate = useNavigate();
   const categorizing = async (e: SyntheticEvent) => {
     const target = e.target as HTMLDivElement;
     const [status, res] = await getAPI(
@@ -119,7 +119,10 @@ const MainBody = () => {
       <div className="MainBody">
         <div className="MainBody-itemFrame">
           {clubList?.length === 0 ? (
-            <div>검색결과 없음</div>
+            <div className="MainBody-noResult">
+              <img src={sad} width="100px" height="100px"></img>동아리가
+              존재하지 않아요!
+            </div>
           ) : (
             <>
               {clubList?.map((val: any, idx: number) => {

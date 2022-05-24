@@ -55,6 +55,10 @@ const LoginPage = () => {
     }
   };
 
+  useEffect(() => {
+    if (window.localStorage.getItem('token')) navigate('/home');
+  }, []);
+
   return (
     <>
       <div className="loginPage-loginBox" ref={loginRef}>
