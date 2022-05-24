@@ -411,6 +411,56 @@ input[class*='input'] {
     }
   }
 
+  &__Input {
+    width: 200px;
+    height: 40px;
+    font-size: 15px;
+    position: relative;
+    border: 1px solid lightgray;
+    margin-bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    &--category {
+      position: relative;
+      width: 120px;
+      left: 145px;
+      margin-bottom: 15px;
+    }
+  }
+
+  &__Input:focus {
+    outline: none;
+    border: 2px solid gray;
+  }
+
+  &__text {
+    position: relative;
+    font-weight: bold;
+    font-size: 15px;
+    left: 145px;
+    margin-bottom: 5px;
+    font-family: Dotum;
+  }
+
+  &__textarea {
+    &--introduction {
+      position: relative;
+      width: 150px;
+      font-size: 15px;
+      border: 1px solid lightgray;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 200px;
+      height: 59px;
+      margin-bottom: 10px;
+    }
+    &--introduction:focus {
+      outline: none;
+      border: 2px solid gray;
+    }
+  }
+
   &__input {
     &--file {
       visibility: hidden;
@@ -425,8 +475,8 @@ input[class*='input'] {
   &__label {
     &--file {
       position: relative;
-      bottom: 10px;
-      margin-left: -23px;
+
+      left: 144px;
       display: flex;
       border-radius: 0.25rem;
       justify-content: center;
@@ -435,9 +485,8 @@ input[class*='input'] {
       font-weight: bold;
       width: 110px;
       height: 30px;
+      top: -20px;
       background-color: $navyblue;
-      left: 6%;
-
       cursor: pointer;
     }
   }

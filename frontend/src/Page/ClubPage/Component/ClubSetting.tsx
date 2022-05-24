@@ -74,32 +74,32 @@ const ClubSetting = () => {
         <div className="ClubSetting__text--title">
           동아리 설정 <hr></hr>
         </div>
-        <div className="ClubSetting__text--current-password">동아리명</div>
+        <div className="ClubSetting__text">동아리명</div>
         <input
           id="name"
-          className="ClubSetting__input--box"
+          className="ClubSetting__Input"
           onChange={setInput}
           type="text"
           ref={(el) => (inputRef.current[0] = el)}
         ></input>
-        <div className="ClubSetting__text--new-password">동아리 위치</div>
+        <div className="ClubSetting__text">동아리 위치</div>
         <input
           id="address"
-          className="ClubSetting__input--box"
+          className="ClubSetting__Input"
           onChange={setInput}
           type="text"
           ref={(el) => (inputRef.current[1] = el)}
         ></input>
-        <div className="ClubSetting__text--introduction">동아리 소개</div>
+        <div className="ClubSetting__text">동아리 소개</div>
         <textarea
           id="description"
-          className="ClubSetting__input--introduction"
+          className="ClubSetting__textarea--introduction"
           onChange={setInput}
           ref={(el) => (inputRef.current[2] = el)}
         ></textarea>
-        <div className="ClubSetting__text--new-password-check">카테고리</div>
+        <div className="ClubSetting__text">카테고리</div>
         <select
-          className="MainHeader__input--box"
+          className="ClubSetting__Input--category"
           id="category"
           onChange={setInput}
           ref={(el) => (inputRef.current[3] = el)}
@@ -109,9 +109,7 @@ const ClubSetting = () => {
             return <option value={val.name}>{val.name}</option>;
           })}
         </select>
-        <div className="ClubSetting__text--new-password-check">
-          동아리 대표 이미지
-        </div>
+        <div className="ClubSetting__text">동아리 대표 이미지</div>
         <input
           id="thumbnail"
           className="ClubSetting__input--file"
