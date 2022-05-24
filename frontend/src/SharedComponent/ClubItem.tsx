@@ -20,9 +20,9 @@ const ClubItem = ({ item }: { item: clubItem }) => {
           {item?.description}
           {item?.category}
         </div>
-        <div className="MainBody-itemFrame-clubItem-member">
+        {/* <div className="MainBody-itemFrame-clubItem-member">
           인원 {item?.club_members}명
-        </div>
+        </div> */}
         <div className="MainBody-itemFrame-clubItem-address">
           위치 {item?.address}
         </div>

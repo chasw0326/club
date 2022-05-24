@@ -46,10 +46,13 @@ const ClubPage = () => {
     <>
       <div className="ClubPage">
         <MainHeader></MainHeader>
-        <hr></hr>
         <div className="ClubPage-navigateBar">
           <div
-            className="ClubPage-navigateBar-information"
+            className={
+              category === 'information'
+                ? 'ClubPage-navigateBar-information-active'
+                : 'ClubPage-navigateBar-information'
+            }
             onClick={selectCategory}
             id="information"
           >
@@ -57,14 +60,22 @@ const ClubPage = () => {
           </div>
           <div
             id="board"
-            className="ClubPage-navigateBar-board"
+            className={
+              category === 'board'
+                ? 'ClubPage-navigateBar-information-active'
+                : 'ClubPage-navigateBar-information'
+            }
             onClick={selectCategory}
           >
             게시판
           </div>
           <div
             id="photo"
-            className="ClubPage-navigateBar-photo"
+            className={
+              category === 'photo'
+                ? 'ClubPage-navigateBar-information-active'
+                : 'ClubPage-navigateBar-information'
+            }
             onClick={selectCategory}
           >
             사진
@@ -73,7 +84,11 @@ const ClubPage = () => {
             <>
               <div
                 id="management"
-                className="ClubPage-navigateBar-chat"
+                className={
+                  category === 'management'
+                    ? 'ClubPage-navigateBar-information-active'
+                    : 'ClubPage-navigateBar-information'
+                }
                 onClick={selectCategory}
               >
                 관리
@@ -81,7 +96,7 @@ const ClubPage = () => {
             </>
           ) : null}
         </div>
-        <hr className="horizon"></hr>
+        <hr className="MainBody-horizon"></hr>
         <Board state={category} setCategory={setCategory}></Board>
         <hr></hr>
       </div>

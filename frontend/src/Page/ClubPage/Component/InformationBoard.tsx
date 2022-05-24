@@ -51,12 +51,19 @@ const InformationBoard = () => {
     setInfo();
   }, []);
 
-  const thumbnailChange = (e: SyntheticEvent) => {
+  const thumbnailChange = async (e: SyntheticEvent) => {
     const target = e.target as HTMLInputElement;
     const formData = new FormData();
     formData.append('clubImage', target.files![0]);
     console.log(target.files![0].type);
-    putAPI(formData, 'form', `/api/clubs/image/${clubID}`);
+    console.log(target.files![0]);
+    const [status, res] = await putAPI(
+      formData,
+      'form',
+      `/api/clubs/image/${clubID}`
+    );
+
+    console.log(res, status);
   };
 
   return (

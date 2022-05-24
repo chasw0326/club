@@ -17,6 +17,8 @@ const categoryList: any = Object.freeze({
   친목: 7,
 });
 
+const data = Object.keys(categoryList);
+
 const MainBody = () => {
   const [globalState, setGlobalState] = useContext(store);
   const [categoryState, setCategory] = useState<category[]>([]);
@@ -87,35 +89,56 @@ const MainBody = () => {
 
   return (
     <>
-      <hr></hr>
       <div className="MainBody-CategoryFrame">
         {categoryState?.map((val: any, idx: any) => {
           return (
-            <div
-              key={idx}
-              className="MainBody__div--category-box"
-              onClick={categorizing}
-            >
-              {val.name}
-            </div>
+            <>
+              <div
+                className={
+                  categoryList[val.name] === curCategory
+                    ? 'MainBody__div--category-frame-active'
+                    : 'MainBody__div--category-frame'
+                }
+              >
+                {' '}
+                <div
+                  key={idx}
+                  className="MainBody__div--category-box"
+                  onClick={categorizing}
+                >
+                  {val.name}
+                </div>
+              </div>
+              &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+            </>
           );
         })}
+        <div className="MainBody-mainInformation-title"></div>
       </div>
-      <hr></hr>
+      <hr className="MainBody-horizon"></hr>
       <div className="MainBody">
-        {clubList?.length === 0 ? (
-          <div>검색결과 없음</div>
-        ) : (
-          <>
-            <div className="MainBody-itemFrame">
+        <div className="MainBody-itemFrame">
+          {clubList?.length === 0 ? (
+            <div>검색결과 없음</div>
+          ) : (
+            <>
               {clubList?.map((val: any, idx: number) => {
                 return <ClubItem key={idx} item={val}></ClubItem>;
               })}
               <div ref={setTarget} className="Target-Element"></div>
-            </div>
-          </>
-        )}
+            </>
+          )}
+        </div>
+        <MainInformation></MainInformation>
       </div>
+    </>
+  );
+};
+
+const MainInformation = () => {
+  return (
+    <>
+      <div className="MainInformation"></div>
     </>
   );
 };
