@@ -77,31 +77,29 @@ const ClubCreateModal = ({
           ></img>
           <div className="MainHeader__div--modify">
             <div className="MainHeader__text--title">동아리 생성</div>
-            <div className="MainHeader__text--current-password">동아리명</div>
+            <div className="MainHeader__text">동아리명</div>
             <input
               id="name"
-              className="MainHeader__input--box"
+              className="MainHeader__Input"
               type="text"
               onChange={setInput}
             ></input>
-            <div className="MainHeader__text--new-password">동아리 위치</div>
+            <div className="MainHeader__text">동아리 위치</div>
             <input
               id="address"
-              className="MainHeader__input--box"
+              className="MainHeader__Input"
               type="text"
               onChange={setInput}
             ></input>
-            <div className="MainHeader__text--introduction">동아리 소개</div>
+            <div className="MainHeader__text">동아리 소개</div>
             <textarea
               id="description"
-              className="MainHeader__input--introduction"
+              className="MainHeader__textarea"
               onChange={setInput}
             ></textarea>
-            <div className="MainHeader__text--new-password-check">카테고리</div>
-
+            <div className="MainHeader__text">카테고리</div>
             <select
-              className="MainHeader__input--box"
-              name="pets"
+              className="MainHeader__Input--category"
               id="category"
               onChange={setInput}
             >
@@ -110,9 +108,7 @@ const ClubCreateModal = ({
                 return <option value={val.name}>{val.name}</option>;
               })}
             </select>
-            <div className="MainHeader__text--new-password-check">
-              동아리 대표 이미지
-            </div>
+            <div className="MainHeader__text">동아리 대표 이미지</div>
             <input
               id="thumbnail"
               className="MainHeader__input--file"

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import './Style/shared.scss';
 import person from '../image/person.svg';
 import ClubCreateModal from './ClubCreateModal';
-import { store } from '../hooks/store';
+import logoutImg from '../image/logout.svg';
 
 const MainHeader = () => {
   const [inputState, setInputState] = useState('');
@@ -13,6 +13,11 @@ const MainHeader = () => {
 
   const setInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputState(event.target.value);
+  };
+
+  const logout = () => {
+    window.localStorage.removeItem('token');
+    navigate('/');
   };
 
   const modalOnOff = () => {
@@ -56,6 +61,13 @@ const MainHeader = () => {
             onClick={() => {
               navigate('/mypage');
             }}
+          ></img>
+          <img
+            className="MainHeader-logout"
+            width="50px"
+            height="50px"
+            src={logoutImg}
+            onClick={logout}
           ></img>
           <ClubCreateModal
             modalState={modalState}
