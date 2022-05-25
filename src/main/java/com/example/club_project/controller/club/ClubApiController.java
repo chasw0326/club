@@ -1,5 +1,6 @@
 package com.example.club_project.controller.club;
 
+import com.example.club_project.controller.common.AttachedFile;
 import com.example.club_project.exception.custom.ForbiddenException;
 import com.example.club_project.exception.custom.UploadException;
 import com.example.club_project.security.dto.AuthUserDTO;
@@ -140,7 +141,10 @@ public class ClubApiController {
                                 @RequestPart MultipartFile clubImage) {
 
         if (clubJoinStateService.isClubMaster(authUser.getId(), clubId)) {
-            supplyAsync(() -> uploadUtil.upload(clubImage, "club-image"), taskExecutor)
+
+            AttachedFile attachedFile = AttachedFile.toAttachedFile(clubImage);
+
+            supplyAsync(() -> uploadUtil.upload(attachedFile, "club-image"), taskExecutor)
                     .thenAccept(clubImageUrl -> {
                         clubService.updateImage(clubId, clubImageUrl);
                     })

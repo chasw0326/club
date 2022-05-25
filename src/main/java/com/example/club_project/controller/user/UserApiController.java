@@ -2,6 +2,7 @@
 package com.example.club_project.controller.user;
 
 import com.example.club_project.controller.comment.CommentDTO;
+import com.example.club_project.controller.common.AttachedFile;
 import com.example.club_project.controller.post.PostDTO;
 import com.example.club_project.exception.custom.UploadException;
 import com.example.club_project.security.dto.AuthUserDTO;
@@ -94,10 +95,12 @@ public class UserApiController {
     }
 
     @PutMapping(value = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public void updateClubImage(@AuthenticationPrincipal AuthUserDTO authUser,
+    public void updateProfileImage(@AuthenticationPrincipal AuthUserDTO authUser,
                                 @RequestPart MultipartFile profileImage) {
 
-        supplyAsync(() -> uploadUtil.upload(profileImage, "user-image"), taskExecutor)
+        AttachedFile attachedFile = AttachedFile.toAttachedFile(profileImage);
+
+        supplyAsync(() -> uploadUtil.upload(attachedFile, "user-image"), taskExecutor)
                 .thenAccept(userImageUrl -> {
                     userService.updateProfileImage(authUser.getId(), userImageUrl);
                 })

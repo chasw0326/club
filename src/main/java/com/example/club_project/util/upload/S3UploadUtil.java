@@ -5,6 +5,7 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.example.club_project.config.AwsConfigure;
+import com.example.club_project.controller.common.AttachedFile;
 import com.example.club_project.exception.custom.InvalidArgsException;
 import com.example.club_project.exception.custom.UploadException;
 import lombok.RequiredArgsConstructor;
@@ -33,33 +34,12 @@ public class S3UploadUtil implements UploadUtil {
     private final AwsConfigure awsConfigure;
 
     @Override
-    public String upload(MultipartFile uploadFile, String uploadPath) {
+    public String upload(AttachedFile uploadFile, String uploadPath) {
+        byte[] bytes = uploadFile.getBytes();
+        String filename = uploadFile.getOriginalFileName();
+        String contentType = uploadFile.getContentType();
 
-        if (!isImageFile(uploadFile)) {
-            throw new InvalidArgsException("Only image file format is allowed.");
-        }
-
-        try {
-            byte[] bytes = uploadFile.getBytes();
-            String filename = uploadFile.getOriginalFilename();
-            String contentType = uploadFile.getContentType();
-
-            return upload(bytes, uploadPath, filename, contentType);
-        } catch (IOException ignored) {
-            throw new UploadException(String.format("ignored IOException occur with %s", uploadFile.getOriginalFilename()));
-        }
-    }
-
-    private boolean isImageFile(MultipartFile uploadFile) {
-        if (ObjectUtils.isNotEmpty(uploadFile)
-            && uploadFile.getSize() > 0
-            && StringUtils.isNotEmpty(uploadFile.getOriginalFilename())) {
-
-            String contentType = uploadFile.getContentType();
-            return isNotEmpty(contentType) && contentType.toLowerCase().startsWith("image");
-        }
-
-        return false;
+        return upload(bytes, uploadPath, filename, contentType);
     }
 
     private String upload(byte[] bytes, String uploadPath, String filename, String contentType) {
