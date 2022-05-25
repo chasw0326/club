@@ -1,6 +1,6 @@
 package com.example.club_project.util.upload;
 
-import org.springframework.web.multipart.MultipartFile;
+import com.example.club_project.controller.common.AttachedFile;
 
 
 public interface UploadUtil {
@@ -10,5 +10,5 @@ public interface UploadUtil {
      * @param uploadPath 저장할 폴더경로
      * @return saveName (이 Url를 DB에 저장)
      */
-    String upload(MultipartFile uploadFile, String uploadPath);
+    String upload(AttachedFile uploadFile, String uploadPath);
 }
