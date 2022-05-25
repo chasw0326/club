@@ -7,6 +7,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Map;
 
 @RequestMapping("/api/comment")
 @RestController
@@ -34,13 +35,13 @@ public class CommentApiController {
 
     @PutMapping("/{commentId}")
     public void update(@AuthenticationPrincipal AuthUserDTO authUser,
-                       @RequestBody String content,
+                       @RequestBody Map<String, String> content,
                        @PathVariable("commentId") Long commentId) {
 
         commentService.update(
                 authUser.getId(),
                 commentId,
-                content
+                content.get("content")
         );
     }
 
