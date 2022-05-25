@@ -35,13 +35,13 @@ public class CommentApiController {
 
     @PutMapping("/{commentId}")
     public void update(@AuthenticationPrincipal AuthUserDTO authUser,
-                       @RequestBody Map<String, String> content,
+                       @RequestBody CommentDTO.PutRequest request,
                        @PathVariable("commentId") Long commentId) {
 
         commentService.update(
                 authUser.getId(),
                 commentId,
-                content.get("content")
+                request.getContent()
         );
     }
 

@@ -25,9 +25,6 @@ public class CommentDTO {
     @Getter
     public static class PutRequest {
 
-        @NotBlank
-        private Long commentId;
-
         @NotBlank(message = "댓글내용은 필수 입니다.")
         private String content;
     }
