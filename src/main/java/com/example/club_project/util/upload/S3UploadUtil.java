@@ -6,7 +6,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.example.club_project.config.AwsConfigure;
 import com.example.club_project.exception.custom.InvalidArgsException;
-import com.example.club_project.exception.custom.UnloadException;
+import com.example.club_project.exception.custom.UploadException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
@@ -46,7 +46,7 @@ public class S3UploadUtil implements UploadUtil {
 
             return upload(bytes, uploadPath, filename, contentType);
         } catch (IOException ignored) {
-            throw new UnloadException(String.format("ignored IOException occur with %s", uploadFile.getOriginalFilename()));
+            throw new UploadException(String.format("ignored IOException occur with %s", uploadFile.getOriginalFilename()));
         }
     }
 
