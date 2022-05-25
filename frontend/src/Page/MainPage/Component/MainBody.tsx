@@ -24,12 +24,12 @@ const MainBody = () => {
   const [categoryState, setCategory] = useState<category[]>([]);
   const [curCategory, setCurCategory] = useState(0);
   const [clubList, setClubList] = useState<clubItem[]>([]);
-  const navigate = useNavigate();
   const categorizing = async (e: SyntheticEvent) => {
     const target = e.target as HTMLDivElement;
     const [status, res] = await getAPI(
       `/api/clubs?category=${categoryList[target.innerHTML]}`
     );
+    setClubList([]);
     setClubList(res);
     setCurCategory(categoryList[target.innerHTML]);
   };
@@ -48,7 +48,6 @@ const MainBody = () => {
 
   const updateClubList = async () => {
     let api = '';
-
     if (curCategory === 0) {
       api = '/api/clubs';
     } else api = `/api/clubs?category=${curCategory}`;
@@ -59,7 +58,7 @@ const MainBody = () => {
   };
 
   const callback = async ([entry]: any, observer: any) => {
-    if (entry.isIntersecting && clubList.length > 4) {
+    if (entry.isIntersecting && clubList.length > 3) {
       observer.unobserve(entry.target);
       await updateClubList();
       observer.observe(entry.target);

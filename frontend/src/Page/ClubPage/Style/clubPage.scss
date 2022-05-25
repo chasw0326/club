@@ -3,6 +3,24 @@
 .ClubPage {
   font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 
+  &-noResult {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Noto Sans KR', sans-serif;
+    width: -moz-fit-content;
+    width: fit-content;
+    height: -moz-fit-content;
+    height: fit-content;
+    position: relative;
+    font-size: 50px;
+    top: 40px;
+    margin-bottom: 300px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
   &-navigateBar {
     display: flex;
     flex-direction: row;

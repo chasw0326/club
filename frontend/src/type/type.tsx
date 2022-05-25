@@ -57,9 +57,9 @@ type clubItem = {
   address: string;
   university: string;
   description: string;
-  image_url: string;
+  imageUrl: string;
   category: string;
-  club_members: number | null;
+  clubMembers: number | null;
 };
 
 type myClub = {

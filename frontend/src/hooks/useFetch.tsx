@@ -56,12 +56,17 @@ const postAPI: Function = async (
   api: string
 ) => {
   if (checkType === 'form') {
-    const fData = await fetch(`${process.env.REACT_APP_TEST_API}${api}`, {
-      method: 'POST',
-      body: requestData,
-    });
+    let res;
+    try {
+      const fData = await fetch(`${process.env.REACT_APP_TEST_API}${api}`, {
+        method: 'POST',
+        body: requestData,
+      });
 
-    const res = await fData.json();
+      res = await fData.json();
+    } catch (err) {
+      alert(err);
+    }
 
     return res;
   } else if (checkType === 'json') {
@@ -74,15 +79,11 @@ const postAPI: Function = async (
       },
     });
 
-    console.log(fData.status);
-
     if (fData.status === 200) {
       return [fData.status, null];
     }
 
     const res = await fData.json();
-
-    console.log(res.message);
 
     return [fData.status, res];
   } else if (checkType === 'login') {
@@ -104,8 +105,6 @@ const postAPI: Function = async (
 };
 
 const getAPI = async (api: string) => {
-  console.log('getAPI 토큰 확인 : ', localStorage.getItem('token'));
-
   const fData = await fetch(`${process.env.REACT_APP_TEST_API}${api}`, {
     headers: {
       Authorization: 'Bearer ' + `${localStorage.getItem('token')}`,
@@ -114,15 +113,11 @@ const getAPI = async (api: string) => {
 
   const res = await fData.json();
 
-  console.log(res);
-
   return [fData.status, res];
 };
 
 const putAPI = async (requestData: any, type: string, api: string) => {
   if (type === 'form') {
-    console.log('이미지 테스트');
-
     const fData = await fetch(`${process.env.REACT_APP_TEST_API}${api}`, {
       method: 'PUT',
       body: requestData,

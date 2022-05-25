@@ -5,6 +5,7 @@ import { postInfo, commentInfo } from '../../../type/type';
 import comment from '../../../image/comment.svg';
 import ModifyBoard from './ModifyBoard';
 import CommentItem from './CommentItem';
+import sad from '../../../image/sad.svg';
 
 const WritePage = ({ postInfo }: { postInfo: any }) => {
   const [inputInfo, setInputInfo] = useState({
@@ -16,8 +17,8 @@ const WritePage = ({ postInfo }: { postInfo: any }) => {
 
   const inputRef = useRef<any>([]);
 
-  const setInputValue = (e: any) => {
-    const { id, value } = e.target;
+  const setInputValue = (e: SyntheticEvent) => {
+    const { id, value } = e.target as HTMLInputElement;
     setInputInfo({ ...inputInfo, [id]: value });
   };
 
@@ -87,7 +88,13 @@ const PostList = ({
   const [postList, setPostList] = useState<postInfo[]>([]);
   const fetchData = async () => {
     const [status, res] = await getAPI(`/api/post?clubId=${clubID}`);
-    setPostList((postList) => [...postList, ...res]);
+
+    if (status === 200) {
+      setPostList((postList) => [...postList, ...res]);
+    } else {
+      alert(res.message);
+      navigate(-1);
+    }
   };
   const navigate = useNavigate();
 
@@ -113,39 +120,49 @@ const PostList = ({
 
   return (
     <>
-      <div className="ClubPage-postBox">
-        <div className="ClubPage__div--index">
-          <span className="ClubPage__span--index-ID">번호</span>
-          <span className="ClubPage__span--index-Title">제목</span>
-          <span className="ClubPage__span--index-Submitter">작성자</span>
+      {postList.length ? (
+        <>
+          <div className="ClubPage-postBox">
+            <div className="ClubPage__div--index">
+              <span className="ClubPage__span--index-ID">번호</span>
+              <span className="ClubPage__span--index-Title">제목</span>
+              <span className="ClubPage__span--index-Submitter">작성자</span>
+            </div>
+            <hr className="ClubPage__hr--index"></hr>
+            {postList?.map((postData, idx) => {
+              return (
+                <>
+                  <div className="ClubPage-boardStuff" key={postData.postId}>
+                    <span className="ClubPage__span--post-ID">
+                      {postData.postId}
+                    </span>
+                    <span
+                      className="ClubPage__span--post-Title"
+                      onClick={postClick}
+                      data-postid={postData.postId}
+                      data-content={postData.content}
+                      data-title={postData.title}
+                      data-nickname={postData.nickname}
+                    >
+                      {postData.title}
+                    </span>
+                    <span className="ClubPage__span--post-Submitter">
+                      {postData.nickname}
+                    </span>
+                  </div>
+                  <hr className="ClubPage__hr--index"></hr>
+                </>
+              );
+            })}
+          </div>
+        </>
+      ) : (
+        <div className="ClubPage-noResult">
+          <img src={sad} width="100px" height="100px"></img>아직 올라온 게시글이
+          없어요!
         </div>
-        <hr className="ClubPage__hr--index"></hr>
-        {postList?.map((postData, idx) => {
-          return (
-            <>
-              <div className="ClubPage-boardStuff" key={postData.postId}>
-                <span className="ClubPage__span--post-ID">
-                  {postData.postId}
-                </span>
-                <span
-                  className="ClubPage__span--post-Title"
-                  onClick={postClick}
-                  data-postid={postData.postId}
-                  data-content={postData.content}
-                  data-title={postData.title}
-                  data-nickname={postData.nickname}
-                >
-                  {postData.title}
-                </span>
-                <span className="ClubPage__span--post-Submitter">
-                  {postData.nickname}
-                </span>
-              </div>
-              <hr className="ClubPage__hr--index"></hr>
-            </>
-          );
-        })}
-      </div>
+      )}
+
       <div className="ClubPage__button--post-button" onClick={writeClick}>
         글쓰기
       </div>

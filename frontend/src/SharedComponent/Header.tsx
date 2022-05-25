@@ -15,6 +15,11 @@ const MainHeader = () => {
     setInputState(event.target.value);
   };
 
+  const homeButton = () => {
+    if (window.location.pathname.includes('home')) window.location.reload();
+    else navigate('/home');
+  };
+
   const logout = () => {
     window.localStorage.removeItem('token');
     navigate('/');
@@ -35,12 +40,7 @@ const MainHeader = () => {
     <>
       <div className="MainHeader">
         <div className="MainHeader__div--content-wrap">
-          <div
-            className="MainHeader-university"
-            onClick={() => {
-              navigate('/home');
-            }}
-          >
+          <div className="MainHeader-university" onClick={homeButton}>
             CLUB
           </div>
           <input

@@ -19,7 +19,7 @@ function App() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!window.localStorage.getItem('token')) navigate('/home');
+    if (!window.localStorage.getItem('token')) navigate('/');
   }, []);
 
   return (

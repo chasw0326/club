@@ -60,20 +60,43 @@
     justify-content: center;
     align-items: center;
 
+    &-blackCover {
+      position: relative;
+      display: flex;
+      color: #fff;
+      align-items: center;
+      flex-direction: row;
+      background-color: rgba(0, 0, 0, 0.3);
+      width: 100%;
+      height: 100%;
+    }
+
     &-clubItem {
       position: relative;
       display: flex;
+      color: $whitegray;
       align-items: center;
       flex-direction: row;
       width: 600px;
       left: 50%;
       transform: translateX(-50%);
+
+      animation: fadein 0.3s;
       margin-top: 10px;
       margin-bottom: 30px;
-      height: 200px;
+      height: 250px;
       background-color: $semi-white;
       box-shadow: 2px 2px 5px 0px slategrey;
       cursor: pointer;
+
+      @keyframes fadein {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
 
       &-right {
         position: relative;
@@ -166,7 +189,6 @@
       cursor: pointer;
       color: #3c4c5b;
       border-color: #e1e6ec;
-      background-color: #e1e6ec;
       font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-weight: bold;
       font-size: 0.875rem;
@@ -177,6 +199,7 @@
       display: flex;
       justify-content: center;
       border-bottom-color: #3c4c5b;
+
       transition: border-color 0.3s;
       overflow-wrap: normal;
       width: 80px;
