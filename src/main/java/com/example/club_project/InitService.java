@@ -158,24 +158,73 @@ public class InitService {
             clubJoinStateService.register(4L,2L, memberCode);
             clubJoinStateService.register(1L,2L, notJoinedCode);
         }
-
+        // 클럽1 [1,2,4] ,클럽2[2,3,4] 클럽3[1] 클럽6[1,3,4]
         public void initPosts() {
-            postService.register(2L, 6L, "클럽6유저2제목1", "클럽6유저1내용1");
-            postService.register(2L, 6L, "클럽6유저2제목2", "클럽6유저1내용2");
-            postService.register(3L, 6L, "클럽6유저3제목1", "클럽6유저1내용1");
-            postService.register(3L, 6L, "클럽6유저3제목2", "클럽6유저1내용2");
-            postService.register(3L, 6L, "클럽6유저3제목3", "클럽6유저1내용3");
-        }
+            postService.register(1L, 1L, "제목1", "내용1");
+            postService.register(1L, 3L, "제목2", "내용2");
+            postService.register(1L, 1L, "제목3", "내용3");
+            postService.register(1L, 3L, "제목4", "내용4");
+            postService.register(1L, 6L, "제목5", "내용5");
+            postService.register(1L, 5L, "제목6", "내용6");
+            postService.register(2L, 2L, "제목8", "내용8");
+            postService.register(2L, 1L, "제목9", "내용9");
+            postService.register(2L, 1L, "제목10", "내용10");
+            postService.register(2L, 6L, "제목11", "내용11");
+            postService.register(2L, 6L, "제목12", "내용12");
+            postService.register(2L, 1L, "제목13", "내용13");
+            postService.register(3L, 2L, "제목14", "내용14");
+            postService.register(3L, 2L, "제목15", "내용15");
+            postService.register(3L, 6L, "제목16", "내용16");
+            postService.register(3L, 6L, "제목17", "내용17");
+            postService.register(3L, 6L, "제목18", "내용18");
+            postService.register(3L, 2L, "제목19", "내용19");
+            postService.register(4L, 1L, "제목20", "내용20");
+            postService.register(4L, 2L, "제목21", "내용21");
+            postService.register(4L, 1L, "제목22", "내용22");
+            postService.register(4L, 1L, "제목23", "내용23");
+            postService.register(4L, 2L, "제목24", "내용24");
 
+        }
+        // 클럽1 [1,2,4] ,클럽2[2,3,4] 클럽3[1] 클럽6[1,3,4]
         public void initComments() {
-            commentService.register(4L, 1L, "글1유저4댓글1");
-            commentService.register(4L, 1L, "글1유저4댓글2");
-            commentService.register(4L, 3L, "글3유저4댓글1");
-            commentService.register(4L, 4L, "글4유저4댓글1");
-            commentService.register(4L, 5L, "글5유저4댓글1");
-            commentService.register(4L, 5L, "글5유저4댓글2");
-            commentService.register(4L, 5L, "글5유저4댓글3");
-            commentService.register(4L, 5L, "글5유저4댓글4");
+            commentService.register(1L, 1L, "댓글1");
+            commentService.register(2L, 2L, "댓글2");
+            commentService.register(2L, 3L, "댓글3");
+            commentService.register(4L, 3L, "댓글4");
+            commentService.register(2L, 5L, "댓글5");
+            commentService.register(2L, 5L, "댓글6");
+            commentService.register(3L, 7L, "댓글7");
+            commentService.register(4L, 5L, "댓글8");
+            commentService.register(3L, 13L, "댓글9");
+            commentService.register(4L, 5L, "댓글10");
+            commentService.register(3L, 5L, "댓글11");
+            commentService.register(2L, 7L, "댓글12");
+            commentService.register(2L, 5L, "댓글13");
+            commentService.register(2L, 5L, "댓글14");
+            commentService.register(3L, 7L, "댓글15");
+            commentService.register(4L, 5L, "댓글16");
+            commentService.register(3L, 13L, "댓글17");
+            commentService.register(1L, 1L, "댓글18");
+            commentService.register(2L, 2L, "댓글19");
+            commentService.register(2L, 3L, "댓글20");
+            commentService.register(4L, 3L, "댓글21");
+            commentService.register(2L, 5L, "댓글22");
+            commentService.register(2L, 5L, "댓글23");
+            commentService.register(3L, 7L, "댓글24");
+            commentService.register(4L, 5L, "댓글25");
+            commentService.register(3L, 13L, "댓글26");
+            commentService.register(4L, 5L, "댓글27");
+            commentService.register(3L, 5L, "댓글28");
+            commentService.register(2L, 7L, "댓글29");
+            commentService.register(3L, 7L, "댓글30");
+            commentService.register(4L, 5L, "댓글31");
+            commentService.register(3L, 13L, "댓글32");
+            commentService.register(1L, 1L, "댓글33");
+            commentService.register(2L, 2L, "댓글34");
+            commentService.register(2L, 3L, "댓글35");
+            commentService.register(4L, 3L, "댓글36");
+            commentService.register(2L, 5L, "댓글37");
+            commentService.register(2L, 5L, "댓글38");
         }
     }
 }
