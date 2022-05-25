@@ -15,7 +15,7 @@ public class CommentApiController {
 
     private final CommentService commentService;
 
-    // TODO: 수정예정
+
     @GetMapping
     public CommentDTO.Response getAllCommentsWithPost(@RequestParam("postId") Long postId) {
         return commentService.getCommentDtos(postId);

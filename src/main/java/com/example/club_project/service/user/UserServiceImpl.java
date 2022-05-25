@@ -6,17 +6,14 @@ import com.example.club_project.domain.UserRole;
 import com.example.club_project.exception.custom.AlreadyExistsException;
 import com.example.club_project.exception.custom.NotFoundException;
 import com.example.club_project.exception.custom.InvalidArgsException;
-import com.example.club_project.exception.custom.UnloadException;
 import com.example.club_project.repository.UserRepository;
 import com.example.club_project.util.ValidateUtil;
-import com.example.club_project.util.upload.UploadUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static java.util.concurrent.CompletableFuture.supplyAsync;
 
 
 @Slf4j

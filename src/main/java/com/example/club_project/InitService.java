@@ -166,7 +166,6 @@ public class InitService {
             postService.register(1L, 3L, "제목4", "내용4");
             postService.register(1L, 6L, "제목5", "내용5");
             postService.register(1L, 5L, "제목6", "내용6");
-//            postService.register(2L, 5L, "제목7", "내용7");
             postService.register(2L, 2L, "제목8", "내용8");
             postService.register(2L, 1L, "제목9", "내용9");
             postService.register(2L, 1L, "제목10", "내용10");
@@ -183,7 +182,7 @@ public class InitService {
             postService.register(4L, 2L, "제목21", "내용21");
             postService.register(4L, 1L, "제목22", "내용22");
             postService.register(4L, 1L, "제목23", "내용23");
-            postService.register(4L, 2L, "제목23", "내용24");
+            postService.register(4L, 2L, "제목24", "내용24");
 
         }
         // 클럽1 [1,2,4] ,클럽2[2,3,4] 클럽3[1] 클럽6[1,3,4]
