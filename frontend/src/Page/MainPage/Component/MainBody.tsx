@@ -20,6 +20,8 @@ const categoryList: any = Object.freeze({
 const data = Object.keys(categoryList);
 
 const MainBody = () => {
+  const [page, setPage] = useState(0);
+
   const [globalState, setGlobalState] = useContext(store);
   const [categoryState, setCategory] = useState<category[]>([]);
   const [curCategory, setCurCategory] = useState(0);
@@ -50,7 +52,7 @@ const MainBody = () => {
     let api = '';
     if (curCategory === 0) {
       api = '/api/clubs';
-    } else api = `/api/clubs?category=${curCategory}`;
+    } else api = `/api/clubs?category=${curCategory}page=${page}`;
 
     const [status, res] = await getAPI(api);
 

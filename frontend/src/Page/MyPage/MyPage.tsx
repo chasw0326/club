@@ -1,6 +1,6 @@
 import React, { SyntheticEvent, useEffect } from 'react';
 import { useState, useRef } from 'react';
-import { getAPI } from '../../hooks/useFetch';
+import { getAPI, putAPI } from '../../hooks/useFetch';
 import './Style/MyPage.scss';
 import { userInfo } from '../../type/type';
 import person from '../../image/person.svg';
@@ -12,9 +12,8 @@ import MyPageNav from './Component/MyPageNav';
 const MyPage = () => {
   const [viewState, setViewState] = useState('');
   const [modalState, setModal] = useState(false);
-
-  const [userInfo, setUserInfo] = useState<userInfo>();
-
+  const [userInfo, setUserInfo] = useState<userInfo | any>();
+  const [profileUrl, setProfileUrl] = useState('');
   const changeCategoryState = (e: any) => {
     setViewState(e.target.innerHTML);
   };
@@ -27,14 +26,18 @@ const MyPage = () => {
   const fetchData = async () => {
     const [status, res] = await getAPI('/api/user');
     setUserInfo({ ...userInfo, ...res });
+
+    const [statusProfile, resProfile] = await getAPI('/api/user/password');
+
+    setProfileUrl(resProfile.profileUrl);
   };
 
-  const thumbnailChange = (e: SyntheticEvent) => {
+  const profileChange = async (e: SyntheticEvent) => {
     const target = e.target as HTMLInputElement;
     const formData = new FormData();
-    formData.append('clubImage', target.files![0]);
-    console.log(target.files![0].type);
-    // putAPI(formData, 'form', `/api/clubs/image/${clubID}`);
+    formData.append('profileImage', target.files![0]);
+    const [status, res] = await putAPI(formData, 'form', `/api/user/image`);
+    window.location.reload();
   };
 
   useEffect(() => {
@@ -47,22 +50,18 @@ const MyPage = () => {
       <hr></hr>
       <div className="MyPage-profile">
         <div>
-          <img className="MyPage-thumbnail" src={person}></img>
+          <img className="MyPage-thumbnail" src={profileUrl}></img>
           <input
             type="file"
             id="thumbnail"
             className="Information__file--edit-thumbnail"
-            onChange={thumbnailChange}
+            onChange={profileChange}
           ></input>
           <label
             htmlFor="thumbnail"
             className="Information__button--edit-button"
           >
-            <img
-              className="Information__img--edit-button"
-              src={setting}
-              onChange={thumbnailChange}
-            ></img>
+            <img className="Information__img--edit-button" src={setting}></img>
             edit
           </label>
         </div>

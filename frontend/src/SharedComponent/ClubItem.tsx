@@ -8,7 +8,7 @@ const ClubItem = ({ item }: { item: clubItem }) => {
 
   const sectionStyle = {
     backgroundImage: `url("${item?.imageUrl ? item?.imageUrl : thumbnail}")`,
-    backgroundSize: '600px 250px',
+    backgroundSize: '719px 261px',
   };
 
   return (

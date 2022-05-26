@@ -24,7 +24,7 @@ const MyClub = () => {
         return (
           <>
             <div className="MyPage__div--belong-club">
-              <img src={thumbnail}></img>
+              <img src={val.imageUrl}></img>
               <div className="MyPage__div--club-info">
                 <div>{val.university}</div>
                 <div>{val.name}</div>

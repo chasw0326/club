@@ -1,6 +1,7 @@
 import React, { useState, useEffect, SyntheticEvent } from 'react';
 import { postAPI, getAPI, deleteAPI, putAPI } from '../../../hooks/useFetch';
 import { clubInfo } from '../../../type/type';
+import thumbnail from '../../../image/thumbnail.svg';
 import { Navigate, useNavigate } from 'react-router-dom';
 import setting from '../../../image/setting.svg';
 const InformationBoard = () => {
@@ -55,15 +56,13 @@ const InformationBoard = () => {
     const target = e.target as HTMLInputElement;
     const formData = new FormData();
     formData.append('clubImage', target.files![0]);
-    console.log(target.files![0].type);
-    console.log(target.files![0]);
     const [status, res] = await putAPI(
       formData,
       'form',
       `/api/clubs/image/${clubID}`
     );
 
-    console.log(res, status);
+    if (status === 200) window.location.reload();
   };
 
   return (
@@ -72,7 +71,9 @@ const InformationBoard = () => {
         <div>
           <img
             className="ClubPage-thumbnail"
-            src={clubInformation?.imageUrl}
+            src={
+              clubInformation?.imageUrl ? clubInformation.imageUrl : thumbnail
+            }
           ></img>
 
           {isMaster ? (
