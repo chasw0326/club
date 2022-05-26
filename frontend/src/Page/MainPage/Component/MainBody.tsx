@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext, SyntheticEvent } from 'react';
 import { clubItem, category } from '../../../type/type';
-import { useAsync } from '../../../hooks/useFetch';
-import { fetchState } from '../../../type/type';
+import { Navigate, useNavigate } from 'react-router-dom';
 import ClubItem from '../../../SharedComponent/ClubItem';
 import '../Style/body.scss';
+import sad from '../../../image/sad.svg';
 import { store } from '../../../hooks/store';
 import { getAPI } from '../../../hooks/useFetch';
 
@@ -17,18 +17,23 @@ const categoryList: any = Object.freeze({
   친목: 7,
 });
 
+const data = Object.keys(categoryList);
+
 const MainBody = () => {
-  const [globalCategory, setGlobalCategory] = useContext(store);
+  const [page, setPage] = useState(0);
+
+  const [globalState, setGlobalState] = useContext(store);
   const [categoryState, setCategory] = useState<category[]>([]);
   const [curCategory, setCurCategory] = useState(0);
   const [clubList, setClubList] = useState<clubItem[]>([]);
-
-  const categorizing = (e: SyntheticEvent) => {
+  const categorizing = async (e: SyntheticEvent) => {
     const target = e.target as HTMLDivElement;
-
-    setCurCategory(categoryList[target.innerHTML]);
-
+    const [status, res] = await getAPI(
+      `/api/clubs?category=${categoryList[target.innerHTML]}`
+    );
     setClubList([]);
+    setClubList(res);
+    setCurCategory(categoryList[target.innerHTML]);
   };
 
   const categorySetting = async () => {
@@ -38,13 +43,24 @@ const MainBody = () => {
 
   const [target, setTarget]: any = useState(null);
 
+  const fetchData = async () => {
+    const [status, res] = await getAPI(`/api/clubs`);
+    setClubList(res);
+  };
+
   const updateClubList = async () => {
-    const [status, res] = await getAPI(`/api/clubs?category=${curCategory}`);
+    let api = '';
+    if (curCategory === 0) {
+      api = '/api/clubs';
+    } else api = `/api/clubs?category=${curCategory}page=${page}`;
+
+    const [status, res] = await getAPI(api);
+
     setClubList((clubList) => [...clubList, ...res]);
   };
 
   const callback = async ([entry]: any, observer: any) => {
-    if (entry.isIntersecting) {
+    if (entry.isIntersecting && clubList.length > 3) {
       observer.unobserve(entry.target);
       await updateClubList();
       observer.observe(entry.target);
@@ -52,11 +68,12 @@ const MainBody = () => {
   };
 
   useEffect(() => {
+    fetchData();
     categorySetting();
   }, []);
 
   useEffect(() => {
-    setGlobalCategory({ ...globalCategory, categories: categoryState });
+    setGlobalState({ ...globalState, categories: categoryState });
   }, [categoryState]);
 
   useEffect(() => {
@@ -73,29 +90,59 @@ const MainBody = () => {
 
   return (
     <>
-      <hr></hr>
       <div className="MainBody-CategoryFrame">
         {categoryState?.map((val: any, idx: any) => {
           return (
-            <div
-              key={idx}
-              className="MainBody__div--category-box"
-              onClick={categorizing}
-            >
-              {val.name}
-            </div>
+            <>
+              <div
+                className={
+                  categoryList[val.name] === curCategory
+                    ? 'MainBody__div--category-frame-active'
+                    : 'MainBody__div--category-frame'
+                }
+              >
+                {' '}
+                <div
+                  key={idx}
+                  className="MainBody__div--category-box"
+                  onClick={categorizing}
+                >
+                  {val.name}
+                </div>
+              </div>
+              &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+            </>
           );
         })}
+        <div className="MainBody-mainInformation-title"></div>
       </div>
-      <hr></hr>
+      <hr className="MainBody-horizon"></hr>
       <div className="MainBody">
         <div className="MainBody-itemFrame">
-          {clubList?.map((val: any, idx: number) => {
-            return <ClubItem key={idx} item={val}></ClubItem>;
-          })}
-          <div ref={setTarget} className="Target-Element"></div>
+          {clubList?.length === 0 ? (
+            <div className="MainBody-noResult">
+              <img src={sad} width="100px" height="100px"></img>동아리가
+              존재하지 않아요!
+            </div>
+          ) : (
+            <>
+              {clubList?.map((val: any, idx: number) => {
+                return <ClubItem key={idx} item={val}></ClubItem>;
+              })}
+              <div ref={setTarget} className="Target-Element"></div>
+            </>
+          )}
         </div>
+        <MainInformation></MainInformation>
       </div>
+    </>
+  );
+};
+
+const MainInformation = () => {
+  return (
+    <>
+      <div className="MainInformation"></div>
     </>
   );
 };

@@ -2,6 +2,7 @@ import React, { createContext, useState } from 'react';
 
 const initialState: any = {
   categories: ['test', 'test1', 'test2'],
+  nickname: '',
 };
 
 const store = createContext(initialState);

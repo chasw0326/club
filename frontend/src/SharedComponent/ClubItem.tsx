@@ -6,25 +6,32 @@ import thumbnail from '../image/thumbnail.svg';
 const ClubItem = ({ item }: { item: clubItem }) => {
   const navigate = useNavigate();
 
+  const sectionStyle = {
+    backgroundImage: `url("${item?.imageUrl ? item?.imageUrl : thumbnail}")`,
+    backgroundSize: '719px 261px',
+  };
+
   return (
     <div
       className="MainBody-itemFrame-clubItem"
+      style={sectionStyle}
       onClick={() => {
         navigate(`/information/${item?.id}`);
       }}
     >
-      <img width="200px" height="200px" src={thumbnail}></img>
-      <div className='"MainBody-itemFrame-clubItem-right'>
-        <div className="MainBody-itemFrame-clubItem-title">{item?.name}</div>
-        <div className="MainBody-itemFrame-clubItem-description">
-          {item?.description}
-          {item?.category}
-        </div>
-        <div className="MainBody-itemFrame-clubItem-member">
-          인원 {item?.club_members}명
-        </div>
-        <div className="MainBody-itemFrame-clubItem-address">
-          위치 {item?.address}
+      <div className="MainBody-itemFrame-blackCover">
+        {' '}
+        <div className='"MainBody-itemFrame-clubItem-right'>
+          <div className="MainBody-itemFrame-clubItem-title">{item?.name}</div>
+          <div className="MainBody-itemFrame-clubItem-description">
+            {item?.description}
+          </div>
+          <div className="MainBody-itemFrame-clubItem-member">
+            인원 {item?.clubMembers}명
+          </div>
+          <div className="MainBody-itemFrame-clubItem-address">
+            위치 {item?.address}
+          </div>
         </div>
       </div>
     </div>

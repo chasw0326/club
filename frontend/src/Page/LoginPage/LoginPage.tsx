@@ -27,13 +27,17 @@ const LoginPage = () => {
   const login = async () => {
     const loginInformation = { email: idState, password: pwState };
 
+    console.log('토큰');
+
     const [responseStatus, res] = await postAPI(
       loginInformation,
       'login',
       '/auth/signin'
     );
 
-    if (responseStatus !== 302) {
+    console.log(res);
+
+    if (responseStatus === 200) {
       const localStorage = window.localStorage;
       console.log('토큰', res);
       localStorage.setItem('token', res);
@@ -50,6 +54,10 @@ const LoginPage = () => {
       setModalState(true);
     }
   };
+
+  useEffect(() => {
+    if (window.localStorage.getItem('token')) navigate('/home');
+  }, []);
 
   return (
     <>

@@ -56,12 +56,17 @@ const postAPI: Function = async (
   api: string
 ) => {
   if (checkType === 'form') {
-    const fData = await fetch(`${process.env.REACT_APP_TEST_API}${api}`, {
-      method: 'POST',
-      body: requestData,
-    });
+    let res;
+    try {
+      const fData = await fetch(`${process.env.REACT_APP_TEST_API}${api}`, {
+        method: 'POST',
+        body: requestData,
+      });
 
-    const res = await fData.json();
+      res = await fData.json();
+    } catch (err) {
+      alert(err);
+    }
 
     return res;
   } else if (checkType === 'json') {
@@ -91,7 +96,7 @@ const postAPI: Function = async (
       },
     });
 
-    const res = await fData.json();
+    const res = await fData.text();
 
     return [fData.status, res];
   } else {
@@ -102,7 +107,7 @@ const postAPI: Function = async (
 const getAPI = async (api: string) => {
   const fData = await fetch(`${process.env.REACT_APP_TEST_API}${api}`, {
     headers: {
-      Authorization: 'bearer ' + `${localStorage.getItem('token')}`,
+      Authorization: 'Bearer ' + `${localStorage.getItem('token')}`,
     },
   });
 
@@ -111,13 +116,48 @@ const getAPI = async (api: string) => {
   return [fData.status, res];
 };
 
-const putAPI = async (requestData: any, api: string) => {
+const putAPI = async (requestData: any, type: string, api: string) => {
+  if (type === 'form') {
+    const fData = await fetch(`${process.env.REACT_APP_TEST_API}${api}`, {
+      method: 'PUT',
+      body: requestData,
+      headers: {
+        Authorization: 'Bearer ' + `${window.localStorage.getItem('token')}`,
+      },
+    });
+
+    if (fData.status === 200) {
+      return [fData.status, null];
+    }
+
+    const res = await fData.json();
+
+    return [fData.status, res];
+  } else {
+    const fData = await fetch(`${process.env.REACT_APP_TEST_API}${api}`, {
+      method: 'PUT',
+      body: JSON.stringify(requestData),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + `${window.localStorage.getItem('token')}`,
+      },
+    });
+
+    if (fData.status === 200) {
+      return [fData.status, null];
+    }
+
+    const res = await fData.json();
+
+    return [fData.status, res];
+  }
+};
+
+const deleteAPI = async (api: string) => {
   const fData = await fetch(`${process.env.REACT_APP_TEST_API}${api}`, {
-    method: 'PUT',
-    body: JSON.stringify(requestData),
+    method: 'DELETE',
     headers: {
-      'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + `${window.localStorage.getItem('token')}`,
+      Authorization: 'Bearer ' + `${localStorage.getItem('token')}`,
     },
   });
 
@@ -130,4 +170,4 @@ const putAPI = async (requestData: any, api: string) => {
   return [fData.status, res];
 };
 
-export { useAsync, postAPI, getAPI, putAPI };
+export { useAsync, postAPI, getAPI, putAPI, deleteAPI };

@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { SyntheticEvent, useEffect } from 'react';
 import { useState } from 'react';
 import { getAPI } from '../../../hooks/useFetch';
 import { myClub, myComment, myPost } from '../../../type/type';
 import thumbnail from '../../../image/thumbnail.svg';
-import { init } from '../../../type/type';
+import setting from '../../../image/setting.svg';
+import { putAPI } from '../../../hooks/useFetch';
 
 const MyClub = () => {
   const [clubInfo, setClubInfo] = useState<myClub[]>([]);
@@ -23,7 +24,7 @@ const MyClub = () => {
         return (
           <>
             <div className="MyPage__div--belong-club">
-              <img src={thumbnail}></img>
+              <img src={val.imageUrl}></img>
               <div className="MyPage__div--club-info">
                 <div>{val.university}</div>
                 <div>{val.name}</div>
@@ -72,6 +73,9 @@ const MyComment = () => {
 
   const fetchData = async () => {
     const [status, res] = await getAPI('/api/user/comments');
+
+    console.log(res.commentData);
+
     setCommentInfo((commentInfo) => [...commentInfo, ...res]);
   };
 
@@ -85,9 +89,9 @@ const MyComment = () => {
         return (
           <>
             <div className="MyPage__div--myPost">
-              <div>{val.postTitle}</div>
-              <div>{val.commentData.content}</div>
-              <div>{val.commentData.createdAt}</div>
+              <div>{val?.postTitle}</div>
+              <div>{val?.commentData.content}</div>
+              <div>{val?.commentData.createdAt}</div>
             </div>
           </>
         );

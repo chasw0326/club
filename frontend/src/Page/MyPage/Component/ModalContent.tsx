@@ -1,13 +1,11 @@
 import React, { useEffect } from 'react';
 import { useState, useRef } from 'react';
-import { toEditorSettings } from 'typescript';
 import { postAPI, getAPI, putAPI } from '../../../hooks/useFetch';
 import back from '../../../image/back.svg';
 
 const ModalContent = ({ setModal }: { setModal: Function }) => {
   const [modify, setModify] = useState('');
   const inputRef = useRef<any>([]);
-
   const [inputInfo, setInputInfo] = useState({
     name: '',
     nickname: '',
@@ -44,13 +42,13 @@ const ModalContent = ({ setModal }: { setModal: Function }) => {
   };
 
   const submitInfo = async () => {
-    const [status, res] = await putAPI(inputInfo, '/api/user');
+    const [status, res] = await putAPI(inputInfo, 'json', '/api/user');
 
     console.log(status);
   };
 
   const submitPassword = async () => {
-    const [status, res] = await postAPI(
+    const [status, res] = await putAPI(
       passwordInfo,
       'json',
       '/api/user/password'

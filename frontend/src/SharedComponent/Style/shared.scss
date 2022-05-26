@@ -7,8 +7,12 @@ body {
 .MainHeader {
   display: flex;
   flex-direction: row;
-  justify-content: start;
+  justify-content: center;
+  align-items: center;
+  height: 90px;
   &-university {
+    position: relative;
+
     font-family: 'Jua', Arial, Helvetica, sans-serif;
     font-size: 50px;
     cursor: pointer;
@@ -18,16 +22,22 @@ body {
     width: 250px;
     height: 50px;
     position: relative;
-
+    margin-left: 10px;
     margin-top: 7px;
     font-family: inherit;
     font-weight: 700;
     font-size: 1.25rem;
     outline: none;
     background: transparent;
-    border: 4px solid $color-chatbox;
+    border: 2px solid #e1e6ec;
     padding: 0.4rem;
     box-sizing: border-box;
+  }
+
+  &-logout {
+    margin-top: 7px;
+    position: relative;
+    cursor: pointer;
   }
 
   &-myPage {
@@ -36,8 +46,15 @@ body {
     cursor: pointer;
   }
 
+  &__div--content-wrap {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    height: fit-content;
+    width: fit-content;
+  }
   &__div--club-create-modal {
-    position: absolute;
+    position: fixed;
     display: flex;
     flex-direction: row;
     width: 500px;
@@ -45,7 +62,7 @@ body {
     left: 50%;
     top: 50%;
     z-index: 2;
-    border-radius: 0.5em;
+
     background-color: white;
     transform: translate(-50%, -50%);
     justify-content: space-evenly;
@@ -69,7 +86,7 @@ body {
       color: white;
       font-weight: bold;
       margin-top: 50px;
-      width: 160px;
+      width: 206px;
       height: 35px;
       text-align: center;
       left: 50%;
@@ -81,6 +98,30 @@ body {
   }
 
   &__text {
+    position: relative;
+    font-weight: bold;
+    font-size: 15px;
+    left: 144px;
+    margin-bottom: 5px;
+    font-family: Dotum;
+
+    &area {
+      position: relative;
+      width: 150px;
+      font-size: 15px;
+      border: 1px solid lightgray;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 200px;
+      height: 59px;
+      margin-bottom: 10px;
+    }
+
+    &area:focus {
+      outline: none;
+      border: 2px solid gray;
+    }
+
     &--current-password,
     &--new-password,
     &--new-password-check {
@@ -96,24 +137,43 @@ body {
     }
 
     &--title {
-      position: absolute;
-
+      width: 200px;
+      height: 10px;
+      font-family: Dotum;
+      font-weight: bold;
+      position: relative;
       left: 50%;
       font-size: 35px;
       transform: translateX(-50%);
       top: -50px;
+      margin-bottom: 20px;
+    }
+  }
+
+  &__Input {
+    width: 200px;
+    height: 40px;
+    font-size: 15px;
+    position: relative;
+    margin-bottom: 10px;
+    border: 1px solid lightgray;
+    left: 50%;
+    transform: translateX(-50%);
+
+    &:focus {
+      outline: none;
+      border: 2px solid gray;
+    }
+
+    &--category {
+      position: relative;
+      width: 120px;
+      left: 145px;
+      margin-bottom: 15px;
     }
   }
 
   &__input {
-    &--box {
-      position: relative;
-      width: 150px;
-      height: 30px;
-      left: 36%;
-      transform: translateX(-50%);
-    }
-
     &--introduction {
       position: relative;
       width: 300px;
@@ -129,9 +189,11 @@ body {
 
   &__button {
     &--club-create {
+      position: relative;
       font-size: 25px;
       width: 150px;
       height: 50px;
+      top: 14px;
       cursor: pointer;
     }
   }
@@ -140,7 +202,6 @@ body {
     &--file {
       position: relative;
       bottom: 10px;
-      margin-left: -23px;
       display: flex;
       border-radius: 0.25rem;
       justify-content: center;
@@ -148,171 +209,38 @@ body {
       color: $semi-white;
       font-weight: bold;
       width: 110px;
-      height: 60px;
-      background-color: $navyblue;
-      left: 25%;
-
-      cursor: pointer;
-    }
-  }
-}
-
-.MainBody {
-  font-family: 'Jua', Arial, Helvetica, sans-serif;
-
-  &-itemFrame {
-    position: relative;
-    height: 800px;
-    width: 80vw;
-    border: 4px solid $grayblue;
-    border-radius: 0.5rem;
-    overflow: scroll;
-    justify-content: center;
-    align-items: center;
-    left: 50%;
-    transform: translateX(-50%);
-
-    &-clubItem {
-      position: relative;
-      display: flex;
-      align-items: center;
-      flex-direction: row;
-      width: 600px;
-      left: 50%;
-      transform: translateX(-50%);
-      margin-top: 10px;
-      height: 200px;
-      border: 1px solid black;
-      background-color: $semi-white;
-      cursor: pointer;
-      border-radius: 0.5rem;
-
-      &-right {
-        position: relative;
-      }
-
-      &-title {
-        position: absolute;
-        top: 20px;
-        font-size: 30px;
-      }
-
-      &-description {
-        position: relative;
-        left: 2px;
-        width: 300px;
-      }
-
-      &-member {
-        position: relative;
-        left: 2px;
-        top: 20px;
-        width: 300px;
-      }
-
-      &-address {
-        position: absolute;
-        bottom: 10px;
-        left: 520px;
-        width: 300px;
-      }
-    }
-  }
-
-  &-itemFrame::-webkit-scrollbar {
-    width: 8px;
-    height: 0px;
-  }
-  &-itemFrame::-webkit-scrollbar-thumb {
-    background-color: #dfdfdf;
-    border-radius: 10px;
-  }
-  &-itemFrame::-webkit-scrollbar-track {
-    background-color: rgba(0, 0, 0, 0.4);
-    border-radius: 10px;
-  }
-}
-
-.ClubPage {
-  font-family: 'Jua', Arial, Helvetica, sans-serif;
-
-  &-navigateBar {
-    display: flex;
-    flex-direction: row;
-    width: 100vw;
-    height: 50px;
-    margin-top: 10px;
-    justify-content: space-evenly;
-    &-information,
-    &-board,
-    &-photo,
-    &-chat {
-      font-family: 'Jua', Arial, Helvetica, sans-serif;
-      font-size: 20px;
-      width: 100px;
       height: 30px;
-      position: relative;
-      text-align: center;
+      background-color: $navyblue;
+      left: 146px;
+      top: -20px;
+
       cursor: pointer;
     }
-  }
-
-  &-middleFrame {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-    align-items: center;
-  }
-
-  .horizon {
-    position: relative;
-    width: 100vw;
-    margin-top: -10px;
-  }
-
-  &-thumbnail {
-    position: relative;
-    width: 500px;
-    height: 500px;
-  }
-
-  &-description {
-    position: relative;
-    width: 300px;
-    height: 300px;
-  }
-
-  &-signIn,
-  &-sign-done,
-  &-sign-wait {
-    font-size: 16px;
-    width: 200px;
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
-    color: rgb(255, 255, 255);
-    text-align: center;
-    line-height: 2.5em;
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
-    border-bottom-right-radius: 4px;
-    border-bottom-left-radius: 4px;
-    background-color: rgb(52, 152, 219);
-    cursor: pointer;
-  }
-
-  &-signIn:hover {
-    background-color: blue;
   }
 }
 
 .blur {
-  position: absolute;
+  position: fixed;
+  top: 0;
+  right: 0;
   background-color: black;
+  top: 0px;
   opacity: 0.55;
   height: 100vh;
   width: 100vw;
-  top: 0px;
+  z-index: 1;
+  filter: blur(5px);
+}
+
+.blur2 {
+  position: absolute;
+  background-color: black;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0.55;
+  height: 117vh;
+  width: 100vw;
   z-index: 1;
   filter: blur(5px);
 }
