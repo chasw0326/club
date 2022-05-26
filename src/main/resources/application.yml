@@ -1,6 +1,9 @@
 spring:
   profiles:
     active: local
+  servlet:
+    multipart:
+      max-file-size: 10MB
 
 # 쓰레드풀 설정
 async:
