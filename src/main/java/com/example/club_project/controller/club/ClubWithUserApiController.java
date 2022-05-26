@@ -1,6 +1,7 @@
 package com.example.club_project.controller.club;
 
 import com.example.club_project.exception.custom.ForbiddenException;
+import com.example.club_project.exception.custom.InvalidArgsException;
 import com.example.club_project.security.dto.AuthUserDTO;
 import com.example.club_project.service.clubjoinstate.ClubJoinStateService;
 import com.example.club_project.service.post.PostService;
@@ -119,23 +120,49 @@ public class ClubWithUserApiController {
     }
 
     /**
-     * 동아리 멤버로 변경(ex.가입신청 승인)
+     * 가입신청 승인
+     *
+     * PUT api/clubs/{clubId}/join-approval/{userId}
+     */
+    @PutMapping("/{clubId}/join-approval/{userId}")
+    public void joinApproval(@AuthenticationPrincipal AuthUserDTO authUser,
+                         @PathVariable("clubId") Long clubId,
+                         @PathVariable("userId") Long userId) {
+
+        if (clubJoinStateService.hasManagerRole(authUser.getId(), clubId)) {
+
+            if (clubJoinStateService.isWaitingApproval(userId, clubId)) {
+                clubJoinStateService.toMember(userId, clubId);
+                return;
+            }
+
+            throw new InvalidArgsException("가입 신청 대기중인 회원만 가입신청 승인을 할 수 있습니다.");
+        }
+
+        throw new ForbiddenException("권한이 없습니다.");
+    }
+
+    /**
+     * 동아리 멤버로 변경
      *
      * PUT api/clubs/{clubId}/member/{userId}
-     *
-     * requestBody userId
      */
     @PutMapping("/{clubId}/member/{userId}")
     public void toMember(@AuthenticationPrincipal AuthUserDTO authUser,
                          @PathVariable("clubId") Long clubId,
                          @PathVariable("userId") Long userId) {
 
-        if (clubJoinStateService.hasManagerRole(authUser.getId(), clubId)) {
+        if (clubJoinStateService.isClubMaster(authUser.getId(), clubId)) {
 
-            if (!clubJoinStateService.isJoined(userId, clubId)) {
-                clubJoinStateService.toMember(userId, clubId);
+            if (authUser.getId().equals(userId)) {
+                throw new InvalidArgsException("마스터는 동아리 멤버로 변경할 수 없습니다.");
             }
 
+            if (!clubJoinStateService.isJoined(userId, clubId)) {
+                throw new InvalidArgsException("동아리 회원이 아닌 사용자는 동아리 멤버로 변경할 수 없습니다.");
+            }
+
+            clubJoinStateService.toMember(userId, clubId);
             return;
         }
 
@@ -146,8 +173,6 @@ public class ClubWithUserApiController {
      * 동아리 운영진으로 변경
      *
      * PUT api/clubs/{clubId}/manager/{userId}
-     *
-     * requestBody userId
      */
     @PutMapping("/{clubId}/manager/{userId}")
     public void toManager(@AuthenticationPrincipal AuthUserDTO authUser,
@@ -157,7 +182,11 @@ public class ClubWithUserApiController {
         if (clubJoinStateService.isClubMaster(authUser.getId(), clubId)) {
 
             if (authUser.getId().equals(userId)) {
-                throw new ForbiddenException("마스터는 운영진으로 변경할 수 없습니다.");
+                throw new InvalidArgsException("마스터는 운영진으로 변경할 수 없습니다.");
+            }
+
+            if (!clubJoinStateService.isJoined(userId, clubId)) {
+                throw new InvalidArgsException("동아리 회원이 아닌 사용자는 운영진으로 변경할 수 없습니다.");
             }
 
             clubJoinStateService.toManager(userId, clubId);
@@ -171,8 +200,6 @@ public class ClubWithUserApiController {
      * 동아리 마스터 변경
      *
      * PUT api/clubs/{clubId}/master/{userId}
-     *
-     * requestBody userId
      */
     @PutMapping("/{clubId}/master/{userId}")
     public void changeMaster(@AuthenticationPrincipal AuthUserDTO authUser,
@@ -180,10 +207,66 @@ public class ClubWithUserApiController {
                              @PathVariable("userId") Long userId) {
 
         if (clubJoinStateService.isClubMaster(authUser.getId(), clubId)) {
+
+            if (authUser.getId().equals(userId)) {
+                throw new InvalidArgsException("자기 자신을 마스터로 변경할 수 없습니다.");
+            }
+
             clubJoinStateService.changeMaster(authUser.getId(), userId, clubId);
             return;
         }
 
         throw new ForbiddenException("권한이 없습니다.");
+    }
+
+    /**
+     * 동아리 마스터인지
+     *
+     * GET api/clubs/{clubId}/is-master
+     *
+     * master: true
+     * manager: false
+     * member: false
+     */
+    @GetMapping("/{clubId}/is-master")
+    public ClubJoinStateDTO.JoinStateResponse isClubMaster(@AuthenticationPrincipal AuthUserDTO authUser,
+                                                           @PathVariable("clubId") Long clubId) {
+
+        boolean result = clubJoinStateService.isClubMaster(authUser.getId(), clubId);
+        return new ClubJoinStateDTO.JoinStateResponse(result);
+    }
+
+    /**
+     * 동아리 운영진인지
+     *
+     * GET api/clubs/{clubId}/is-manager
+     *
+     * master: true
+     * manager: true
+     * member: false
+     */
+    @GetMapping("/{clubId}/is-manager")
+    public ClubJoinStateDTO.JoinStateResponse isClubManager(@AuthenticationPrincipal AuthUserDTO authUser,
+                                                            @PathVariable("clubId") Long clubId) {
+
+        boolean result = clubJoinStateService.hasManagerRole(authUser.getId(), clubId);
+        return new ClubJoinStateDTO.JoinStateResponse(result);
+    }
+
+    /**
+     * 동아리 회원인지
+     *
+     * GET api/clubs/{clubId}/is-member
+     *
+     * master: true
+     * manager: true
+     * member: true
+     */
+    @GetMapping("/{clubId}/is-member")
+    public ClubJoinStateDTO.JoinStateResponse isClubMember(@AuthenticationPrincipal AuthUserDTO authUser,
+                                                           @PathVariable("clubId") Long clubId) {
+
+        boolean result = clubJoinStateService.hasMemberRole(authUser.getId(), clubId);
+        return new ClubJoinStateDTO.JoinStateResponse(result);
     }
 }

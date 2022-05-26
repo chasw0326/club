@@ -2,10 +2,12 @@ package com.example.club_project.util.upload;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.example.club_project.config.AwsConfigure;
+import com.example.club_project.controller.common.AttachedFile;
 import com.example.club_project.exception.custom.InvalidArgsException;
-import com.example.club_project.exception.custom.UnloadException;
+import com.example.club_project.exception.custom.UploadException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
@@ -13,10 +15,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.Optional;
+import java.io.InputStream;
 import java.util.UUID;
 
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
@@ -33,71 +34,32 @@ public class S3UploadUtil implements UploadUtil {
     private final AwsConfigure awsConfigure;
 
     @Override
-    public String upload(MultipartFile uploadFile, String uploadPath) {
+    public String upload(AttachedFile uploadFile, String uploadPath) {
+        byte[] bytes = uploadFile.getBytes();
+        String filename = uploadFile.getOriginalFileName();
+        String contentType = uploadFile.getContentType();
 
-        if (!isImageFile(uploadFile)) {
-            throw new InvalidArgsException("Only image file format is allowed.");
-        }
-
-        try {
-            // 파일로 변환할 수 없으면 에러
-            File convertedFile = convert(uploadFile)
-                    .orElseThrow(() -> new UnloadException(
-                            String.format("File convert fail with %s", uploadFile.getOriginalFilename()))
-                    );
-
-            return upload(convertedFile, uploadPath);
-
-        } catch (IOException ignored) {
-            throw new UnloadException(String.format("ignored IOException occur with %s", uploadFile.getOriginalFilename()));
-        }
+        return upload(bytes, uploadPath, filename, contentType);
     }
 
-    private boolean isImageFile(MultipartFile uploadFile) {
-        if (ObjectUtils.isNotEmpty(uploadFile)
-            && uploadFile.getSize() > 0
-            && StringUtils.isNotEmpty(uploadFile.getOriginalFilename())) {
-
-            String contentType = uploadFile.getContentType();
-            return isNotEmpty(contentType) && contentType.toLowerCase().startsWith("image");
-        }
-
-        return false;
+    private String upload(byte[] bytes, String uploadPath, String filename, String contentType) {
+        String key = uploadPath + "/" + UUID.randomUUID() + filename;
+        return upload(new ByteArrayInputStream(bytes), bytes.length, key, contentType);
     }
 
-    private Optional<File> convert(MultipartFile file) throws IOException {
-        File convertFile = new File(file.getOriginalFilename());
-        if(convertFile.createNewFile()) {
-            try (FileOutputStream fos = new FileOutputStream(convertFile)) {
-                fos.write(file.getBytes());
-            }
-            return Optional.of(convertFile);
-        }
+    private String upload(InputStream in, long length, String key, String contentType) {
 
-        return Optional.empty();
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+
+        objectMetadata.setContentLength(length);
+        objectMetadata.setContentType(contentType);
+
+        PutObjectRequest putObjectRequest = new PutObjectRequest(awsConfigure.getBucket(), key, in, objectMetadata);
+        return putS3(putObjectRequest);
     }
 
-    // S3로 파일 업로드하기
-    private String upload(File uploadFile, String dirName) {
-        String fileName = dirName + "/" + UUID.randomUUID() + uploadFile.getName();   // S3에 저장된 파일 이름
-        String uploadImageUrl = putS3(uploadFile, fileName); // s3로 업로드
-        removeNewFile(uploadFile);
-        return uploadImageUrl;
-    }
-
-    // S3로 업로드
-    private String putS3(File uploadFile, String fileName) {
-        String bucket = awsConfigure.getBucket();
-
-        amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, uploadFile).withCannedAcl(CannedAccessControlList.PublicRead));
-        return amazonS3Client.getUrl(bucket, fileName).toString();
-    }
-
-    private void removeNewFile(File targetFile) {
-        if (targetFile.delete()) {
-            log.debug("파일이 삭제되었습니다.");
-        } else {
-            log.debug("파일이 삭제되지 않았습니다.");
-        }
+    private String putS3(PutObjectRequest request) {
+        amazonS3Client.putObject(request.withCannedAcl(CannedAccessControlList.PublicRead));
+        return amazonS3Client.getUrl(awsConfigure.getBucket(), request.getKey()).toString();
     }
 }

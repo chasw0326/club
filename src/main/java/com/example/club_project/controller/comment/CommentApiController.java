@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+
 @RequestMapping("/api/comment")
 @RestController
 @RequiredArgsConstructor
@@ -15,7 +16,7 @@ public class CommentApiController {
 
     private final CommentService commentService;
 
-    // TODO: 수정예정
+
     @GetMapping
     public CommentDTO.Response getAllCommentsWithPost(@RequestParam("postId") Long postId) {
         return commentService.getCommentDtos(postId);
@@ -34,13 +35,13 @@ public class CommentApiController {
 
     @PutMapping("/{commentId}")
     public void update(@AuthenticationPrincipal AuthUserDTO authUser,
-                       @RequestBody String content,
+                       @RequestBody CommentDTO.PutRequest request,
                        @PathVariable("commentId") Long commentId) {
 
         commentService.update(
                 authUser.getId(),
                 commentId,
-                content
+                request.getContent()
         );
     }
 

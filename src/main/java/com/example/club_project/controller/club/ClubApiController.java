@@ -1,7 +1,8 @@
 package com.example.club_project.controller.club;
 
+import com.example.club_project.controller.common.AttachedFile;
 import com.example.club_project.exception.custom.ForbiddenException;
-import com.example.club_project.exception.custom.UnloadException;
+import com.example.club_project.exception.custom.UploadException;
 import com.example.club_project.security.dto.AuthUserDTO;
 import com.example.club_project.service.club.ClubService;
 import com.example.club_project.service.clubjoinstate.ClubJoinStateService;
@@ -140,13 +141,16 @@ public class ClubApiController {
                                 @RequestPart MultipartFile clubImage) {
 
         if (clubJoinStateService.isClubMaster(authUser.getId(), clubId)) {
-            supplyAsync(() -> uploadUtil.upload(clubImage, "club-image"), taskExecutor)
+
+            AttachedFile attachedFile = AttachedFile.toAttachedFile(clubImage);
+
+            supplyAsync(() -> uploadUtil.upload(attachedFile, "club-image"), taskExecutor)
                     .thenAccept(clubImageUrl -> {
                         clubService.updateImage(clubId, clubImageUrl);
                     })
                     .exceptionally(throwable -> {
-                        if (throwable instanceof UnloadException) {
-                            log.warn("UnloadException: {}",throwable.getMessage(), throwable);
+                        if (throwable instanceof UploadException) {
+                            log.warn("UploadException: {}",throwable.getMessage(), throwable);
                         } else if (throwable instanceof Exception) {
                             log.warn("UnHandleException: {}",throwable.getMessage(), throwable);
                         }
