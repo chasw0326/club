@@ -16,18 +16,7 @@ import java.util.List;
 
 import static java.util.stream.Collectors.*;
 
-@AllArgsConstructor
-@Getter
 public class ClubDTO {
-
-    private Long id;
-    private String name;
-    private String address;
-    private String university;
-    private String description;
-    private String imageUrl;
-    private Long category;
-    private long clubMembers;
 
     /**
      * GET
@@ -134,6 +123,19 @@ public class ClubDTO {
                             .name(member.getUser().getName())
                             .build();
         }
+    }
+
+    @AllArgsConstructor
+    @Getter
+    public static class SimpleResponse {
+        private Long id;
+        private String name;
+        private String address;
+        private String university;
+        private String description;
+        private String imageUrl;
+        private Long category;
+        private long clubMembers;
     }
 
     @Builder
