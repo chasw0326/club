@@ -1,11 +1,18 @@
 import React, { useState, useEffect, useContext, SyntheticEvent } from 'react';
-import { clubItem, category } from '../../../type/type';
+import {
+  clubItem,
+  category,
+  myClub,
+  clubInfo,
+  postInfo,
+} from '../../../type/type';
 import { Navigate, useNavigate } from 'react-router-dom';
 import ClubItem from '../../../SharedComponent/ClubItem';
 import '../Style/body.scss';
 import sad from '../../../image/sad.svg';
 import { store } from '../../../hooks/store';
 import { getAPI } from '../../../hooks/useFetch';
+import thumbnail from '../../../image/thumbnail.svg';
 
 const categoryList: any = Object.freeze({
   '문화/예술/공연': 1,
@@ -21,7 +28,7 @@ const data = Object.keys(categoryList);
 
 const MainBody = () => {
   const [page, setPage] = useState(0);
-
+  const [isLoading, setIsLoading] = useState(false);
   const [globalState, setGlobalState] = useContext(store);
   const [categoryState, setCategory] = useState<category[]>([]);
   const [curCategory, setCurCategory] = useState(0);
@@ -44,8 +51,10 @@ const MainBody = () => {
   const [target, setTarget]: any = useState(null);
 
   const fetchData = async () => {
+    setIsLoading(true);
     const [status, res] = await getAPI(`/api/clubs`);
     setClubList(res);
+    setIsLoading(false);
   };
 
   const updateClubList = async () => {
@@ -119,7 +128,9 @@ const MainBody = () => {
       <hr className="MainBody-horizon"></hr>
       <div className="MainBody">
         <div className="MainBody-itemFrame">
-          {clubList?.length === 0 ? (
+          {isLoading ? (
+            <div className="MainBody-loading"></div>
+          ) : clubList?.length === 0 ? (
             <div className="MainBody-noResult">
               <img src={sad} width="100px" height="100px"></img>동아리가
               존재하지 않아요!
@@ -140,9 +151,80 @@ const MainBody = () => {
 };
 
 const MainInformation = () => {
+  const [joinedClub, setJoinedClub] = useState<myClub[]>([]);
+  const navigate = useNavigate();
+  const fetchData = async () => {
+    const [status, res] = await getAPI(`/api/users/joined-club`);
+    if (status === 200) setJoinedClub(res);
+    else console.log(res);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <>
-      <div className="MainInformation"></div>
+      <div className="MainInformation">
+        <div className="MainInformation__text--myClub">나의 동아리</div>
+        <div className="MainInformation__div--club-wrap">
+          {joinedClub?.map((val: myClub, idx: number) => {
+            return <MyClub clubInfo={val}></MyClub>;
+          })}
+        </div>
+        <div className="MainInformation__text--myClub">최근 소식</div>
+        <div className="MainInformation__div--club-wrap">
+          {joinedClub?.map((val: myClub, idx: number) => {
+            return <LatestPost clubInfo={val}></LatestPost>;
+          })}
+        </div>
+      </div>
+    </>
+  );
+};
+
+const MyClub = ({ clubInfo }: { clubInfo: myClub }) => {
+  const navigate = useNavigate();
+
+  const moveTargetClub = (e: SyntheticEvent) => {
+    e.stopPropagation();
+    const target = e.target as HTMLDivElement;
+    navigate(`/information/${target.dataset.clubid}`);
+  };
+
+  return (
+    <>
+      <div className="MyClub__div" key={clubInfo.id}>
+        <img
+          className="MyClub__img--club-thumbnail"
+          src={clubInfo.imageUrl ? clubInfo.imageUrl : thumbnail}
+          width="50px"
+          height="50px"
+          data-clubid={clubInfo.id}
+          onClick={moveTargetClub}
+        ></img>
+        <div className="MyClub__div--club-name">{clubInfo.name}</div>
+      </div>
+    </>
+  );
+};
+
+const LatestPost = ({ clubInfo }: { clubInfo: myClub }) => {
+  const [postList, setPostList] = useState<postInfo[]>([]);
+
+  const fetchData = async () => {
+    const [status, res] = await getAPI(`/api/post?clubId=${clubInfo.id}`);
+    setPostList(res);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  return (
+    <>
+      {clubInfo?.name}
+      {postList[0]?.content}
     </>
   );
 };

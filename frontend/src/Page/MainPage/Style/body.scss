@@ -1,35 +1,37 @@
 @import '../../../stylesheets//palette.scss';
 
-.MainInformation {
-  position: relative;
-  height: 800px;
-  width: 400px;
-  border: 2px solid $grayblue;
-  border-radius: 0.25rem;
-  left: 20px;
-  overflow: scroll;
-  justify-content: center;
-  align-items: center;
-
-  &::-webkit-scrollbar {
-    width: 0px;
-    height: 0px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: #dfdfdf;
-    border-radius: 10px;
-  }
-  &::-webkit-scrollbar-track {
-    background-color: rgba(0, 0, 0, 0.4);
-    border-radius: 10px;
-  }
-}
-
 .MainBody {
   font-family: 'Jua', Arial, Helvetica, sans-serif;
   display: flex;
   flex-direction: row;
   justify-content: center;
+
+  &-loading {
+    position: relative;
+    left: 280px;
+    top: 270px;
+    width: 200px;
+    height: 200px;
+    transform: translate(-50%, -50%);
+
+    border: thick solid #3c4c5b;
+    border: {
+      right-color: lightgray;
+      top-color: ligthgray;
+      radius: 100%;
+    }
+
+    animation: spin 800ms infinite linear;
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(359deg);
+    }
+  }
 
   &-mainInformation-title {
     width: 370px;
@@ -212,6 +214,56 @@
     &--category-box:hover {
       font-weight: bold;
       color: black;
+    }
+  }
+}
+
+.MainInformation {
+  position: relative;
+  height: 800px;
+  width: 400px;
+  left: 20px;
+
+  justify-content: center;
+  align-items: center;
+
+  &__text {
+    &--myClub {
+      position: relative;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 20px;
+      font-weight: bold;
+      left: 9px;
+    }
+  }
+
+  &__div {
+    &--club-wrap {
+      display: flex;
+      flex-direction: row;
+
+      flex-wrap: wrap;
+      width: 400px;
+      overflow-wrap: normal;
+    }
+  }
+}
+
+.MyClub {
+  &__div {
+    font-family: 'Noto Sans KR', sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+    width: 120px;
+  }
+
+  &__img {
+    &--club-thumbnail {
+      border-radius: 0.25rem;
+      cursor: pointer;
     }
   }
 }
