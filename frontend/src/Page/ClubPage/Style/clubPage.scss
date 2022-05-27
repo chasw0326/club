@@ -102,8 +102,7 @@
     font-size: 18px;
     width: 150px;
     position: relative;
-    left: 50%;
-    transform: translateX(-50%);
+    top: 60px;
     color: black;
     font-weight: bold;
     text-align: center;
@@ -656,6 +655,22 @@ input[class*='input'] {
 }
 
 .Information {
+  &__div {
+    &--rightComponent {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    &--club-introduction {
+      font-family: 'Noto Sans KR', sans-serif;
+      bottom: 78px;
+      position: relative;
+      font-size: 30px;
+    }
+  }
+
   &__button {
     &--edit-button {
       display: flex;

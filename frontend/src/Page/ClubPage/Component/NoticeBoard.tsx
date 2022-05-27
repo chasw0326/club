@@ -86,6 +86,7 @@ const PostList = ({
 }) => {
   const clubID = window.location.pathname.split('/')[2];
   const [postList, setPostList] = useState<postInfo[]>([]);
+  const [isPostOpen, setIsPostOpen] = useState(false);
   const fetchData = async () => {
     const [status, res] = await getAPI(`/api/post?clubId=${clubID}`);
 

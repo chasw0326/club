@@ -32,6 +32,11 @@ const InformationBoard = () => {
       'json',
       `/api/clubs/${clubID}/member`
     );
+
+    if (status === 200) {
+      alert('가입 신청이 완료되었습니다.');
+      window.location.reload();
+    }
   };
 
   const setInfo = async () => {
@@ -97,25 +102,26 @@ const InformationBoard = () => {
             </>
           ) : null}
         </div>
-
-        <div className="ClubPage-description">
-          {clubInformation?.description}
+        <div className="Information__div--rightComponent">
+          <div className="Information__div--club-introduction">동아리 소개</div>
+          <div className="ClubPage-description">
+            {clubInformation?.description}
+          </div>
+          {isSigned ? (
+            <div className="ClubPage-sign-done" onClick={quitClub}>
+              탈퇴하기
+            </div>
+          ) : signWait ? (
+            <div className="ClubPage-sign-wait" onClick={requestSign}>
+              가입대기 중
+            </div>
+          ) : (
+            <div className="ClubPage-signIn" onClick={requestSign}>
+              가입하기
+            </div>
+          )}
         </div>
       </div>
-      <hr className="MainBody-horizon"></hr>
-      {isSigned ? (
-        <div className="ClubPage-sign-done" onClick={quitClub}>
-          탈퇴하기
-        </div>
-      ) : signWait ? (
-        <div className="ClubPage-sign-wait" onClick={requestSign}>
-          가입대기 중
-        </div>
-      ) : (
-        <div className="ClubPage-signIn" onClick={requestSign}>
-          가입하기
-        </div>
-      )}
     </>
   );
 };

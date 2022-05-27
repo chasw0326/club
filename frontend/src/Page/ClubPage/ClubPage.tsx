@@ -63,6 +63,10 @@ const ClubPage = () => {
             className={
               category === 'board'
                 ? 'ClubPage-navigateBar-information-active'
+                : category === 'post'
+                ? 'ClubPage-navigateBar-information-active'
+                : category === 'write'
+                ? 'ClubPage-navigateBar-information-active'
                 : 'ClubPage-navigateBar-information'
             }
             onClick={selectCategory}
@@ -98,6 +102,7 @@ const ClubPage = () => {
         </div>
         <hr className="MainBody-horizon"></hr>
         <Board state={category} setCategory={setCategory}></Board>
+        <hr className="MainBody-horizon"></hr>
       </div>
     </>
   );
