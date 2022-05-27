@@ -102,7 +102,7 @@ const InformationBoard = () => {
           {clubInformation?.description}
         </div>
       </div>
-      <hr></hr>
+      <hr className="MainBody-horizon"></hr>
       {isSigned ? (
         <div className="ClubPage-sign-done" onClick={quitClub}>
           탈퇴하기

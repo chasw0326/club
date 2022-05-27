@@ -98,7 +98,6 @@ const ClubPage = () => {
         </div>
         <hr className="MainBody-horizon"></hr>
         <Board state={category} setCategory={setCategory}></Board>
-        <hr></hr>
       </div>
     </>
   );

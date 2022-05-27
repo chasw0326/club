@@ -24,12 +24,10 @@ const categoryList: any = Object.freeze({
   친목: 7,
 });
 
-const data = Object.keys(categoryList);
-
 const MainBody = () => {
   const [page, setPage] = useState(0);
+  const [pageEnd, setPageEnd] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [globalState, setGlobalState] = useContext(store);
   const [categoryState, setCategory] = useState<category[]>([]);
   const [curCategory, setCurCategory] = useState(0);
   const [clubList, setClubList] = useState<clubItem[]>([]);
@@ -52,27 +50,29 @@ const MainBody = () => {
 
   const fetchData = async () => {
     setIsLoading(true);
-    const [status, res] = await getAPI(`/api/clubs`);
+    const [status, res] = await getAPI(`/api/clubs?page=${page}`);
+    if (res.length < 5) setPageEnd(true);
     setClubList(res);
     setIsLoading(false);
   };
 
   const updateClubList = async () => {
     let api = '';
-    if (curCategory === 0) {
-      api = '/api/clubs';
-    } else api = `/api/clubs?category=${curCategory}page=${page}`;
-
+    if (curCategory === 0) api = `/api/clubs?page=${page}`;
+    else api = `/api/clubs?category=${curCategory}`;
     const [status, res] = await getAPI(api);
-
     setClubList((clubList) => [...clubList, ...res]);
+    if (res.length < 5) {
+      setPageEnd(true);
+    }
   };
 
   const callback = async ([entry]: any, observer: any) => {
     if (entry.isIntersecting && clubList.length > 3) {
-      observer.unobserve(entry.target);
-      await updateClubList();
-      observer.observe(entry.target);
+      setPage((page) => page + 1);
+      observer.disconnect();
+      console.log('옵저버 콜백');
+      setTimeout(() => observer.observe(target), 1000);
     }
   };
 
@@ -82,20 +82,19 @@ const MainBody = () => {
   }, []);
 
   useEffect(() => {
-    setGlobalState({ ...globalState, categories: categoryState });
-  }, [categoryState]);
+    if (page > 0) {
+      updateClubList();
+    }
+  }, [page]);
 
   useEffect(() => {
     let observer: any;
-
     if (target) {
       observer = new IntersectionObserver(callback, { threshold: 1.0 });
-
       observer.observe(target);
     }
-
     return () => observer && observer.disconnect();
-  }, [target, curCategory]);
+  }, [curCategory, target]);
 
   return (
     <>
@@ -137,10 +136,13 @@ const MainBody = () => {
             </div>
           ) : (
             <>
+              {' '}
               {clubList?.map((val: any, idx: number) => {
                 return <ClubItem key={idx} item={val}></ClubItem>;
               })}
-              <div ref={setTarget} className="Target-Element"></div>
+              {pageEnd ? null : (
+                <div ref={setTarget} className="Target-Element"></div>
+              )}
             </>
           )}
         </div>
@@ -155,6 +157,7 @@ const MainInformation = () => {
   const navigate = useNavigate();
   const fetchData = async () => {
     const [status, res] = await getAPI(`/api/users/joined-club`);
+
     if (status === 200) setJoinedClub(res);
     else console.log(res);
   };
