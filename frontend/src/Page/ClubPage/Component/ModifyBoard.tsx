@@ -47,7 +47,6 @@ const ModifyBoard = ({ postInfo }: { postInfo: postInfo | any }) => {
     <>
       <div className="ClubPage__div--write-wrap">
         <div>
-          제목 :{' '}
           <input
             id="title"
             className="ClubPage__input--write-title"

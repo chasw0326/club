@@ -175,7 +175,7 @@ const MainInformation = () => {
             return <MyClub clubInfo={val}></MyClub>;
           })}
         </div>
-        <div className="MainInformation__text--myClub">최근 소식</div>
+        <div className="MainInformation__text--latest">최근 소식</div>
         <div className="MainInformation__div--club-wrap">
           {joinedClub?.map((val: myClub, idx: number) => {
             return <LatestPost clubInfo={val}></LatestPost>;
@@ -214,10 +214,21 @@ const MyClub = ({ clubInfo }: { clubInfo: myClub }) => {
 
 const LatestPost = ({ clubInfo }: { clubInfo: myClub }) => {
   const [postList, setPostList] = useState<postInfo[]>([]);
-
+  const navigate = useNavigate();
   const fetchData = async () => {
     const [status, res] = await getAPI(`/api/post?clubId=${clubInfo.id}`);
-    setPostList(res);
+
+    if (res.length < 3) {
+      setPostList(res);
+    } else {
+      const latestThree = res.slice(0, 3);
+      setPostList(latestThree);
+    }
+  };
+
+  const postClick = (e: SyntheticEvent) => {
+    const target = e.target as HTMLDivElement;
+    navigate(`/post/${clubInfo.id}/${target.dataset.postid}`);
   };
 
   useEffect(() => {
@@ -226,8 +237,28 @@ const LatestPost = ({ clubInfo }: { clubInfo: myClub }) => {
 
   return (
     <>
-      {clubInfo?.name}
-      {postList[0]?.content}
+      <div className="MyClub__div--latest-clubList">
+        <span className="MyClub__span--clubName">{clubInfo?.name}</span>
+        {postList?.map((val: postInfo, idx: number) => {
+          return (
+            <>
+              <div className="MyClub__div--latest-post">
+                <span className="N">{val.title}</span>
+                <span
+                  className="MyClub__span--latest-content"
+                  onClick={postClick}
+                  data-postid={val.postId}
+                >
+                  {val.content}
+                </span>
+                <span className="MyClub__span--date">
+                  {val.createdAt.split('T')[0]}
+                </span>
+              </div>
+            </>
+          );
+        })}
+      </div>
     </>
   );
 };

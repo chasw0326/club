@@ -235,13 +235,23 @@
       font-weight: bold;
       left: 9px;
     }
+
+    &--latest {
+      position: relative;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 20px;
+      margin-top: 15px;
+      top: 10px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      left: 9px;
+    }
   }
 
   &__div {
     &--club-wrap {
       display: flex;
       flex-direction: row;
-
       flex-wrap: wrap;
       width: 400px;
       overflow-wrap: normal;
@@ -258,6 +268,73 @@
     align-items: center;
     height: 100px;
     width: 120px;
+
+    &--latest-clubList {
+      position: relative;
+      left: 10px;
+      width: fit-content;
+      height: fit-content;
+      margin-top: 20px;
+    }
+
+    &--latest-post {
+      margin-bottom: 10px;
+      position: relative;
+      display: flex;
+      cursor: pointer;
+      flex-direction: row;
+      align-items: center;
+      justify-content: start;
+      height: 20px;
+      width: 400px;
+      left: 10px;
+    }
+
+    &--latest-post::after {
+      content: '';
+      position: absolute;
+      margin-top: 23px;
+      background-color: #3c4c5b;
+      border-radius: 1.5rem;
+      height: 2px;
+      width: 0px;
+    }
+
+    &--latest-post:hover {
+      font-weight: bold;
+    }
+
+    &--latest-post:hover:after {
+      width: 96%;
+      transition: width 0.3s;
+    }
+  }
+
+  &__span {
+    &--clubName {
+      position: relative;
+      font-weight: bold;
+      width: fit-content;
+      height: fit-content;
+      font-size: 17px;
+      top: -9px;
+    }
+
+    &--date {
+      position: absolute;
+      width: 100px;
+      left: 300px;
+    }
+
+    &--latest-content {
+      position: absolute;
+      left: 70px;
+      overflow: hidden;
+      width: 200px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
   }
 
   &__img {
