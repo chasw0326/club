@@ -112,9 +112,7 @@ const InformationBoard = () => {
               탈퇴하기
             </div>
           ) : signWait ? (
-            <div className="ClubPage-sign-wait" onClick={requestSign}>
-              가입대기 중
-            </div>
+            <div className="ClubPage-sign-wait">가입대기 중</div>
           ) : (
             <div className="ClubPage-signIn" onClick={requestSign}>
               가입하기

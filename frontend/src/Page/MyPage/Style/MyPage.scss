@@ -7,6 +7,15 @@
     justify-content: center;
   }
 
+  &-noThumbnail {
+    font-family: 'Noto Sans KR', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
+    height: 200px;
+  }
+
   &-thumbnail {
     width: 200px;
     height: 200px;
@@ -141,14 +150,16 @@
 
   &__div {
     &--belong-club {
+      font-family: 'Noto Sans KR', sans-serif;
       position: relative;
       height: 100px;
       width: 300px;
       display: flex;
       flex-direction: row;
       left: 50%;
+      margin-bottom: 10px;
       transform: translateX(-50%);
-      border: 1px solid black;
+      border: 2px solid lightgray;
       border-radius: 0.25rem;
     }
 
@@ -164,12 +175,15 @@
       position: relative;
       margin-bottom: 5px;
       height: 50px;
-      width: 600px;
+      width: 400px;
+      padding-left: 5px;
+      padding-right: 5px;
       display: flex;
       flex-direction: row;
       left: 50%;
       transform: translateX(-50%);
-      border: 1px solid black;
+      border: 2px solid lightgray;
+      font-family: 'Noto Sans KR', sans-serif;
       justify-content: space-between;
       align-items: center;
       border-radius: 0.25rem;
@@ -208,6 +222,7 @@
     &--userName {
       font-size: 20px;
       width: 200px;
+      display: flex;
     }
     &--invite {
       font-size: 20px;
@@ -218,7 +233,7 @@
       width: fit-content;
       height: fit-content;
       font-size: 13px;
-      left: 115px;
+
       top: 70px;
     }
   }

@@ -1,7 +1,7 @@
 @import '../../../stylesheets//palette.scss';
 
 .MainBody {
-  font-family: 'Jua', Arial, Helvetica, sans-serif;
+  font-family: 'Noto Sans KR', sans-serif;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -125,8 +125,8 @@
       &-address {
         position: absolute;
         bottom: 10px;
-        left: 520px;
-        width: 300px;
+        right: 5px;
+        width: fit-content;
       }
     }
   }
@@ -223,7 +223,7 @@
   height: 800px;
   width: 400px;
   left: 20px;
-
+  font-family: 'Noto Sans KR', sans-serif;
   justify-content: center;
   align-items: center;
 
@@ -286,7 +286,7 @@
       align-items: center;
       justify-content: start;
       height: 20px;
-      width: 400px;
+      width: 431px;
       left: 10px;
     }
 
@@ -305,7 +305,7 @@
     }
 
     &--latest-post:hover:after {
-      width: 96%;
+      width: 100%;
       transition: width 0.3s;
     }
   }
@@ -323,17 +323,25 @@
     &--date {
       position: absolute;
       width: 100px;
-      left: 300px;
+      left: 350px;
     }
 
     &--latest-content {
       position: absolute;
-      left: 70px;
+      left: 120px;
       overflow: hidden;
       width: 200px;
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: nowrap;
+    }
+
+    &--latest-title {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      height: fit-content;
+      width: 100px;
     }
   }
 

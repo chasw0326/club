@@ -183,6 +183,8 @@
     }
 
     &--submit-frame {
+      position: relative;
+      margin-top: 15px;
       display: flex;
       flex-direction: row;
     }
@@ -195,7 +197,7 @@
     &--comment-frame {
       width: 100%;
       height: fit-content;
-      border: 1px solid black;
+      border: 2px solid lightgray;
       border-radius: 0.25rem;
       margin-bottom: 5px;
     }
@@ -218,6 +220,7 @@
 
   &__input {
     &--write-title {
+      font-family: 'Noto Sans KR', sans-serif;
       width: 100%;
       height: 27px;
       border: 2px solid #e1e6ec;
@@ -244,7 +247,7 @@
       height: 71px;
       width: 68px;
       margin-left: 13px;
-      border: 1px solid black;
+      border: 2px solid lightgray;
       justify-content: center;
       align-items: center;
       border-radius: 0.25rem;
@@ -344,12 +347,16 @@
 
   &__textarea {
     &--submit-comment {
+      font-family: 'Noto Sans KR', sans-serif;
       width: 511px;
       height: 67px;
+      border: 2px solid lightgray;
+      outline: none;
       resize: none;
     }
 
     &--write-area {
+      font-family: 'Noto Sans KR', sans-serif;
       position: relative;
       border: 2px solid #e1e6ec;
       top: 10px;

@@ -15,6 +15,7 @@ import { getAPI } from '../../../hooks/useFetch';
 import thumbnail from '../../../image/thumbnail.svg';
 
 const categoryList: any = Object.freeze({
+  전체: 0,
   '문화/예술/공연': 1,
   '봉사/사회활동': 2,
   '학술/교양': 3,
@@ -31,18 +32,21 @@ const MainBody = () => {
   const [categoryState, setCategory] = useState<category[]>([]);
   const [curCategory, setCurCategory] = useState(0);
   const [clubList, setClubList] = useState<clubItem[]>([]);
-  const categorizing = async (e: SyntheticEvent) => {
-    const target = e.target as HTMLDivElement;
-    const [status, res] = await getAPI(
-      `/api/clubs?category=${categoryList[target.innerHTML]}`
-    );
+  const categorizing = async () => {
+    setPage(0);
+    setPageEnd(false);
+    let api = ``;
+    if (curCategory === 0) api = `/api/clubs`;
+    else api = `/api/clubs?category=${curCategory}`;
+    const [status, res] = await getAPI(api);
     setClubList([]);
     setClubList(res);
-    setCurCategory(categoryList[target.innerHTML]);
   };
 
   const categorySetting = async () => {
     const [status, res]: any = await getAPI('/api/category');
+    const temp: category = { id: 0, name: '전체', description: '전체' };
+    res.splice(0, 0, temp);
     setCategory((categoryState) => [...categoryState, ...res]);
   };
 
@@ -59,7 +63,7 @@ const MainBody = () => {
   const updateClubList = async () => {
     let api = '';
     if (curCategory === 0) api = `/api/clubs?page=${page}`;
-    else api = `/api/clubs?category=${curCategory}`;
+    else api = `/api/clubs?category=${curCategory}&page=${page}`;
     const [status, res] = await getAPI(api);
     setClubList((clubList) => [...clubList, ...res]);
     if (res.length < 5) {
@@ -71,7 +75,6 @@ const MainBody = () => {
     if (entry.isIntersecting && clubList.length > 3) {
       setPage((page) => page + 1);
       observer.disconnect();
-      console.log('옵저버 콜백');
       setTimeout(() => observer.observe(target), 1000);
     }
   };
@@ -86,6 +89,10 @@ const MainBody = () => {
       updateClubList();
     }
   }, [page]);
+
+  useEffect(() => {
+    categorizing();
+  }, [curCategory]);
 
   useEffect(() => {
     let observer: any;
@@ -113,7 +120,9 @@ const MainBody = () => {
                 <div
                   key={idx}
                   className="MainBody__div--category-box"
-                  onClick={categorizing}
+                  onClick={() => {
+                    setCurCategory(categoryList[val?.name]);
+                  }}
                 >
                   {val.name}
                 </div>
@@ -158,8 +167,8 @@ const MainInformation = () => {
   const fetchData = async () => {
     const [status, res] = await getAPI(`/api/users/joined-club`);
 
-    if (status === 200) setJoinedClub(res);
-    else console.log(res);
+    if (status === 200) setJoinedClub(res.slice(0, 3));
+    else alert(res);
   };
 
   useEffect(() => {
@@ -243,7 +252,7 @@ const LatestPost = ({ clubInfo }: { clubInfo: myClub }) => {
           return (
             <>
               <div className="MyClub__div--latest-post">
-                <span className="N">{val.title}</span>
+                <span className="MyClub__span--latest-title">{val.title}</span>
                 <span
                   className="MyClub__span--latest-content"
                   onClick={postClick}

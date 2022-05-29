@@ -44,7 +44,10 @@ const ModalContent = ({ setModal }: { setModal: Function }) => {
   const submitInfo = async () => {
     const [status, res] = await putAPI(inputInfo, 'json', '/api/user');
 
-    console.log(status);
+    if (status === 200) {
+      alert('수정이 완료되었습니다.');
+      window.location.reload();
+    }
   };
 
   const submitPassword = async () => {

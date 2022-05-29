@@ -59,7 +59,7 @@ const MyPost = () => {
             <div className="MyPage__div--myPost">
               <div>{val.nickname}</div>
               <div>{val.title}</div>
-              <div>{val.createdAt}</div>
+              <div>{val.createdAt.split('T')[0]}</div>
             </div>
           </>
         );
@@ -91,7 +91,7 @@ const MyComment = () => {
             <div className="MyPage__div--myPost">
               <div>{val?.postTitle}</div>
               <div>{val?.commentData.content}</div>
-              <div>{val?.commentData.createdAt}</div>
+              <div>{val?.commentData.createdAt.split('T')[0]}</div>
             </div>
           </>
         );

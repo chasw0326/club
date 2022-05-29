@@ -52,6 +52,7 @@ const ModifyBoard = ({ postInfo }: { postInfo: postInfo | any }) => {
             className="ClubPage__input--write-title"
             type="text"
             onChange={setInputValue}
+            placeholder="제목을 입력하세요"
             ref={(el) => (inputRef.current[0] = el)}
           ></input>
         </div>

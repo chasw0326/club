@@ -57,6 +57,7 @@ const ClubCreateModal = ({
     if (status === 200) {
       alert('등록이 완료되었습니다.');
       setModal();
+      window.location.reload();
     } else {
       alert(res.message.exception);
     }
