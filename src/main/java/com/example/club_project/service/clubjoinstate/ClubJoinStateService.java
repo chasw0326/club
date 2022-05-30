@@ -13,13 +13,7 @@ public interface ClubJoinStateService {
     /**
      * DTO Region (for other controllers)
      */
-    List<ClubDTO> getClubDtos(String university, Pageable pageable);
-
-    List<ClubDTO> getClubDtos(String name, String university, Pageable pageable);
-
-    List<ClubDTO> getClubDtos(List<Long> categories, String university, Pageable pageable);
-
-    List<ClubDTO> getClubDtos(List<Long> categories, String university, String name, Pageable pageable);
+    List<ClubDTO.SimpleResponse> getClubDtos(List<Long> categories, String university, String name, Pageable pageable);
 
     ClubDTO.DetailResponse getClubDetailDto(Long clubId);
 

@@ -9,10 +9,8 @@ import com.example.club_project.service.clubjoinstate.ClubJoinStateService;
 import com.example.club_project.util.upload.UploadUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -50,30 +48,14 @@ public class ClubApiController {
      * 검색조건4: 카테고리 + 동아리 이름
      */
     @GetMapping
-    public List<ClubDTO> searchClubs(@AuthenticationPrincipal AuthUserDTO authUser,
-                                                              ClubDTO.SearchOption searchOption,
-                                     @PageableDefault(
-                                            size = 20,
-                                            sort = "id",
-                                            direction = Sort.Direction.DESC) Pageable pageable) {
+    public List<ClubDTO.SimpleResponse> searchClubs(@AuthenticationPrincipal AuthUserDTO authUser,
+                                                                ClubDTO.SearchOption searchOption,
+                                                    @PageableDefault(size = 5) Pageable pageable) {
 
-        if (ObjectUtils.isEmpty(searchOption.getName()) && ObjectUtils.isEmpty(searchOption.getCategories())) {
-            return clubJoinStateService.getClubDtos(authUser.getUniversity(), pageable);
-        } else if (ObjectUtils.isEmpty(searchOption.getCategories())) {
-            return clubJoinStateService.getClubDtos(searchOption.getName(),
-                                                    authUser.getUniversity(),
-                                                    pageable);
-
-        } else if (ObjectUtils.isEmpty(searchOption.getName())) {
-            return clubJoinStateService.getClubDtos(searchOption.getCategories(),
-                                                    authUser.getUniversity(),
-                                                    pageable);
-        } else {
-            return clubJoinStateService.getClubDtos(searchOption.getCategories(),
-                                                    authUser.getUniversity(),
-                                                    searchOption.getName(),
-                                                    pageable);
-        }
+        return clubJoinStateService.getClubDtos(searchOption.getCategories(),
+                                                authUser.getUniversity(),
+                                                searchOption.getName(),
+                                                pageable);
     }
 
     /**
