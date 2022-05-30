@@ -84,19 +84,23 @@ const PostList = ({
   setPostInfo: any;
   setCategory: any;
 }) => {
+  const [page, setPage] = useState(0);
   const clubID = window.location.pathname.split('/')[2];
   const [postList, setPostList] = useState<postInfo[]>([]);
   const [isPostOpen, setIsPostOpen] = useState(false);
   const fetchData = async () => {
-    const [status, res] = await getAPI(`/api/post?clubId=${clubID}`);
+    const [status, res] = await getAPI(
+      `/api/post?clubId=${clubID}&page=${page}`
+    );
 
     if (status === 200) {
-      setPostList((postList) => [...postList, ...res]);
+      setPostList((postList) => res);
     } else {
       alert(res.message);
       navigate(-1);
     }
   };
+
   const navigate = useNavigate();
 
   const postClick = (e: SyntheticEvent) => {
@@ -108,16 +112,24 @@ const PostList = ({
       nickname: target.dataset.nickname,
     });
     setCategory('post');
-    navigate(`/post/${clubID}/${target.dataset.postid}`);
+    navigate(`/post/${clubID}/${target.dataset.postid}/${page + 1}`);
   };
 
   const writeClick = () => {
     setCategory('write');
   };
 
+  const nextPage = () => {
+    setPage((page) => page + 1);
+  };
+
+  const prevPage = () => {
+    setPage((page) => page - 1);
+  };
+
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [page]);
 
   return (
     <>
@@ -163,9 +175,21 @@ const PostList = ({
           없어요!
         </div>
       )}
-
-      <div className="ClubPage__button--post-button" onClick={writeClick}>
-        글쓰기
+      <div className="NoticeBoard-footer">
+        {' '}
+        {page ? (
+          <span className="NoticeBoard__button--prevPage" onClick={prevPage}>
+            이전페이지
+          </span>
+        ) : null}
+        <span className="ClubPage__button--post-button" onClick={writeClick}>
+          글쓰기{' '}
+        </span>
+        {postList.length < 20 ? null : (
+          <span className="NoticeBoard__button--nextPage" onClick={nextPage}>
+            다음페이지
+          </span>
+        )}
       </div>
     </>
   );
@@ -174,6 +198,7 @@ const PostList = ({
 const Post = () => {
   const clubID = window.location.pathname.split('/')[2];
   const postId = window.location.pathname.split('/')[3];
+  const page = parseInt(window.location.pathname.split('/')[4]);
   const navigate = useNavigate();
   const [commentList, setCommentList] = useState<commentInfo[]>([]);
   const [postInfo, setPostInfo] = useState<postInfo>();
@@ -196,7 +221,13 @@ const Post = () => {
   };
 
   const fetchData = async () => {
-    const [statusPost, resPost] = await getAPI(`/api/post?clubId=${clubID}`);
+    const [statusPost, resPost] = await getAPI(
+      `/api/post?clubId=${clubID}&page=${page - 1}`
+    );
+
+    console.log(page);
+
+    console.log(resPost);
 
     const targetPost = resPost.find(
       (val: postInfo) => val.postId.toString() === postId

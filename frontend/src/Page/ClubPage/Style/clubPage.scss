@@ -793,3 +793,51 @@
   border-left: 2px solid lightgray;
   height: 90%;
 }
+
+.NoticeBoard {
+  &-footer {
+    display: flex;
+    position: relative;
+    width: 628px;
+    left: 50%;
+    transform: translate(-50%);
+    flex-direction: row;
+  }
+
+  &__button {
+    &--nextPage {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100px;
+      height: 35px;
+      right: 0px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    &--prevPage {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100px;
+      height: 35px;
+      left: 0px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  }
+}
+
+.MyPage {
+  &-footer {
+    display: flex;
+    position: relative;
+    width: 470px;
+    left: 50%;
+    transform: translate(-50%);
+    flex-direction: row;
+  }
+}
