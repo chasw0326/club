@@ -54,12 +54,12 @@ const WritePage = ({ postInfo }: { postInfo: any }) => {
     <>
       <div className="ClubPage__div--write-wrap">
         <div>
-          제목 :{' '}
           <input
             id="title"
             className="ClubPage__input--write-title"
             type="text"
             onChange={setInputValue}
+            placeholder="제목을 입력하세요"
             ref={(el) => (inputRef.current[0] = el)}
           ></input>
         </div>
@@ -84,18 +84,23 @@ const PostList = ({
   setPostInfo: any;
   setCategory: any;
 }) => {
+  const [page, setPage] = useState(0);
   const clubID = window.location.pathname.split('/')[2];
   const [postList, setPostList] = useState<postInfo[]>([]);
+  const [isPostOpen, setIsPostOpen] = useState(false);
   const fetchData = async () => {
-    const [status, res] = await getAPI(`/api/post?clubId=${clubID}`);
+    const [status, res] = await getAPI(
+      `/api/post?clubId=${clubID}&page=${page}`
+    );
 
     if (status === 200) {
-      setPostList((postList) => [...postList, ...res]);
+      setPostList((postList) => res);
     } else {
       alert(res.message);
       navigate(-1);
     }
   };
+
   const navigate = useNavigate();
 
   const postClick = (e: SyntheticEvent) => {
@@ -107,16 +112,24 @@ const PostList = ({
       nickname: target.dataset.nickname,
     });
     setCategory('post');
-    navigate(`/post/${clubID}/${target.dataset.postid}`);
+    navigate(`/post/${clubID}/${target.dataset.postid}/${page + 1}`);
   };
 
   const writeClick = () => {
     setCategory('write');
   };
 
+  const nextPage = () => {
+    setPage((page) => page + 1);
+  };
+
+  const prevPage = () => {
+    setPage((page) => page - 1);
+  };
+
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [page]);
 
   return (
     <>
@@ -162,9 +175,21 @@ const PostList = ({
           없어요!
         </div>
       )}
-
-      <div className="ClubPage__button--post-button" onClick={writeClick}>
-        글쓰기
+      <div className="NoticeBoard-footer">
+        {' '}
+        {page ? (
+          <span className="NoticeBoard__button--prevPage" onClick={prevPage}>
+            이전페이지
+          </span>
+        ) : null}
+        <span className="ClubPage__button--post-button" onClick={writeClick}>
+          글쓰기{' '}
+        </span>
+        {postList.length < 20 ? null : (
+          <span className="NoticeBoard__button--nextPage" onClick={nextPage}>
+            다음페이지
+          </span>
+        )}
       </div>
     </>
   );
@@ -173,6 +198,8 @@ const PostList = ({
 const Post = () => {
   const clubID = window.location.pathname.split('/')[2];
   const postId = window.location.pathname.split('/')[3];
+  const page = parseInt(window.location.pathname.split('/')[4]);
+  const navigate = useNavigate();
   const [commentList, setCommentList] = useState<commentInfo[]>([]);
   const [postInfo, setPostInfo] = useState<postInfo>();
   const [userNickname, setUserNickname] = useState('');
@@ -194,7 +221,13 @@ const Post = () => {
   };
 
   const fetchData = async () => {
-    const [statusPost, resPost] = await getAPI(`/api/post?clubId=${clubID}`);
+    const [statusPost, resPost] = await getAPI(
+      `/api/post?clubId=${clubID}&page=${page - 1}`
+    );
+
+    console.log(page);
+
+    console.log(resPost);
 
     const targetPost = resPost.find(
       (val: postInfo) => val.postId.toString() === postId
@@ -220,10 +253,14 @@ const Post = () => {
     if (!modifyMode) setModifyMode(true);
   };
 
-  const erasePost = () => {
-    deleteAPI(`/api/post/${postInfo?.postId}?clubId=${clubID}`);
-
-    window.location.reload();
+  const erasePost = async () => {
+    const [status, res] = await deleteAPI(
+      `/api/post/${postInfo?.postId}?clubId=${clubID}`
+    );
+    if (status === 200) {
+      alert('글이 삭제 되었습니다.');
+      navigate(`/board/${clubID}`);
+    }
   };
 
   useEffect(() => {
@@ -236,30 +273,32 @@ const Post = () => {
         <ModifyBoard postInfo={postInfo!}></ModifyBoard>
       ) : (
         <div className="ClubPage-postBox">
-          <div className="ClubPage__text--title">
-            {postInfo?.title}
+          <div className="ClubPage__div--post-upper">
+            <span className="ClubPage__text--title">{postInfo?.title}</span>
             <span className="ClubPage__text--post-writer">
               {postInfo?.nickname}
             </span>
           </div>
           <div className="ClubPage__text--contents">{postInfo?.content}</div>
-          {postInfo?.nickname === userNickname ? (
-            <>
-              <span
-                className="ClubPage__button--post-modify"
-                onClick={setModify}
-              >
-                글수정
-              </span>
-              &nbsp; &nbsp; &nbsp; &nbsp;
-              <span
-                className="ClubPage__button--post-erase"
-                onClick={erasePost}
-              >
-                글삭제
-              </span>
-            </>
-          ) : null}
+          <div className="ClubPage__div--post-modify-erase">
+            {postInfo?.nickname === userNickname ? (
+              <>
+                <span
+                  className="ClubPage__button--post-modify"
+                  onClick={setModify}
+                >
+                  글수정
+                </span>
+                &nbsp; &nbsp; &nbsp; &nbsp;
+                <span
+                  className="ClubPage__button--post-erase"
+                  onClick={erasePost}
+                >
+                  글삭제
+                </span>
+              </>
+            ) : null}
+          </div>
 
           <div className="ClubPage__text--comment">
             <img src={comment} width="20px" height="20px"></img>댓글(

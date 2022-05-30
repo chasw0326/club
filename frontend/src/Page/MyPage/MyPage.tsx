@@ -50,7 +50,16 @@ const MyPage = () => {
       <hr></hr>
       <div className="MyPage-profile">
         <div>
-          <img className="MyPage-thumbnail" src={profileUrl}></img>
+          {profileUrl ? (
+            <img className="MyPage-thumbnail" src={profileUrl}></img>
+          ) : (
+            <>
+              <div className="MyPage-noThumbnail">
+                등록된 프로필 사진이 없어요 사진을 등록해보세요!
+              </div>
+            </>
+          )}
+
           <input
             type="file"
             id="thumbnail"

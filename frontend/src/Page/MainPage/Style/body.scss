@@ -1,35 +1,37 @@
 @import '../../../stylesheets//palette.scss';
 
-.MainInformation {
-  position: relative;
-  height: 800px;
-  width: 400px;
-  border: 2px solid $grayblue;
-  border-radius: 0.25rem;
-  left: 20px;
-  overflow: scroll;
-  justify-content: center;
-  align-items: center;
-
-  &::-webkit-scrollbar {
-    width: 0px;
-    height: 0px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: #dfdfdf;
-    border-radius: 10px;
-  }
-  &::-webkit-scrollbar-track {
-    background-color: rgba(0, 0, 0, 0.4);
-    border-radius: 10px;
-  }
-}
-
 .MainBody {
-  font-family: 'Jua', Arial, Helvetica, sans-serif;
+  font-family: 'Noto Sans KR', sans-serif;
   display: flex;
   flex-direction: row;
   justify-content: center;
+
+  &-loading {
+    position: relative;
+    left: 280px;
+    top: 270px;
+    width: 200px;
+    height: 200px;
+    transform: translate(-50%, -50%);
+
+    border: thick solid #3c4c5b;
+    border: {
+      right-color: lightgray;
+      top-color: ligthgray;
+      radius: 100%;
+    }
+
+    animation: spin 800ms infinite linear;
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(359deg);
+    }
+  }
 
   &-mainInformation-title {
     width: 370px;
@@ -123,8 +125,8 @@
       &-address {
         position: absolute;
         bottom: 10px;
-        left: 520px;
-        width: 300px;
+        right: 5px;
+        width: fit-content;
       }
     }
   }
@@ -212,6 +214,141 @@
     &--category-box:hover {
       font-weight: bold;
       color: black;
+    }
+  }
+}
+
+.MainInformation {
+  position: relative;
+  height: 800px;
+  width: 400px;
+  left: 20px;
+  font-family: 'Noto Sans KR', sans-serif;
+  justify-content: center;
+  align-items: center;
+
+  &__text {
+    &--myClub {
+      position: relative;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 20px;
+      font-weight: bold;
+      left: 9px;
+    }
+
+    &--latest {
+      position: relative;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 20px;
+      margin-top: 15px;
+      top: 10px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      left: 9px;
+    }
+  }
+
+  &__div {
+    &--club-wrap {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      width: 400px;
+      overflow-wrap: normal;
+    }
+  }
+}
+
+.MyClub {
+  &__div {
+    font-family: 'Noto Sans KR', sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+    width: 120px;
+
+    &--latest-clubList {
+      position: relative;
+      left: 10px;
+      width: fit-content;
+      height: fit-content;
+      margin-top: 20px;
+    }
+
+    &--latest-post {
+      margin-bottom: 10px;
+      position: relative;
+      display: flex;
+      cursor: pointer;
+      flex-direction: row;
+      align-items: center;
+      justify-content: start;
+      height: 20px;
+      width: 431px;
+      left: 10px;
+    }
+
+    &--latest-post::after {
+      content: '';
+      position: absolute;
+      margin-top: 23px;
+      background-color: #3c4c5b;
+      border-radius: 1.5rem;
+      height: 2px;
+      width: 0px;
+    }
+
+    &--latest-post:hover {
+      font-weight: bold;
+    }
+
+    &--latest-post:hover:after {
+      width: 100%;
+      transition: width 0.3s;
+    }
+  }
+
+  &__span {
+    &--clubName {
+      position: relative;
+      font-weight: bold;
+      width: fit-content;
+      height: fit-content;
+      font-size: 17px;
+      top: -9px;
+    }
+
+    &--date {
+      position: absolute;
+      width: 100px;
+      left: 350px;
+    }
+
+    &--latest-content {
+      position: absolute;
+      left: 120px;
+      overflow: hidden;
+      width: 200px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    &--latest-title {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      height: fit-content;
+      width: 100px;
+    }
+  }
+
+  &__img {
+    &--club-thumbnail {
+      border-radius: 0.25rem;
+      cursor: pointer;
     }
   }
 }
