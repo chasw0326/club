@@ -20,7 +20,7 @@ const MyClub = () => {
     <>
       {clubInfo?.map((val, idx) => {
         return (
-          <>
+          <React.Fragment key={val.id}>
             <div className="MyPage__div--belong-club">
               <img src={val.imageUrl}></img>
               <div className="MyPage__div--club-info">
@@ -30,7 +30,7 @@ const MyClub = () => {
                 <div className="MyPage__text--club-address">{val.address}</div>
               </div>
             </div>
-          </>
+          </React.Fragment>
         );
       })}
     </>
@@ -61,13 +61,13 @@ const MyPost = () => {
     <>
       {postInfo?.map((val, idx) => {
         return (
-          <>
+          <React.Fragment key={idx}>
             <div className="MyPage__div--myPost">
               <div>{val.nickname}</div>
               <div>{val.title}</div>
               <div>{val.createdAt.split('T')[0]}</div>
             </div>
-          </>
+          </React.Fragment>
         );
       })}
       <div className="MyPage-footer">
@@ -112,13 +112,13 @@ const MyComment = () => {
     <>
       {commentInfo?.map((val, idx) => {
         return (
-          <>
+          <React.Fragment key={val.commentData.commentId}>
             <div className="MyPage__div--myPost">
               <div>{val?.postTitle}</div>
               <div>{val?.commentData.content}</div>
               <div>{val?.commentData.createdAt.split('T')[0]}</div>
             </div>
-          </>
+          </React.Fragment>
         );
       })}
       <div className="MyPage-footer">

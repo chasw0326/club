@@ -108,7 +108,7 @@ const MainBody = () => {
       <div className="MainBody-CategoryFrame">
         {categoryState?.map((val: any, idx: any) => {
           return (
-            <>
+            <React.Fragment key={val.id}>
               <div
                 className={
                   categoryList[val.name] === curCategory
@@ -118,7 +118,6 @@ const MainBody = () => {
               >
                 {' '}
                 <div
-                  key={idx}
                   className="MainBody__div--category-box"
                   onClick={() => {
                     setCurCategory(categoryList[val?.name]);
@@ -128,7 +127,7 @@ const MainBody = () => {
                 </div>
               </div>
               &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-            </>
+            </React.Fragment>
           );
         })}
         <div className="MainBody-mainInformation-title"></div>
@@ -167,7 +166,7 @@ const MainInformation = () => {
   const fetchData = async () => {
     const [status, res] = await getAPI(`/api/users/joined-club`);
 
-    if (status === 200) setJoinedClub(res.slice(0, 3));
+    if (status === 200) setJoinedClub(res);
     else alert(res);
   };
 
@@ -181,13 +180,13 @@ const MainInformation = () => {
         <div className="MainInformation__text--myClub">나의 동아리</div>
         <div className="MainInformation__div--club-wrap">
           {joinedClub?.map((val: myClub, idx: number) => {
-            return <MyClub clubInfo={val}></MyClub>;
+            return <MyClub key={val.id} clubInfo={val}></MyClub>;
           })}
         </div>
         <div className="MainInformation__text--latest">최근 소식</div>
         <div className="MainInformation__div--club-wrap">
-          {joinedClub?.map((val: myClub, idx: number) => {
-            return <LatestPost clubInfo={val}></LatestPost>;
+          {joinedClub?.slice(0, 3).map((val: myClub, idx: number) => {
+            return <LatestPost key={val.id} clubInfo={val}></LatestPost>;
           })}
         </div>
       </div>
@@ -246,11 +245,11 @@ const LatestPost = ({ clubInfo }: { clubInfo: myClub }) => {
 
   return (
     <>
-      <div className="MyClub__div--latest-clubList">
+      <div className="MyClub__div--latest-clubList" key={clubInfo.id}>
         <span className="MyClub__span--clubName">{clubInfo?.name}</span>
         {postList?.map((val: postInfo, idx: number) => {
           return (
-            <>
+            <React.Fragment key={val.postId}>
               <div className="MyClub__div--latest-post">
                 <span className="MyClub__span--latest-title">{val.title}</span>
                 <span
@@ -264,7 +263,7 @@ const LatestPost = ({ clubInfo }: { clubInfo: myClub }) => {
                   {val.createdAt.split('T')[0]}
                 </span>
               </div>
-            </>
+            </React.Fragment>
           );
         })}
       </div>
