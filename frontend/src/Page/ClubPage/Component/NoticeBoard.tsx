@@ -144,8 +144,8 @@ const PostList = ({
             <hr className="ClubPage__hr--index"></hr>
             {postList?.map((postData, idx) => {
               return (
-                <>
-                  <div className="ClubPage-boardStuff" key={postData.postId}>
+                <React.Fragment key={postData.postId}>
+                  <div className="ClubPage-boardStuff">
                     <span className="ClubPage__span--post-ID">
                       {postData.postId}
                     </span>
@@ -164,7 +164,7 @@ const PostList = ({
                     </span>
                   </div>
                   <hr className="ClubPage__hr--index"></hr>
-                </>
+                </React.Fragment>
               );
             })}
           </div>
@@ -224,11 +224,6 @@ const Post = () => {
     const [statusPost, resPost] = await getAPI(
       `/api/post?clubId=${clubID}&page=${page - 1}`
     );
-
-    console.log(page);
-
-    console.log(resPost);
-
     const targetPost = resPost.find(
       (val: postInfo) => val.postId.toString() === postId
     );
@@ -307,7 +302,12 @@ const Post = () => {
           <hr className="ClubPage__hr--under-comment"></hr>
           <div className="ClubPage__div--all-comment">
             {commentList?.map((val, idx) => {
-              return <CommentItem commentData={val}></CommentItem>;
+              return (
+                <CommentItem
+                  key={val.commentId}
+                  commentData={val}
+                ></CommentItem>
+              );
             })}
           </div>
           <div className="ClubPage__div--submit-frame">

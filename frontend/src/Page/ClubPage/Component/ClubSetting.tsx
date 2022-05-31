@@ -106,7 +106,11 @@ const ClubSetting = () => {
         >
           <option value="">카테고리 선택</option>
           {categories?.map((val: any, idx: number) => {
-            return <option value={val.name}>{val.name}</option>;
+            return (
+              <option key={val.id} value={val.name}>
+                {val.name}
+              </option>
+            );
           })}
         </select>
         <div className="ClubSetting__text">동아리 대표 이미지</div>

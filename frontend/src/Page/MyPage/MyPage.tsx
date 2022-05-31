@@ -3,7 +3,6 @@ import { useState, useRef } from 'react';
 import { getAPI, putAPI } from '../../hooks/useFetch';
 import './Style/MyPage.scss';
 import { userInfo } from '../../type/type';
-import person from '../../image/person.svg';
 import SettingModal from './Component/SettingModal';
 import setting from '../../image/setting.svg';
 import MainHeader from '../../SharedComponent/Header';
