@@ -28,14 +28,14 @@ function App() {
         <>
           <Routes>
             <Route path="/" element={<LoginPage />} />
-            <Route path="/home*" element={<MainPage />} />
+            <Route path="/home" element={<MainPage />} />
             <Route path="/result" element={<ResultPage />} />
-            <Route path="/information*" element={<ClubPage />} />
-            <Route path="/board*" element={<ClubPage />} />
-            <Route path="/post*" element={<ClubPage />} />
-            <Route path="/photo*" element={<ClubPage />} />
-            <Route path="/management*" element={<ClubPage />} />
-            <Route path="/mypage*" element={<MyPage />} />
+            <Route path="/information/*" element={<ClubPage />} />
+            <Route path="/board/*" element={<ClubPage />} />
+            <Route path="/post/*" element={<ClubPage />} />
+            <Route path="/photo/*" element={<ClubPage />} />
+            <Route path="/management/*" element={<ClubPage />} />
+            <Route path="/mypage/*" element={<MyPage />} />
           </Routes>
         </>
       ) : (

@@ -37,15 +37,25 @@ const SignUpModal = ({
       return false;
     }
 
+    if (passwordCheck !== signInfo.password) {
+      alert('비밀번호가 일치하지 않습니다. 다시 입력해주세요');
+      return false;
+    }
+
     return true;
   };
 
   const [signInfo, setSignInfo] = useState(initialState);
+  const [passwordCheck, setPasswordCheck] = useState('');
 
   const setInput = (event: any) => {
     if (event.target.id === 'profile') {
       setSignInfo({ ...signInfo, [event.target.id]: event.target.files[0] });
     } else setSignInfo({ ...signInfo, [event.target.id]: event.target.value });
+  };
+
+  const setPwCheck = (event: any) => {
+    setPasswordCheck((passwordCheck) => event.target.value);
   };
 
   const upload = async () => {
@@ -89,7 +99,7 @@ const SignUpModal = ({
           id="password-check"
           type="password"
           className="SignUpModal__Input"
-          onChange={setInput}
+          onChange={setPwCheck}
         ></input>
         <div className="SignUpModal__text">이름</div>
         <input

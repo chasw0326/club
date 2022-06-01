@@ -64,7 +64,10 @@ const MemberManagement = () => {
         <div className="ClubSetting__div--accept-wrap">
           {nonMemberList?.map((val: any, idx: number) => {
             return (
-              <div className="ClubSetting__div--accept-item-wrap">
+              <div
+                className="ClubSetting__div--accept-item-wrap"
+                key={val.userId}
+              >
                 <span className="MemberManagement__span--delegate-wrap">
                   <span className="MemberManagement__span--position">
                     {position[val?.joinStateCode.toString()]}

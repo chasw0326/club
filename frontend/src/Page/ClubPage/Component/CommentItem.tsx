@@ -55,15 +55,28 @@ const CommentItem = ({ commentData }: { commentData: commentInfo }) => {
           key={commentData.commentId}
         >
           <div className="ClubPage__text--comment-nickname">
-            {commentData?.nickname}
-            {commentData?.nickname === globalState.nickname ? (
-              <>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <span onClick={setModifyMode}>수정</span>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <span onClick={eraseComment}>삭제</span>
-              </>
-            ) : null}
+            <span>{commentData?.nickname}</span>
+            <span className="ClubPage__div--modify-delete">
+              {' '}
+              {commentData?.nickname === globalState.nickname ? (
+                <>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <span
+                    className="ClubPage__text--comment-modify"
+                    onClick={setModifyMode}
+                  >
+                    수정
+                  </span>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <span
+                    className="ClubPage__text--comment-delete"
+                    onClick={eraseComment}
+                  >
+                    삭제
+                  </span>
+                </>
+              ) : null}
+            </span>
           </div>
 
           <div

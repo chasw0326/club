@@ -9,12 +9,12 @@ import com.example.club_project.domain.User;
 import com.example.club_project.exception.custom.AlreadyExistsException;
 import com.example.club_project.exception.custom.NotFoundException;
 import com.example.club_project.repository.ClubJoinStateRepository;
+import com.example.club_project.repository.query.ClubQueryRepository;
 import com.example.club_project.service.club.ClubService;
 import com.example.club_project.service.user.UserService;
 import com.example.club_project.util.ValidateUtil;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -35,6 +35,7 @@ public class ClubJoinStateServiceImpl implements ClubJoinStateService {
     private static final int MEMBER_SIZE = 10;
 
     private final ClubJoinStateRepository clubJoinStateRepository;
+    private final ClubQueryRepository clubQueryRepository;
     private final UserService userService;
     private final ClubService clubService;
     private final ValidateUtil validateUtil;
@@ -44,41 +45,8 @@ public class ClubJoinStateServiceImpl implements ClubJoinStateService {
      * for Controller
      */
     @Override
-    public List<ClubDTO> getClubDtos(String university, Pageable pageable) {
-        checkArgument(StringUtils.isNotEmpty(university), "university 입력값은 필수입니다.");
-
-        return clubJoinStateRepository.findAllByUniversity(university, getPageByClub(pageable));
-    }
-
-    @Override
-    public List<ClubDTO> getClubDtos(String name, String university, Pageable pageable) {
-        checkArgument(StringUtils.isNotEmpty(name), "name 입력값은 필수입니다.");
-        checkArgument(StringUtils.isNotEmpty(university), "university 입력값은 필수입니다.");
-
-        return clubJoinStateRepository.findAllByNameAndUniversity(name, university, getPageByClub(pageable));
-    }
-
-    @Override
-    public List<ClubDTO> getClubDtos(List<Long> categories, String university, Pageable pageable) {
-        checkArgument(ObjectUtils.isNotEmpty(categories), "categories 입력값은 필수입니다.");
-        checkArgument(StringUtils.isNotEmpty(university), "university 입력값은 필수입니다.");
-
-        return clubJoinStateRepository.findAll(categories, university, getPageByClub(pageable));
-    }
-
-    @Override
-    public List<ClubDTO> getClubDtos(List<Long> categories, String university, String name, Pageable pageable) {
-        checkArgument(ObjectUtils.isNotEmpty(categories), "categories 입력값은 필수입니다.");
-        checkArgument(StringUtils.isNotEmpty(university), "university 입력값은 필수입니다.");
-        checkArgument(StringUtils.isNotEmpty(name), "name 입력값은 필수입니다.");
-
-        return clubJoinStateRepository.findAll(categories, name, university, getPageByClub(pageable));
-    }
-
-    private Pageable getPageByClub(Pageable defaultPageable) {
-        return PageRequest.of(defaultPageable.getPageNumber(),
-                              defaultPageable.getPageSize(),
-                              Sort.by(DESC, "club"));
+    public List<ClubDTO.SimpleResponse> getClubDtos(List<Long> categories, String university, String name, Pageable pageable) {
+        return clubQueryRepository.findAll(categories, university, name, pageable);
     }
 
     @Override

@@ -178,12 +178,12 @@ class ClubJoinStateServiceTest {
 
         //when
         String university = "test";
-        List<ClubDTO> clubDtos = clubJoinStateService.getClubDtos(university, testPageRequest);
+        List<ClubDTO.SimpleResponse> clubDtos = clubJoinStateService.getClubDtos(null, university, null, testPageRequest);
 
         //then
         assertThat(clubDtos.size()).isEqualTo(5);
 
-        for (ClubDTO clubDto : clubDtos) {
+        for (ClubDTO.SimpleResponse clubDto : clubDtos) {
             assertThat(clubDto.getClubMembers()).isNotEqualTo(0);
         }
     }
@@ -207,12 +207,12 @@ class ClubJoinStateServiceTest {
         //when
         String searchKeyword = "club";
         String university = "test";
-        List<ClubDTO> clubDtos = clubJoinStateService.getClubDtos(searchKeyword, university, testPageRequest);
+        List<ClubDTO.SimpleResponse> clubDtos = clubJoinStateService.getClubDtos(null, university, searchKeyword, testPageRequest);
 
         //then
         assertThat(clubDtos.size()).isEqualTo(5);
 
-        for (ClubDTO clubDto : clubDtos) {
+        for (ClubDTO.SimpleResponse clubDto : clubDtos) {
             assertThat(clubDto.getClubMembers()).isNotEqualTo(0);
         }
     }
@@ -236,12 +236,12 @@ class ClubJoinStateServiceTest {
         //when
         List<Long> searchCategories = new ArrayList<>(Arrays.asList(mockCategory1.getId(), mockCategory2.getId(), mockCategory3.getId()));
         String university = "test";
-        List<ClubDTO> clubDtos = clubJoinStateService.getClubDtos(searchCategories, university, testPageRequest);
+        List<ClubDTO.SimpleResponse> clubDtos = clubJoinStateService.getClubDtos(searchCategories, university, null, testPageRequest);
 
         //then
         assertThat(clubDtos.size()).isEqualTo(3);
 
-        for (ClubDTO clubDto : clubDtos) {
+        for (ClubDTO.SimpleResponse clubDto : clubDtos) {
             assertThat(clubDto.getClubMembers()).isNotEqualTo(0);
         }
     }
@@ -266,12 +266,12 @@ class ClubJoinStateServiceTest {
         List<Long> searchCategories = new ArrayList<>(Arrays.asList(mockCategory1.getId(), mockCategory2.getId()));
         String searchKeyword = "club";
         String university = "test";
-        List<ClubDTO> clubDtos = clubJoinStateService.getClubDtos(searchCategories, university, searchKeyword, testPageRequest);
+        List<ClubDTO.SimpleResponse> clubDtos = clubJoinStateService.getClubDtos(searchCategories, university, searchKeyword, testPageRequest);
 
         //then
         assertThat(clubDtos.size()).isEqualTo(2);
 
-        for (ClubDTO clubDto : clubDtos) {
+        for (ClubDTO.SimpleResponse clubDto : clubDtos) {
             assertThat(clubDto.getClubMembers()).isNotEqualTo(0);
         }
     }

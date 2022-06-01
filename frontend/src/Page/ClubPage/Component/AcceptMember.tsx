@@ -11,7 +11,6 @@ const AcceptMember = () => {
     const [statusNonMember, targetMember] = await getAPI(
       `/api/clubs/${clubID}/non-member`
     );
-
     setNonMemberList((nonMemberList: any) => [
       ...nonMemberList,
       ...targetMember,
@@ -52,7 +51,10 @@ const AcceptMember = () => {
         <div className="ClubSetting__div--accept-wrap">
           {nonMemberList?.map((val: any, idx: number) => {
             return (
-              <div className="ClubSetting__div--accept-item-wrap">
+              <div
+                className="ClubSetting__div--accept-item-wrap"
+                key={val.userId}
+              >
                 <span className="ClubSetting__span--nonmember-name">
                   {val?.name + val?.userId}
                 </span>

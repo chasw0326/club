@@ -1,6 +1,12 @@
-import React, { EventHandler, KeyboardEventHandler, useContext } from 'react';
+import React, {
+  EventHandler,
+  KeyboardEventHandler,
+  useContext,
+  useEffect,
+} from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { getAPI } from '../hooks/useFetch';
 import './Style/shared.scss';
 import person from '../image/person.svg';
 import ClubCreateModal from './ClubCreateModal';
@@ -9,7 +15,13 @@ import logoutImg from '../image/logout.svg';
 const MainHeader = () => {
   const [inputState, setInputState] = useState('');
   const [modalState, setModalState] = useState(false);
+  const [profileUrl, setProfileUrl] = useState('');
   const navigate = useNavigate();
+
+  const fetchData = async () => {
+    const [statusProfile, resProfile] = await getAPI('/api/user/password');
+    setProfileUrl(resProfile.profileUrl);
+  };
 
   const setInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputState(event.target.value);
@@ -36,6 +48,10 @@ const MainHeader = () => {
     }
   };
 
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <>
       <div className="MainHeader">
@@ -55,7 +71,7 @@ const MainHeader = () => {
           </div>
           <img
             className="MainHeader-myPage"
-            src={person}
+            src={profileUrl ? profileUrl : person}
             width="50px"
             height="50px"
             onClick={() => {

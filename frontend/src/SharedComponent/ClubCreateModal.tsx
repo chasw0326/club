@@ -50,13 +50,11 @@ const ClubCreateModal = ({
   };
 
   const upload = async () => {
-    console.log(clubInfo);
-
     const [status, res] = await postAPI(clubInfo, 'json', '/api/clubs');
-
     if (status === 200) {
       alert('등록이 완료되었습니다.');
       setModal();
+      window.location.reload();
     } else {
       alert(res.message.exception);
     }
@@ -105,7 +103,11 @@ const ClubCreateModal = ({
             >
               <option value="">카테고리 선택</option>
               {categories?.map((val: any, idx: number) => {
-                return <option value={val.name}>{val.name}</option>;
+                return (
+                  <option key={val.id} value={val.name}>
+                    {val.name}
+                  </option>
+                );
               })}
             </select>
             <div className="MainHeader__text">동아리 대표 이미지</div>

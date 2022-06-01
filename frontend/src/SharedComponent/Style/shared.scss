@@ -11,9 +11,10 @@ body {
   align-items: center;
   height: 90px;
   &-university {
+    font-family: 'Noto Sans KR', sans-serif;
     position: relative;
-
-    font-family: 'Jua', Arial, Helvetica, sans-serif;
+    bottom: 7px;
+    font-weight: bold;
     font-size: 50px;
     cursor: pointer;
   }
@@ -43,6 +44,7 @@ body {
   &-myPage {
     margin-top: 7px;
     position: relative;
+    border-radius: 100%;
     cursor: pointer;
   }
 
@@ -107,6 +109,7 @@ body {
 
     &area {
       position: relative;
+      font-family: 'Noto Sans KR', sans-serif;
       width: 150px;
       font-size: 15px;
       border: 1px solid lightgray;
