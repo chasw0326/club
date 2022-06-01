@@ -62,8 +62,16 @@ const MainBody = () => {
 
   const updateClubList = async () => {
     let api = '';
-    if (curCategory === 0) api = `/api/clubs?page=${page}`;
-    else api = `/api/clubs?category=${curCategory}&page=${page}`;
+
+    if (window.location.pathname.split('/')[2]) {
+      api = `/api/clubs?name=${
+        window.location.pathname.split('/')[2]
+      }&page=${page}`;
+    } else {
+      if (curCategory === 0) api = `/api/clubs?page=${page}`;
+      else api = `/api/clubs?category=${curCategory}&page=${page}`;
+    }
+
     const [status, res] = await getAPI(api);
     setClubList((clubList) => [...clubList, ...res]);
     if (res.length < 5) {
@@ -71,18 +79,38 @@ const MainBody = () => {
     }
   };
 
+  const fetchDataByName = async () => {
+    setIsLoading(true);
+    const api = `/api/clubs?name=${window.location.pathname.split('/')[2]}`;
+    const [status, res] = await getAPI(api);
+    setClubList(res);
+    setIsLoading(false);
+  };
+
   const callback = async ([entry]: any, observer: any) => {
     if (entry.isIntersecting && clubList.length > 3) {
       setPage((page) => page + 1);
+      console.log('옵저버 콜백');
       observer.disconnect();
       setTimeout(() => observer.observe(target), 1000);
     }
   };
 
   useEffect(() => {
-    fetchData();
+    if (!window.location.pathname.split('/')[2]) {
+      fetchData();
+    } else {
+      fetchDataByName();
+    }
     categorySetting();
   }, []);
+
+  useEffect(() => {
+    if (window.location.pathname.split('/')[2]) {
+      fetchDataByName();
+      setPage(0);
+    }
+  }, [window.location.pathname]);
 
   useEffect(() => {
     if (page > 0) {
@@ -91,7 +119,9 @@ const MainBody = () => {
   }, [page]);
 
   useEffect(() => {
-    categorizing();
+    if (!window.location.pathname.split('/')[2]) {
+      categorizing();
+    }
   }, [curCategory]);
 
   useEffect(() => {
