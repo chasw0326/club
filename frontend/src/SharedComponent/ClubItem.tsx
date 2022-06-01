@@ -5,7 +5,6 @@ import thumbnail from '../image/thumbnail.svg';
 
 const ClubItem = ({ item }: { item: clubItem }) => {
   const navigate = useNavigate();
-
   const sectionStyle = {
     backgroundImage: `url("${item?.imageUrl ? item?.imageUrl : thumbnail}")`,
     backgroundSize: '719px 261px',

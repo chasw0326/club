@@ -28,8 +28,15 @@ const MainHeader = () => {
   };
 
   const homeButton = () => {
-    if (window.location.pathname.includes('home')) window.location.reload();
-    else navigate('/home');
+    if (
+      window.location.pathname.includes('home') &&
+      !window.location.pathname.split('/')[2]
+    )
+      window.location.reload();
+    else {
+      navigate('/home');
+      window.location.reload();
+    }
   };
 
   const logout = () => {
@@ -44,7 +51,8 @@ const MainHeader = () => {
 
   const enter = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      navigate(`/result`);
+      navigate(`/home/${inputState}`);
+      window.location.reload();
     }
   };
 
